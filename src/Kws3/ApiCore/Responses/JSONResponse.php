@@ -14,10 +14,10 @@ class JSONResponse extends Response
     public function send($records, $error = false)
     {
 
-        $success = $error == true ? parent::ERROR : parent::SUCCESS;
+        $status = $error == true ? parent::ERROR : parent::SUCCESS;
 
         $metadata = $this->app->get('METADATAPROVIDER');
-        $metadata->setStatus($success);
+        $metadata->setStatus($status);
         $metadata->setCount(count($records));
 
         // Convert to snake_case if the flag is set
