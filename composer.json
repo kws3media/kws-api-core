@@ -1,17 +1,16 @@
 {
-    "name": "kws/api-core",
-    "version": "0.1.0",
-    "description": "core api",
-    "type": "core",
+    "name": "kws3/api-core",
+    "version": "1.0.0",
+    "description": "KWS3 Api Core",
     "license": "MIT",
     "authors": [
         {
-            "name": "Kawsar Ahmed",
-            "email": "prokawsar@gmail.com"
+            "name": "ekhaled",
+            "email": "ekhaled983@gmail.com"
         }
     ],
     "autoload": {
-        "psr-4": {"KwsApiCore\\": "src/"}
+        "classmap": ["src/"]
     },
     "require": {}
 }
