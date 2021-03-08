@@ -2,10 +2,10 @@
 
 namespace Kws3\ApiCore\Controllers;
 
-use Exceptions\HTTPException;
-use Utils\Identity;
-use Utils\AccessHandler;
-use Utils\Tools;
+use \Kws3\ApiCore\Exceptions\HTTPException;
+use \Kws3\ApiCore\Utils\Identity;
+use \Kws3\ApiCore\Utils\AccessHandler;
+use \Kws3\ApiCore\Utils\Tools;
 
 class BaseController
 {
@@ -204,6 +204,11 @@ class BaseController
         }
 
         $this->app->get('RESPONDER')->send($data);
+    }
+
+    public static function greet()
+    {
+        echo "Hello";
     }
 
 }
