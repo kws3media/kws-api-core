@@ -1,6 +1,6 @@
 <?php
 
-namespace Kws3\ApiCore;
+namespace Kws3\ApiCore\Controllers;
 
 use Exceptions\HTTPException;
 use Utils\Identity;
