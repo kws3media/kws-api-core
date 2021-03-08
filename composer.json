@@ -1,0 +1,17 @@
+{
+    "name": "kws/api-core",
+    "version": "0.1.0",
+    "description": "core api",
+    "type": "core",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kawsar Ahmed",
+            "email": "prokawsar@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"KwsApiCore\\": "src/"}
+    },
+    "require": {}
+}
