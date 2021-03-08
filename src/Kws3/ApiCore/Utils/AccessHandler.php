@@ -1,7 +1,7 @@
 <?php
 namespace Kws3\ApiCore\Utils;
 
-use Kws3\ApiCore\Exceptions\BaseHTTPException;
+use Kws3\ApiCore\Exceptions\HTTPException;
 
 class AccessHandler extends \Prefab
 {
@@ -68,7 +68,7 @@ class AccessHandler extends \Prefab
 
     public static function expiredKey()
     {
-        throw new BaseHTTPException(
+        throw new HTTPException(
             'Expired',
             419,
             [
@@ -81,7 +81,7 @@ class AccessHandler extends \Prefab
 
     public static function inactiveKey()
     {
-        throw new BaseHTTPException(
+        throw new HTTPException(
             'Conflict.',
             409,
             [
