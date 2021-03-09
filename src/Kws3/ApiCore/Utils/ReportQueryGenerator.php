@@ -3,9 +3,8 @@ namespace Kws3\ApiCore\Utils;
 
 use \Kws3\ApiCore\Exceptions\HTTPException;
 use \Kws3\ApiCore\Utils\Tools;
-use \Kws3\ApiCore\Utils\Identity;
 
-class ReportQueryGenerator extends \Models\Base
+class ReportQueryGenerator extends \Kws3\ApiCore\Models\BaseModel
 {
   private $model;
   private $DB;
@@ -409,11 +408,5 @@ class ReportQueryGenerator extends \Models\Base
     $field['alias'] = isset($opts[2]) ? $opts[2] : (isset($default_alias[1]) ? $default_alias[1] : $default_alias[0]);
     $field['name'] = $opts[0];
     return $field;
-  }
-
-  protected static function userRoleMap($field){
-    $_map = Identity::$identityDescriptions;
-    $result = self::buildFieldMap($_map, $field);
-    return $result;
   }
 }

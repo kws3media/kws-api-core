@@ -1,9 +1,7 @@
 <?php
 namespace Kws3\ApiCore\Utils;
 
-use \Kws3\ApiCore\Utils\Identity;
-
-class ReportOptionsGenerator extends \Models\Base
+class ReportOptionsGenerator extends \Kws3\ApiCore\Models\BaseModel
 {
   public static function augment(&$model)
   {
@@ -36,12 +34,5 @@ class ReportOptionsGenerator extends \Models\Base
     }
     return $option;
   }
-
-  protected static function getUserRoles(){
-    $_map = Identity::$identityDescriptions;
-    $_map = array_flip($_map);
-    return self::buildOptionArray($_map);
-  }
-
 
 }
