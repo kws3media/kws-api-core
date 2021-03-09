@@ -206,9 +206,4 @@ class BaseController
         $this->app->get('RESPONDER')->send($data);
     }
 
-    public static function greet()
-    {
-        echo "Hello";
-    }
-
 }
