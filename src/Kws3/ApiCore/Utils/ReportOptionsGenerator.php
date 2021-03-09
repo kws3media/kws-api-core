@@ -1,7 +1,7 @@
 <?php
 namespace Kws3\ApiCore\Utils;
 
-use Kws3\ApiCore\Utils\Identity;
+use \Kws3\ApiCore\Utils\Identity;
 
 class ReportOptionsGenerator extends \Models\Base
 {
