@@ -39,9 +39,4 @@ class BaseEnv
     //fallback in case version was not defined
     defined('API_VERSION') or define("API_VERSION", "undefined");
   }
-
-  public function setENV($key, $value)
-  {
-    define($key, $value);
-  }
 }
