@@ -4,16 +4,6 @@ namespace Kws3\ApiCore\Utils;
 class Identity extends \Prefab
 {
 
-  const CONTEXT_ADMIN           = 'A';
-  const CONTEXT_USER            = 'U';
-  const CONTEXT_APP_USER        = 'X';
-
-  public static $identityDescriptions = [
-    self::CONTEXT_ADMIN         => 'Admin',
-    self::CONTEXT_USER          => 'User',
-    self::CONTEXT_APP_USER      => 'App User'
-  ];
-
   public static $keyLifetime = 7200; //seconds
 
   protected $app;
