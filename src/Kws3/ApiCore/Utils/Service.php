@@ -5,7 +5,8 @@ class Service extends \Prefab
 {
     public static function call($method = '', $params = [], $async = true)
     {
-        $wd = getcwd();
+        $app = \Base::instance();
+        $wd = realpath($app->get('SERVICE_PATH'));
         $ds = DIRECTORY_SEPARATOR;
 
         $command = 'php ' . $wd . $ds . 'index.php' . ' /cli/' . $method;
