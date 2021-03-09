@@ -1,7 +1,7 @@
 <?php
 namespace Kws3\ApiCore\Config;
 
-class Env
+class BaseEnv
 {
   public $constents = [
     'K_ENV' => 'local',
