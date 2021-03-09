@@ -36,7 +36,7 @@ class HTTPException extends \Exception
         $responder = $this->app->get('RESPONDER');
         if (empty($reponder)) {
             //fallback to JSONResponder
-            $reponder = \Responses\JSONResponse::instance();
+            $reponder = \Kws3\ApiCore\Responses\JSONResponse::instance();
         }
 
         $code = $this->getCode();
