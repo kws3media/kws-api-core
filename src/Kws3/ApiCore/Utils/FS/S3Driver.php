@@ -1,7 +1,6 @@
 <?php
-namespace Utils\FS;
+namespace Kws3\ApiCore\Utils\FS;
 
-use \Exceptions\HTTPException;
 use \Aws\S3\S3Client;
 use \Aws\S3\Exception\S3Exception;
 

@@ -1,7 +1,5 @@
 <?php
-namespace Utils\FS;
-
-use \Exceptions\HTTPException;
+namespace Kws3\ApiCore\Utils\FS;
 
 class LocalDriver extends Driver
 {
