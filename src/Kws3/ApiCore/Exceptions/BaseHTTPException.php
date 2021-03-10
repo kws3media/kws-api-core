@@ -1,7 +1,7 @@
 <?php
 namespace Kws3\ApiCore\Exceptions;
 
-class HTTPException extends \Exception
+class BaseHTTPException extends \Exception
 {
 
     protected $app;

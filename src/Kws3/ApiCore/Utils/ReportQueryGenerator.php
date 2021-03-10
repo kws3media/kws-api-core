@@ -1,7 +1,7 @@
 <?php
 namespace Kws3\ApiCore\Utils;
 
-use \Kws3\ApiCore\Exceptions\HTTPException;
+use \Kws3\ApiCore\Exceptions\BaseHTTPException as HTTPException;
 use \Kws3\ApiCore\Utils\Tools;
 
 class ReportQueryGenerator extends \Kws3\ApiCore\Models\BaseModel
