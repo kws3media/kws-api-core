@@ -3,7 +3,7 @@ namespace Kws3\ApiCore\Utils;
 
 class Identity extends \Prefab
 {
-
+  protected static $rotateKeys = true; //set true to activate rotating keys
   public static $keyLifetime = 7200; //seconds
 
   protected $app;
@@ -50,7 +50,7 @@ class Identity extends \Prefab
     }
 
     $created_on = strtotime($token->created);
-    if((time() - $created_on) > self::$keyLifetime){
+    if(self::$rotateKeys && (time() - $created_on) > self::$keyLifetime){
       $this->expiredKey = true;
       return;
     }
