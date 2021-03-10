@@ -41,7 +41,7 @@ class BaseRoutes
   {
     $this->app = $config['app'];
     $this->apiVersions = $config['apiVersions'];
-    $this->DS = $config['DS'];
+    $this->DS = DIRECTORY_SEPARATOR;
     $this->generateRoute();
   }
 
