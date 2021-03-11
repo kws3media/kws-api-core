@@ -20,19 +20,11 @@ class Identity extends \Prefab
 
   public function reIdentify($token)
   {
-    $this->baseIdentify($token);
+    $this->identify($token);
   }
 
-  private function baseIdentify($token)
+  private function identify($token)
   {
-    if ($token->user->disabled == 1 || $token->user->deleted == 1) {
-      return;
-    }
-
-    if ($token->active != 1) {
-      $this->inactiveKey = true;
-      return;
-    }
     //check config flag
     $rotateKeys = $this->app->get('CONFIG')['ROTATE_KEYS'];
 
@@ -42,10 +34,6 @@ class Identity extends \Prefab
       return;
     }
 
-    if (!empty($token->user)) {
-      $this->user = $token->user;
-      $this->context = $token->user->role;
-    }
   }
 
 }
