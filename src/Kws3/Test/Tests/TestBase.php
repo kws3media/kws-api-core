@@ -1,5 +1,5 @@
 <?php
-namespace Tests;
+namespace Kws3\Tests;
 
 class TestBase{
 
