@@ -1,11 +1,11 @@
 <?php
 
-namespace Kws3\ApiCore\Controllers;
+namespace ApiCore\Controllers;
 
-use \Kws3\ApiCore\Exceptions\BaseHTTPException as HTTPException;
-use \Kws3\ApiCore\Utils\Identity;
-use \Kws3\ApiCore\Utils\AccessHandler;
-use \Kws3\ApiCore\Utils\Tools;
+use ApiCore\Exceptions\BaseHTTPException as HTTPException;
+use ApiCore\Utils\Identity;
+use ApiCore\Utils\AccessHandler;
+use ApiCore\Utils\Tools;
 
 class BaseController
 {

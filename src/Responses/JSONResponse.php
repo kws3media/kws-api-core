@@ -1,7 +1,7 @@
 <?php
-namespace Kws3\ApiCore\Responses;
+namespace ApiCore\Responses;
 
-class JSONResponse extends \Kws3\ApiCore\Responses\Response
+class JSONResponse extends \ApiCore\Responses\Response
 {
     protected $snake = true;
     protected $envelope = true;

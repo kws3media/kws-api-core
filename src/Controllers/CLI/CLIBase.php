@@ -1,6 +1,6 @@
 <?php
 
-namespace Kws3\ApiCore\Controllers\CLI;
+namespace ApiCore\Controllers\CLI;
 
 class CLIBase
 {

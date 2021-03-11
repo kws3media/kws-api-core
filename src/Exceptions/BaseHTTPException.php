@@ -1,5 +1,5 @@
 <?php
-namespace Kws3\ApiCore\Exceptions;
+namespace ApiCore\Exceptions;
 
 class BaseHTTPException extends \Exception
 {

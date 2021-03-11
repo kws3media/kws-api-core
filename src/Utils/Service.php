@@ -1,5 +1,5 @@
 <?php
-namespace Kws3\ApiCore\Utils;
+namespace ApiCore\Utils;
 
 class Service extends \Prefab
 {

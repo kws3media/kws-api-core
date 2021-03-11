@@ -1,7 +1,7 @@
 <?php
-namespace Kws3\ApiCore\Utils;
+namespace ApiCore\Utils;
 
-use \Kws3\ApiCore\Exceptions\BaseHTTPException as HTTPException;
+use ApiCore\Exceptions\BaseHTTPException as HTTPException;
 
 class RequestBody extends \Prefab
 {

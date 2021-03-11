@@ -1,6 +1,6 @@
 <?php
 
-namespace Kws3\ApiCore\Config;
+namespace ApiCore\Config;
 
 class Options
 {
