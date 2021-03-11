@@ -1,5 +1,5 @@
 <?php
-namespace Kws3\Tests\AABasicTests;
+namespace ApiCore\Tests\AABasicTests;
 
 class ControllerTest extends \Tests\TestBase{
 

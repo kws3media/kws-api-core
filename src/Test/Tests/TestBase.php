@@ -1,5 +1,5 @@
 <?php
-namespace Kws3\Tests;
+namespace ApiCore\Tests;
 
 class TestBase{
 
