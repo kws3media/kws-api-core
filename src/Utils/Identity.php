@@ -3,7 +3,7 @@ namespace ApiCore\Utils;
 
 class Identity extends \Prefab
 {
-  public static $keyLifetime = 7200; //seconds
+  protected static $keyLifetime = 7200; //seconds
 
   protected $app;
 
@@ -11,6 +11,11 @@ class Identity extends \Prefab
   public $context = null;
   public $inactiveKey = false;
   public $expiredKey = false;
+
+  public static function getKeyLifeTime()
+  {
+    return self::$keyLifetime;
+  }
 
   public function forget()
   {
