@@ -3,7 +3,7 @@ namespace Kws3\ApiCore\Utils;
 
 class Identity extends \Prefab
 {
-  public static $keyLifetime = 7200; //seconds
+  public static $keyLifetime = 7; //seconds
 
   protected $app;
 
@@ -12,33 +12,19 @@ class Identity extends \Prefab
   public $inactiveKey = false;
   public $expiredKey = false;
 
-  public function __construct()
-  {
-    $this->app = \Base::instance();
-    $this->identify();
-  }
-
   public function forget()
   {
     $this->user = null;
     $this->context = null;
   }
 
-  public function reIdentify()
+  public function reIdentify($token)
   {
-    $this->identify();
+    $this->baseIdentify($token);
   }
 
-  private function identify()
+  private function baseIdentify($token)
   {
-    $api_key = $this->app->get('HEADERS.Api-Key');
-
-    $token = new \Models\Tokens;
-    $token->load(['`access_token` = ?', $api_key]);
-    if ($token->dry()) {
-      return;
-    }
-
     if ($token->user->disabled == 1 || $token->user->deleted == 1) {
       return;
     }
