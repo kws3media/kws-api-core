@@ -22,7 +22,7 @@ class ControllerAccessTest extends \Tests\TestBase{
 
         $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
-        $refl = new \ReflectionClass('\Controllers\Base');
+        $refl = new \ReflectionClass('\Kws3\ApiCore\Controllers\BaseController');
         $accessList = $refl->getProperty('accessList');
         $accessList->setAccessible(true);
         $accessList->setValue($controller, [
@@ -116,7 +116,7 @@ class ControllerAccessTest extends \Tests\TestBase{
 
         $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
-        $refl = new \ReflectionClass('\Controllers\Base');
+        $refl = new \ReflectionClass('\Kws3\ApiCore\Controllers\BaseController');
         $accessList = $refl->getProperty('accessList');
         $accessList->setAccessible(true);
         $accessList->setValue($controller, [
@@ -211,7 +211,7 @@ class ControllerAccessTest extends \Tests\TestBase{
 
         $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
-        $refl = new \ReflectionClass('\Controllers\Base');
+        $refl = new \ReflectionClass('\Kws3\ApiCore\Controllers\BaseController');
         $accessList = $refl->getProperty('accessList');
         $accessList->setAccessible(true);
         $accessList->setValue($controller, [
@@ -304,7 +304,7 @@ class ControllerAccessTest extends \Tests\TestBase{
 
         $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
-        $refl = new \ReflectionClass('\Controllers\Base');
+        $refl = new \ReflectionClass('\Kws3\ApiCore\Controllers\BaseController');
         $accessList = $refl->getProperty('accessList');
         $accessList->setAccessible(true);
         $accessList->setValue($controller, [
@@ -397,7 +397,7 @@ class ControllerAccessTest extends \Tests\TestBase{
 
         $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
-        $refl = new \ReflectionClass('\Controllers\Base');
+        $refl = new \ReflectionClass('\Kws3\ApiCore\Controllers\BaseController');
         $accessList = $refl->getProperty('accessList');
         $accessList->setAccessible(true);
         $accessList->setValue($controller, [
