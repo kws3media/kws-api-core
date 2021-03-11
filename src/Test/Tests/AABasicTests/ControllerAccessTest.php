@@ -1,5 +1,5 @@
 <?php
-namespace ApiCore\Tests\AABasicTests;
+namespace ApiCore\Test\Tests\AABasicTests;
 
 class ControllerAccessTest extends \Tests\TestBase{
 

@@ -1,5 +1,5 @@
 <?php
-namespace ApiCore\Tests;
+namespace ApiCore\Test\Tests;
 
 class TestBase{
 
