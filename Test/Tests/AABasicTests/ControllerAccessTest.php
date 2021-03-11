@@ -20,7 +20,7 @@ class ControllerAccessTest extends \Tests\TestBase{
 
     function testControllerAccessUnAuthedUser(){
 
-        $controller = new \Controllers\Base($this->app);
+        $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
         $refl = new \ReflectionClass('\Controllers\Base');
         $accessList = $refl->getProperty('accessList');
@@ -44,7 +44,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 $beforeroute->invoke($controller) === true,
                 'Unauthenticated user on TRUE marked method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 false,
                 'Unauthenticated user on TRUE marked method is allowed'
@@ -59,7 +59,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Unauthenticated user on array marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 isset($ret1) === false,
                 'Unauthenticated user on array marked method is not allowed'
@@ -73,7 +73,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Unauthenticated user on single-item array marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret2) === false,
                 'Unauthenticated user on single-item array marked method is not allowed'
@@ -87,7 +87,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Unauthenticated user on string marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Unauthenticated user on string marked method is not allowed'
@@ -101,7 +101,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Unauthenticated user on unspecified method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Unauthenticated user on unspecified method is not allowed'
@@ -114,7 +114,7 @@ class ControllerAccessTest extends \Tests\TestBase{
 
         $this->app->get('IDENTITY')->user = [];
 
-        $controller = new \Controllers\Base($this->app);
+        $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
         $refl = new \ReflectionClass('\Controllers\Base');
         $accessList = $refl->getProperty('accessList');
@@ -138,7 +138,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 $beforeroute->invoke($controller) === true,
                 'Uncontexted user on TRUE marked method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 false,
                 'Uncontexted user on TRUE marked method is allowed'
@@ -153,7 +153,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Uncontexted user on array marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 isset($ret1) === false,
                 'Uncontexted user on array marked method is not allowed'
@@ -167,7 +167,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Uncontexted user on single-item array marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret2) === false,
                 'Uncontexted user on single-item array marked method is not allowed'
@@ -181,7 +181,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Uncontexted user on string marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Uncontexted user on string marked method is not allowed'
@@ -195,7 +195,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Uncontexted user on unspecified method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Uncontexted user on unspecified method is not allowed'
@@ -209,7 +209,7 @@ class ControllerAccessTest extends \Tests\TestBase{
         $this->app->get('IDENTITY')->user = [];
         $this->app->get('IDENTITY')->context = 'G';
 
-        $controller = new \Controllers\Base($this->app);
+        $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
         $refl = new \ReflectionClass('\Controllers\Base');
         $accessList = $refl->getProperty('accessList');
@@ -233,7 +233,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 $beforeroute->invoke($controller) === true,
                 'Authed user on array marked method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 false,
                 'Authed user on array marked method is allowed'
@@ -246,7 +246,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 $beforeroute->invoke($controller) === true,
                 'Authed user on TRUE marked method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 false,
                 'Authed user on TRUE marked method is allowed'
@@ -260,7 +260,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on array marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 isset($ret1) === false,
                 'Authed user on array marked method is not allowed'
@@ -274,7 +274,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on string marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Authed user on string marked method is not allowed'
@@ -288,7 +288,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on unspecified method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Authed user on unspecified method is allowed'
@@ -302,7 +302,7 @@ class ControllerAccessTest extends \Tests\TestBase{
         $this->app->get('IDENTITY')->user = [];
         $this->app->get('IDENTITY')->context = 'U';
 
-        $controller = new \Controllers\Base($this->app);
+        $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
         $refl = new \ReflectionClass('\Controllers\Base');
         $accessList = $refl->getProperty('accessList');
@@ -326,7 +326,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 $beforeroute->invoke($controller) === true,
                 'Authed user on array marked method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 false,
                 'Authed user on array marked method is allowed'
@@ -339,7 +339,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 $beforeroute->invoke($controller) === true,
                 'Authed user on TRUE marked method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 false,
                 'Authed user on TRUE marked method is allowed'
@@ -353,7 +353,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on array marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 isset($ret1) === false,
                 'Authed user on array marked method is not allowed'
@@ -367,7 +367,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on string marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Authed user on string marked method is not allowed'
@@ -381,7 +381,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on unspecified method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Authed user on unspecified method is allowed'
@@ -395,7 +395,7 @@ class ControllerAccessTest extends \Tests\TestBase{
         $this->app->get('IDENTITY')->user = [];
         $this->app->get('IDENTITY')->context = 'V';
 
-        $controller = new \Controllers\Base($this->app);
+        $controller = new \Kws3\ApiCore\Controllers\BaseController($this->app);
 
         $refl = new \ReflectionClass('\Controllers\Base');
         $accessList = $refl->getProperty('accessList');
@@ -419,7 +419,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 $beforeroute->invoke($controller) === true,
                 'Authed user on array marked method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 false,
                 'Authed user on array marked method is allowed'
@@ -432,7 +432,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 $beforeroute->invoke($controller) === true,
                 'Authed user on TRUE marked method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 false,
                 'Authed user on TRUE marked method is allowed'
@@ -446,7 +446,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on array marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 isset($ret1) === false,
                 'Authed user on array marked method is not allowed'
@@ -460,7 +460,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on string marked method is not allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Authed user on string marked method is not allowed'
@@ -474,7 +474,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on unspecified method is allowed'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  isset($ret3) === false,
                 'Authed user on unspecified method is allowed'
@@ -494,7 +494,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on unspecified method is not allowed if inactive key'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  ((isset($ret4) === false) && $ex->getMessage() == 'Conflict.'),
                 'Authed user on unspecified method is not allowed if inactive key'
@@ -508,7 +508,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 false,
                 'Authed user on allowed method is not allowed if inactive key'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                  ((isset($ret5) === false) && $ex->getMessage() == 'Conflict.'),
                 'Authed user on allowed method is not allowed if inactive key'
@@ -521,7 +521,7 @@ class ControllerAccessTest extends \Tests\TestBase{
                 $beforeroute->invoke($controller) === true,
                 'Authed user on TRUE marked method is allowed if inactive key'
             );
-        }catch(\Exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\Exceptions\BaseHTTPException $ex){
             $this->test->expect(
                 false,
                 'Authed user on TRUE marked method is allowed if inactive key'
