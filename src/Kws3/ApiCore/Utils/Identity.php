@@ -3,7 +3,7 @@ namespace Kws3\ApiCore\Utils;
 
 class Identity extends \Prefab
 {
-  public static $keyLifetime = 7; //seconds
+  public static $keyLifetime = 7200; //seconds
 
   protected $app;
 
