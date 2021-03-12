@@ -3,7 +3,7 @@ namespace ApiCore\Utils;
 
 class Identity extends \Prefab
 {
-  protected static $keyLifetime = 7200; //seconds
+  protected $keyLifetime = 7200; //seconds
 
   protected $app;
 
@@ -12,9 +12,9 @@ class Identity extends \Prefab
   public $inactiveKey = false;
   public $expiredKey = false;
 
-  public static function getKeyLifeTime()
+  public function getKeyLifeTime()
   {
-    return self::$keyLifetime;
+    return $this->keyLifetime;
   }
 
   public function forget()
@@ -34,7 +34,7 @@ class Identity extends \Prefab
     $rotateKeys = $this->app->get('CONFIG')['ROTATE_KEYS'];
 
     $created_on = strtotime($token->created);
-    if($rotateKeys && (time() - $created_on) > self::$keyLifetime){
+    if($rotateKeys && (time() - $created_on) > $this->keyLifetime){
       $this->expiredKey = true;
       return;
     }
