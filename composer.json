@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "KWS3 Api Core",
     "scripts":{
-        "test-core": "php bin/cli TestCore"
+        "test-core": "php bin/cli TestCore start"
     },
     "authors": [
         {
