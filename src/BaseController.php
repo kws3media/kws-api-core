@@ -70,7 +70,10 @@ class BaseController
             if ($this->parseQS) {
                 $this->parseRequest();
             }
-            $this->requestBody = $this->app->get('REQUESTBODY')->parse();
+            // $this->requestBody = $this->app->get('REQUESTBODY')->parse(); // REQUESTBODY getting null on tests
+            $requestBody = \Kws3\ApiCore\Utils\RequestBody::instance();
+            $this->requestBody = $requestBody->parse();
+
             return true;
         }
 
