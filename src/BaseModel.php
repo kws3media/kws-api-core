@@ -1,5 +1,5 @@
 <?php
-namespace ApiCore\Models;
+namespace ApiCore;
 
 class BaseModel extends \DB\Cortex
 {

@@ -1,5 +1,5 @@
 <?php
-namespace ApiCore\Responses;
+namespace ApiCore;
 
 class Response extends \Prefab
 {

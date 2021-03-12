@@ -1,7 +1,7 @@
 <?php
-namespace ApiCore\Responses;
+namespace ApiCore;
 
-class JSONResponse extends \ApiCore\Responses\Response
+class JSONResponse extends \ApiCore\Response
 {
     protected $snake = true;
     protected $envelope = true;

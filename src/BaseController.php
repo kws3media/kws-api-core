@@ -2,7 +2,7 @@
 
 namespace ApiCore;
 
-use ApiCore\Exceptions\BaseHTTPException as HTTPException;
+use ApiCore\BaseHTTPException as HTTPException;
 use ApiCore\Utils\AccessHandler;
 use ApiCore\Utils\Tools;
 
