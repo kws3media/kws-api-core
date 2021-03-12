@@ -1,5 +1,5 @@
 <?php
-namespace ApiCore\Utils\FS;
+namespace Kws3\ApiCore\Utils\FS;
 
 class LocalDriver extends Driver
 {

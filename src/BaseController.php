@@ -2,9 +2,9 @@
 
 namespace Kws3\ApiCore;
 
-use ApiCore\BaseHTTPException as HTTPException;
-use ApiCore\Utils\AccessHandler;
-use ApiCore\Utils\Tools;
+use \Kws3\ApiCore\BaseHTTPException as HTTPException;
+use \Kws3\ApiCore\Utils\AccessHandler;
+use \Kws3\ApiCore\Utils\Tools;
 
 class BaseController
 {

@@ -1,5 +1,5 @@
 <?php
-namespace ApiCore\Utils\FS;
+namespace Kws3\ApiCore\Utils\FS;
 
 use \Aws\S3\S3Client;
 use \Aws\S3\Exception\S3Exception;

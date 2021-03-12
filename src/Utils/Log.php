@@ -1,5 +1,5 @@
 <?php
-namespace ApiCore\Utils;
+namespace Kws3\ApiCore\Utils;
 
 class Log extends \Log
 {
