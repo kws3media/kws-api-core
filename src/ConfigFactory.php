@@ -1,6 +1,6 @@
 <?php
 
-namespace ApiCore\Config;
+namespace ApiCore;
 
 class ConfigFactory extends \Prefab
 {
