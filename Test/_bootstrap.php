@@ -7,4 +7,4 @@ spl_autoload_register(function ($class) {
     if (stream_resolve_include_path($file))
         require $file;
 });
-// $app = require_once(__DIR__ . '/../src/config/bootstrap.php');
+$app = \Base::instance();
