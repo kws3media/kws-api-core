@@ -1,6 +1,6 @@
 <?php
 
-namespace ApiCore\Controllers\CLI;
+namespace ApiCore;
 
 class CLIBase
 {

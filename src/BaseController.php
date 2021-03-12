@@ -1,9 +1,8 @@
 <?php
 
-namespace ApiCore\Controllers;
+namespace ApiCore;
 
 use ApiCore\Exceptions\BaseHTTPException as HTTPException;
-use ApiCore\Utils\Identity;
 use ApiCore\Utils\AccessHandler;
 use ApiCore\Utils\Tools;
 

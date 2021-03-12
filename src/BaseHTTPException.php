@@ -1,5 +1,5 @@
 <?php
-namespace ApiCore\Exceptions;
+namespace ApiCore;
 
 class BaseHTTPException extends \Exception
 {
