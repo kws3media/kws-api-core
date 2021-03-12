@@ -212,7 +212,7 @@ class $className extends \Tests\TestBase{
           $f = str_replace('.php', '', $f);
           if(($fileName && $f == $fileName) || !$fileName){
             $this->output("..................... ".$obj['namespace'] . '\\' .$f." ...............");
-            $class = "Tests\\".($obj['namespace'] ? $obj['namespace']."\\" : "").$f;
+            $class = "\\Kws3\\ApiCore\\Test\\Tests\\".($obj['namespace'] ? $obj['namespace']."\\" : "").$f;
             $class = new $class;
             $class->run();
 
