@@ -2,7 +2,7 @@
 
 namespace Kws3\ApiCore;
 
-class JSONResponse extends \ApiCore\Response
+class JSONResponse extends \Kws3\ApiCore\Response
 {
     protected $snake = true;
     protected $envelope = true;
