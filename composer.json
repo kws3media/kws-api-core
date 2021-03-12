@@ -14,5 +14,8 @@
             "ApiCore\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "bcosca/fatfree-core": "3.5.1",
+        "ikkez/f3-cortex": "1.4.1"
+    }
 }
