@@ -1,8 +1,7 @@
 <?php
 namespace ApiCore\Test\Tests\AABasicTests;
 
-class RequestBodyTest extends \Tests\TestBase{
-
+class RequestBodyTest extends \Apicore\Test\Tests\TestBase{
 
 
     function testJSONparsing(){
