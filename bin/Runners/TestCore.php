@@ -2,7 +2,7 @@
 
 namespace Runners;
 
-class Test extends Base{
+class TestCore extends Base{
   public function help(){
     $this->output("\n");
     $this->output("To generate a test file:", false);
