@@ -9,7 +9,7 @@ class Routes
   public $CLIRoutes;
   public $defaultDefinition;
 
-  public function __construct(\Base $app)
+  public function __construct(\Base &$app)
   {
     $this->defaultDefinition = [
       //The main endpoint that will be hit
