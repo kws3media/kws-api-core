@@ -2,7 +2,9 @@
     "name": "kws3/api-core",
     "version": "1.0.0",
     "description": "KWS3 Api Core",
-    "license": "MIT",
+    "scripts":{
+        "test-core": "php bin/cli TestCore"
+    },
     "authors": [
         {
             "name": "ekhaled",
@@ -17,5 +19,6 @@
     "require": {
         "bcosca/fatfree-core": "3.5.1",
         "ikkez/f3-cortex": "1.4.1"
-    }
+    },
+    "license": "MIT"
 }
