@@ -2,15 +2,16 @@
 
 namespace ApiCore\Config;
 
-class Routes
+class ConfigFactory extends \Prefab
 {
   public $app;
   public $apiVersions;
   public $CLIRoutes;
   public $defaultDefinition;
 
-  public function __construct(\Base &$app)
+  public function __construct()
   {
+    $this->app = \Base::instance();
     $this->defaultDefinition = [
       //The main endpoint that will be hit
       "endpoint" => "[url endpoint]",
@@ -40,8 +41,13 @@ class Routes
         ]
       ]
     ];
+  }
 
-    $this->app = $app;
+  public function setOptions($options)
+  {
+    foreach($options as $key=>$value){
+      $this->app->set($key, $value);
+    }
   }
 
   public function registerRoutes($routesPath)
@@ -142,4 +148,5 @@ class Routes
       }
     }
   }
+
 }
