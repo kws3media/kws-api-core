@@ -1,7 +1,7 @@
 <?php
 namespace ApiCore\Test\Tests\AABasicTests;
 
-class ControllerAccessTest extends \Tests\TestBase{
+class ControllerAccessTest extends \ApiCore\Test\Tests\TestBase{
 
     protected $oldIdentity;
 
