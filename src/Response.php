@@ -1,5 +1,6 @@
 <?php
-namespace ApiCore;
+
+namespace Kws3\ApiCore;
 
 class Response extends \Prefab
 {

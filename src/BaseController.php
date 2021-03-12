@@ -1,6 +1,6 @@
 <?php
 
-namespace ApiCore;
+namespace Kws3\ApiCore;
 
 use ApiCore\BaseHTTPException as HTTPException;
 use ApiCore\Utils\AccessHandler;
