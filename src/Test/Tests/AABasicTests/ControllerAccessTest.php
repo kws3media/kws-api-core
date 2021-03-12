@@ -1,7 +1,7 @@
 <?php
-namespace ApiCore\Test\Tests\AABasicTests;
+namespace Kws3\ApiCore\Test\Tests\AABasicTests;
 
-class ControllerAccessTest extends \ApiCore\Test\Tests\TestBase{
+class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
 
     protected $oldIdentity;
 

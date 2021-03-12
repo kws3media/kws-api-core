@@ -1,5 +1,5 @@
 <?php
-namespace ApiCore\Test\Tests;
+namespace Kws3\ApiCore\Test\Tests;
 
 class TestBase{
 
@@ -290,7 +290,7 @@ class TestBase{
 
           $this->mockRequest($data);
 
-        }catch(\exceptions\HTTPException $ex){
+        }catch(\Kws3\ApiCore\BaseHTTPException $ex){
           $ex_message = $ex->getMessage();
         }
         $this->test->expect(

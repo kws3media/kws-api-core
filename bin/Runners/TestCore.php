@@ -42,7 +42,7 @@ class TestCore extends Base{
   public function listGroups(){
     $this->output("\n");
     $this->output("List of available test groups:", false);
-    $testGroupFolders = glob($this->fixPath(__DIR__ . '/../../Test/Tests/*'), GLOB_ONLYDIR);
+    $testGroupFolders = glob($this->fixPath(__DIR__ . '/../../src/Test/Tests/*'), GLOB_ONLYDIR);
     foreach ($testGroupFolders as $dir) {
         $ex = explode(DIRECTORY_SEPARATOR, $dir);
         $namespace = end($ex);
@@ -60,7 +60,7 @@ class TestCore extends Base{
     if(strpos($className, ':') !== false){
         list($dir, $className) = explode(':', $className);
         $dir = ucfirst(strtolower($dir));
-        $f = $this->fixPath(__DIR__ . '/../../test/tests/'.$dir);
+        $f = $this->fixPath(__DIR__ . '/../../src/Test/Tests/'.$dir);
         if(!file_exists($f) || !is_dir($f)){
             mkdir($f);
         }
@@ -126,8 +126,8 @@ class $className extends \Tests\TestBase{
       $groupName = array_shift($groupName);
     }
 
-    require_once($this->fixPath(__DIR__ . '/../../Test/_bootstrap.php'));
-    require_once($this->fixPath(__DIR__ . '/../../Test/_config.php'));
+    require_once($this->fixPath(__DIR__ . '/../../src/Test/_bootstrap.php'));
+    require_once($this->fixPath(__DIR__ . '/../../src/Test/_config.php'));
 
 
     $passed = 0;
@@ -144,8 +144,8 @@ class $className extends \Tests\TestBase{
       }
     }
 
-    $baseGroupTests = glob($this->fixPath(__DIR__ . '/../../Test/Tests/*Test.php'));
-    $testGroupFolders = glob($this->fixPath(__DIR__ . '/../../Test/Tests/*'), GLOB_ONLYDIR);
+    $baseGroupTests = glob($this->fixPath(__DIR__ . '/../../src/Test/Tests/*Test.php'));
+    $testGroupFolders = glob($this->fixPath(__DIR__ . '/../../src/Test/Tests/*'), GLOB_ONLYDIR);
 
     $toRun = [
         'BASE' => ['files' => $baseGroupTests, 'namespace' => null, 'name' => 'BASE']
@@ -155,7 +155,7 @@ class $className extends \Tests\TestBase{
         $ex = explode(DIRECTORY_SEPARATOR, $dir);
         $namespace = end($ex);
         $toRun[$namespace] = [
-            'files' => glob($this->fixPath(__DIR__ . '/../../Test/Tests/'.$namespace.'/*Test.php')),
+            'files' => glob($this->fixPath(__DIR__ . '/../../src/Test/Tests/'.$namespace.'/*Test.php')),
             'namespace' => $namespace,
             'name' => $namespace
         ];

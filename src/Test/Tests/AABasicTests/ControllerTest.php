@@ -1,7 +1,7 @@
 <?php
-namespace ApiCore\Test\Tests\AABasicTests;
+namespace Kws3\ApiCore\Test\Tests\AABasicTests;
 
-class ControllerTest extends \Apicore\Test\Tests\TestBase{
+class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
 
     function testOffsetLimit(){
 

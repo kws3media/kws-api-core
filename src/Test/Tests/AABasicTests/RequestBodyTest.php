@@ -1,7 +1,7 @@
 <?php
-namespace ApiCore\Test\Tests\AABasicTests;
+namespace Kws3\ApiCore\Test\Tests\AABasicTests;
 
-class RequestBodyTest extends \Apicore\Test\Tests\TestBase{
+class RequestBodyTest extends \Kws3\Apicore\Test\Tests\TestBase{
 
 
     function testJSONparsing(){
@@ -14,32 +14,32 @@ class RequestBodyTest extends \Apicore\Test\Tests\TestBase{
         $this->app->set('BODY', $JSON);
 
         $this->app->set('VERB', 'POST');
-        $rb = new \ApiCore\Utils\RequestBody();
+        $rb = new \Kws3\ApiCore\Utils\RequestBody();
         $parsed = $rb->parse();
         $this->test->expect($parsed["hello"] == $ARR['hello'], "Check JSON is parsed properly");
         $this->test->expect($parsed["How"] == $ARR['How'], "Check JSON is parsed properly");
 
         $this->app->set('VERB', 'PUT');
-        $rb = new \ApiCore\Utils\RequestBody();
+        $rb = new \Kws3\ApiCore\Utils\RequestBody();
         $parsed = $rb->parse();
         $this->test->expect($parsed["hello"] == $ARR['hello'], "Check JSON is parsed properly");
         $this->test->expect($parsed["How"] == $ARR['How'], "Check JSON is parsed properly");
 
         $this->app->set('VERB', 'GET');
-        $rb = new \ApiCore\Utils\RequestBody();
+        $rb = new \Kws3\ApiCore\Utils\RequestBody();
         $parsed = $rb->parse();
         $this->test->expect(!isset($parsed["hello"]), "Check JSON is parsed properly");
         $this->test->expect(!isset($parsed["How"]), "Check JSON is parsed properly");
 
         $this->app->set('VERB', 'DELETE');
-        $rb = new \ApiCore\Utils\RequestBody();
+        $rb = new \Kws3\ApiCore\Utils\RequestBody();
         $parsed = $rb->parse();
         $this->test->expect(!isset($parsed["How"]), "Check JSON is parsed properly");
         $this->test->expect(!isset($parsed["hello"]), "Check JSON is parsed properly");
 
         $this->app->set('HEADERS.Content-Type', 'application/xml');
         $this->app->set('VERB', 'POST');
-        $rb = new \ApiCore\Utils\RequestBody();
+        $rb = new \Kws3\ApiCore\Utils\RequestBody();
         $parsed = $rb->parse();
         $this->test->expect(!isset($parsed["How"]), "content type of application/json is only respected");
         $this->test->expect(!isset($parsed["hello"]), "content type of application/json is only respected");
@@ -55,7 +55,7 @@ class RequestBodyTest extends \Apicore\Test\Tests\TestBase{
         $this->app->set('POST', null);
 
         $this->app->set('VERB', 'PUT');
-        $rb = new \ApiCore\Utils\RequestBody();
+        $rb = new \Kws3\ApiCore\Utils\RequestBody();
         $parsed = $rb->parse();
         $this->test->expect($parsed["hello"] == $ARR['hello'], "Check x-www-form-urlencoded is parsed properly");
         $this->test->expect($parsed["How"] == $ARR['How'], "Check x-www-form-urlencoded is parsed properly");
