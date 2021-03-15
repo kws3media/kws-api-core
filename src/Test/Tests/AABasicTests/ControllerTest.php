@@ -150,7 +150,7 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
         }
         $this->test->expect(
              ($ex_message != ''),
-            'Excpetion was thrown in last test as expected'
+            'Exception was thrown in last test as expected'
         );
 
         $this->app->set('GET.q', '');
