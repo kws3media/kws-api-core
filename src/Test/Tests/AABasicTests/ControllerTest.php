@@ -141,7 +141,7 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
             $method->invoke($instance);
 
             $filters = $prop->getValue($instance);
-        }catch(\ApiCore\Exceptions\BaseHTTPException $ex){
+        }catch(\Kws3\ApiCore\BaseHTTPException $ex){
             $ex_message = $ex->getMessage();
             $this->test->expect(
                  ($ex->getMessage() == 'The fields you specified cannot be searched.'),
