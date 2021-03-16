@@ -4,7 +4,7 @@ namespace Kws3\ApiCore;
 
 class ConfigFactory extends \Prefab
 {
-  public $app;
+  protected $app;
   public $apiVersions;
   public $CLIRoutes;
   public $defaultDefinition;
