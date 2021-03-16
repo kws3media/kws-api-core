@@ -1,0 +1,11 @@
+<?php
+{{NAMESPACE}}
+
+class {{CLASSNAME}} {{EXTENDS}}
+{
+    protected $viewName = "{{VIEWNAME}}",
+    $viewSource = <<<PHP
+{{VIEWSOURCE}}
+PHP;
+
+}

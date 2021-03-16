@@ -1,0 +1,29 @@
+<?php
+  return [
+    'SALT' => null,
+    'DB' => [
+      'adapter'   => 'mysql',
+      'host'      => 'HOST',
+      'username'  => 'USERNAME',
+      'password'  => 'PASSWORD',
+      'dbname'    => 'DBNAME',
+    ],
+    'LOG' => [
+      'folder'      => __DIR__ . '/../../runtime/logs/',
+      'filename'    => 'application.log',
+      'maxFileSize' => 1024,
+      'maxLogFiles' => 5,
+      'rotate'      => true
+    ],
+    'LOCALFS' => [
+      'folder'      => __DIR__ . '/../../public/files/',
+      'url'         => '/files/',
+      'domain_url'  => null
+    ],
+    'FOLDERS' => [
+      'avatars'     => 'avatars'
+    ],
+    'MAIL' => [
+
+    ]
+  ];

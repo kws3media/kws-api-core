@@ -1,0 +1,11 @@
+<?php
+{{NAMESPACE}}
+
+class {{CLASSNAME}} {{EXTENDS}}
+{
+    protected $fieldConf = [
+{{FIELDCONF}}
+    ],
+    $table = '{{TABLENAME}}';
+
+}
