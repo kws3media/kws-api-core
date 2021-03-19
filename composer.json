@@ -18,8 +18,8 @@
     },
     "require": {
         "bcosca/fatfree-core": "3.5.1",
-        "ikkez/f3-cortex": "1.4.1"
+        "ikkez/f3-cortex": "1.4.1",
+        "itsgoingd/clockwork": "4.1.8"
     },
-    "bin": ["bin/cli"],
-    "license": "MIT"
+    "bin": ["bin/cli"]
 }
