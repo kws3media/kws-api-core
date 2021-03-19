@@ -1,9 +1,26 @@
 <?php
 namespace Kws3\ApiCore\Utils;
 
+use \Exception;
+use Kws3\ApiCore\BaseHTTPException;
+
 class Identity extends \Prefab
 {
+
+  const CONTEXT_ADMIN           = 'A';
+  const CONTEXT_USER            = 'U';
+
+  public static $identityDescriptions = [
+    self::CONTEXT_ADMIN         => 'Admin',
+    self::CONTEXT_USER          => 'User'
+  ];
+
+  protected $rotateKeys = true; //set true to activate rotating keys
   protected $keyLifetime = 7200; //seconds
+
+  protected $requestHeaderKey = 'Api-Key';
+  protected $tokensModel = null;
+  protected $accessTokenField = 'access_token';
 
   protected $app;
 
@@ -11,6 +28,19 @@ class Identity extends \Prefab
   public $context = null;
   public $inactiveKey = false;
   public $expiredKey = false;
+
+  public function __construct($config = [])
+  {
+
+    foreach($config as $k => $v){
+      if(property_exists($this, $k)){
+        $this->{$k} = $v;
+      }
+    }
+
+    $this->app = \Base::instance();
+    $this->identify();
+  }
 
   public function getKeyLifeTime()
   {
@@ -23,22 +53,50 @@ class Identity extends \Prefab
     $this->context = null;
   }
 
-  public function reIdentify($token)
+  public function reIdentify()
   {
-    $this->identify($token);
+    $this->identify();
   }
 
-  private function identify($token)
+  protected function identify()
   {
-    //check config flag
-    $rotateKeys = $this->app->get('CONFIG')['ROTATE_KEYS'];
+
+    if(empty($this->tokensModel)){
+      throw new BaseHTTPException('tokensModel not defined', 500);
+    }
+
+    $api_key = $this->app->get('HEADERS.' . $this->requestHeaderKey);
+
+    $token = $this->tokensModel;
+    $token->load(['`' . $this->accessTokenField . '` = ?', $api_key]);
+    if ($token->dry()) {
+      return;
+    }
+
+    if ($token->user->disabled == 1 || $token->user->deleted == 1) {
+      return;
+    }
+
+    if ($token->active != 1) {
+      $this->inactiveKey = true;
+      return;
+    }
 
     $created_on = strtotime($token->created);
-    if($rotateKeys && (time() - $created_on) > $this->keyLifetime){
+    if($this->rotateKeys && (time() - $created_on) > $this->keyLifetime){
       $this->expiredKey = true;
       return;
     }
 
+    if (!empty($token->user)) {
+      $this->user = $token->user;
+      $this->context = $token->user->role;
+      $this->postProcess();
+    }
+  }
+
+  protected function postProcess(){
+    //to be implemented by subclass
   }
 
 }
