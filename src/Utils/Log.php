@@ -1,9 +1,12 @@
 <?php
 namespace Kws3\ApiCore\Utils;
 
-class Log extends \Log
+class Log
 {
-    protected $filename = 'application.log';
+    protected $app;
+    protected $logGroup = 'application';
+
+    private $file;
 
     // whether to rotate or not
     private $rotate = true;
@@ -14,9 +17,15 @@ class Log extends \Log
 
     public function __construct($options = array())
     {
+        $this->app = \Base::instance();
+
+        if (!is_dir($dir = $this->app->get('LOGS'))){
+            mkdir($dir, \Base::MODE, TRUE);
+        }
+
         //additional setters
-        if (isset($options["filename"])) {
-            $this->setFilename($options["filename"]);
+        if (isset($options["logGroup"])) {
+            $this->setLogGroup($options["logGroup"]);
         }
         if (isset($options["maxFileSize"])) {
             $this->setMaxFileSize($options["maxFileSize"]);
@@ -27,29 +36,30 @@ class Log extends \Log
         if (isset($options["rotate"])) {
             $this->setRotate($options["rotate"]);
         }
+
+        $this->file = $dir . $this->logGroup . '.log';
+
         if ($this->rotate) {
             $this->rotateLogs();
         }
 
-        parent::__construct($this->filename);
     }
 
     private function rotateLogs()
     {
-        $app = \Base::instance();
-        $dir = realpath($app->get('LOGS'));
-        $logFile = $dir . DIRECTORY_SEPARATOR . $this->filename;
 
-        if ($this->getRotate()===true && @filesize($logFile) > $this->getMaxFileSize()*1024) {
+        $logFile = $this->file;
+
+        if ($this->getRotate() === true && @filesize($logFile) > $this->getMaxFileSize() * 1024) {
 
             $max=$this->getMaxLogFiles();
 
             //rotate already rotated files
-            for ($i=$max;$i>0;--$i) {
+            for ($i = $max; $i > 0; --$i) {
                 $rotateFile=$logFile.'.'.$i;
                 if (is_file($rotateFile)) {
                     // suppress errors because it's possible multiple processes enter into this section
-                    if ($i===$max) {
+                    if ($i === $max) {
                         @unlink($rotateFile);
                     } else {
                         @rename($rotateFile,$logFile.'.'.($i+1));
@@ -65,13 +75,24 @@ class Log extends \Log
         }
     }
 
-    public function getFilename()
-    {
-        return $this->filename;
+    public function write($text, $format='r') {
+        $this->app->write(
+            $this->file,
+            date($format).
+                (isset($_SERVER['REMOTE_ADDR'])?
+                    (' ['.$_SERVER['REMOTE_ADDR'].']'):'').' '.
+            trim($text).PHP_EOL,
+            TRUE
+        );
     }
-    public function setFilename($filename)
+
+    public function getLogGroup()
     {
-        $this->filename = $filename;
+        return $this->logGroup;
+    }
+    public function setLogGroup($logGroup)
+    {
+        $this->logGroup = $logGroup;
     }
     public function getRotate()
     {
