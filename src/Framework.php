@@ -50,20 +50,19 @@ class Framework extends \Prefab
     }
   }
 
-  public static function registerRoutes($WebRoutes, $cliRoutes, $options)
+  public static function registerRoutes($WebRoutes)
   {
     $thisClass = self::instance();
     $thisClass->apiVersions = $WebRoutes;
-    $thisClass->CLIRoutes = $cliRoutes;
-    $thisClass->init();
-    $thisClass->setOptions($options);
     $thisClass->generateRoutes();
     $thisClass->generateCLIRoutes();
   }
 
-  protected function init()
+  public static function registerCLIRoutes($cliRoutes)
   {
-
+    $thisClass = self::instance();
+    $thisClass->CLIRoutes = $cliRoutes;
+    $thisClass->generateCLIRoutes();
   }
 
   protected function generateRoutes()
