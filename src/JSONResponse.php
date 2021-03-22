@@ -2,6 +2,8 @@
 
 namespace Kws3\ApiCore;
 
+use Kws3\ApiCore\Loader;
+
 class JSONResponse extends Response
 {
     protected $snake = true;
@@ -17,7 +19,7 @@ class JSONResponse extends Response
 
         $status = $error == true ? parent::ERROR : parent::SUCCESS;
 
-        $metadata = $this->app->get('METADATAPROVIDER');
+        $metadata = Loader::getMetaDataProvider();;
         $metadata->setStatus($status);
         $metadata->setCount(count($records));
 

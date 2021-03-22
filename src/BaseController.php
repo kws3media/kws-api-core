@@ -5,9 +5,13 @@ namespace Kws3\ApiCore;
 use \Kws3\ApiCore\BaseHTTPException as HTTPException;
 use \Kws3\ApiCore\Utils\AccessHandler;
 use \Kws3\ApiCore\Utils\Tools;
+use \Kws3\ApiCore\Framework;
+use \Kws3\ApiCore\Traits\DynamicLoader;
 
 class BaseController
 {
+    use DynamicLoader;
+
     protected $app;
 
     protected $requestBody;
@@ -205,7 +209,9 @@ class BaseController
             );
         }
 
-        $this->app->get('RESPONDER')->send($data);
+        $loader = self::getLoader();
+        $responder = $loader::getResponder();
+        $responder->send($data);
     }
 
 }

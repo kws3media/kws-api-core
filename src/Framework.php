@@ -4,72 +4,75 @@ namespace Kws3\ApiCore;
 
 class Framework extends \Prefab
 {
+
+  /** @var \Base */
   protected $app;
-  public $apiVersions;
-  public $CLIRoutes;
-  public $defaultDefinition;
 
-  public function __construct()
-  {
-    $this->app = \Base::instance();
-    $this->defaultDefinition = [
-      //The main endpoint that will be hit
-      "endpoint" => "[url endpoint]",
-      //The controller that will handle this endpoint
-      "controller" => "[name of controller, no namespaces]",
-      //For normal routes
-      //First parameter is the route
-      //Second parameter is the function name of the Controller.
-      "routes" => [
-        // array keys define the HTTP verb
-        'head' => [
-          '/' => 'get',
-          '/@id' => 'getOne'
-        ],
-        'get' => [
-          '/' => 'get',
-          '/@id' => 'getOne'
-        ],
-        'post' => [
-          '/' => 'post'
-        ],
-        'put' => [
-          '/@id' => 'put'
-        ],
-        'delete' => [
-          '/@id' => 'delete'
-        ]
+  /** @var \Loader */
+  public static $loader;
+
+  protected $defaultDefinition = [
+    //The main endpoint that will be hit
+    "endpoint" => "[url endpoint]",
+    //The controller that will handle this endpoint
+    "controller" => "[name of controller, no namespaces]",
+    //For normal routes
+    //First parameter is the route
+    //Second parameter is the function name of the Controller.
+    "routes" => [
+      // array keys define the HTTP verb
+      'head' => [
+        '/' => 'get',
+        '/@id' => 'getOne'
+      ],
+      'get' => [
+        '/' => 'get',
+        '/@id' => 'getOne'
+      ],
+      'post' => [
+        '/' => 'post'
+      ],
+      'put' => [
+        '/@id' => 'put'
+      ],
+      'delete' => [
+        '/@id' => 'delete'
       ]
-    ];
+    ]
+  ];
+
+  public static function init($params){
+
+    /** @var self */
+    $instance = self::instance($params);
+
+    return $instance->app;
   }
 
-  public function setOptions($options)
+  public static function registerLoader($loader)
   {
-    foreach($options as $key=>$value){
-      $this->app->set($key, $value);
+    self::$loader = $loader;
+  }
+
+  public static function getLoader()
+  {
+    if(!self::$loader){
+      self::$loader = Loader::class;
     }
+    return self::$loader;
   }
 
-  public static function registerRoutes($WebRoutes)
+  public static function registerOptions($params)
   {
-    $thisClass = self::instance();
-    $thisClass->apiVersions = $WebRoutes;
-    $thisClass->generateRoutes();
-    $thisClass->generateCLIRoutes();
+    $instance = self::instance();
+    $instance->applyOptions($params);
   }
 
-  public static function registerCLIRoutes($cliRoutes)
+  public static function registerRoutes($routes = [])
   {
-    $thisClass = self::instance();
-    $thisClass->CLIRoutes = $cliRoutes;
-    $thisClass->generateCLIRoutes();
-  }
-
-  protected function generateRoutes()
-  {
-    if($this->apiVersions)
-    {
-      foreach ($this->apiVersions as $av) {
+    $instance = self::instance();
+    if($routes){
+      foreach ($routes as $av) {
         $definitionFiles = scandir($av);
         $_p = explode(DIRECTORY_SEPARATOR, $av);
         $version = end($_p);
@@ -83,7 +86,7 @@ class Framework extends \Prefab
             $stub = reset($_d);
 
             //fill in controller and endpoints
-            $generatedDefinition = array_replace_recursive($this->defaultDefinition, [
+            $generatedDefinition = array_replace_recursive($instance->defaultDefinition, [
               "endpoint" => $stub,
               "controller" => ucfirst($stub)
             ]);
@@ -108,7 +111,7 @@ class Framework extends \Prefab
                     if ($v) {
                       $_route = strtoupper($verb) . ' ' . $_prefix . ($k == '/' ? '' : $k);
                       $_routeHandler = $_handler . '->' . $v;
-                      $this->app->route($_route, $_routeHandler);
+                      $instance->app->route($_route, $_routeHandler);
                     }
                   }
                 }
@@ -120,11 +123,11 @@ class Framework extends \Prefab
     }
   }
 
-  protected function generateCLIRoutes()
+  public static function registerCLIRoutes($routes)
   {
-    if($this->CLIRoutes)
-    {
-      foreach ($this->CLIRoutes as $CLIR) {
+    $instance = self::instance();
+    if($routes){
+      foreach($routes as $CLIR){
         $definitionFiles = scandir($CLIR);
         foreach ($definitionFiles as $definitionFile) {
           $pathinfo = pathinfo($definitionFile);
@@ -143,7 +146,7 @@ class Framework extends \Prefab
                   $endpoint = $resolution;
                 }
                 $_handler = $cli_namespace . $className . '->' . $resolution;
-                $this->app->route('GET /cli/' . $endpoint, $_handler);
+                $instance->app->route('GET /cli/' . $endpoint, $_handler);
               }
             }
           }
@@ -151,5 +154,19 @@ class Framework extends \Prefab
       }
     }
   }
+
+  public function __construct($params = [])
+  {
+    $this->app = \Base::instance();
+    $this->applyOptions($params);
+  }
+
+  protected function applyOptions($params){
+    foreach($params as $k => $v){
+      $this->app->set($k, $v);
+    }
+  }
+
+
 
 }

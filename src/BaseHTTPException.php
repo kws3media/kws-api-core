@@ -37,7 +37,7 @@ class BaseHTTPException extends \Exception
         $responder = $this->app->get('RESPONDER');
         if (empty($reponder)) {
             //fallback to JSONResponder
-            $reponder = \Kws3\ApiCore\JSONResponse::instance();
+            $responder = \Kws3\ApiCore\JSONResponse::instance();
         }
 
         $code = $this->getCode();
