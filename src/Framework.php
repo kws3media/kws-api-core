@@ -2,13 +2,9 @@
 
 namespace Kws3\ApiCore;
 
-defined('K_ENV') or define("K_ENV", "local");
-defined('K_ENV_PRODUCTION') or define("K_ENV_PRODUCTION", "production");
-defined('K_ENV_TESTING') or define("K_ENV_TESTING", "testing");
-defined('K_ENV_DEV') or define("K_ENV_DEV", "development");
-defined('K_ENV_LOCAL') or define("K_ENV_LOCAL", "local");
-
+require_once __DIR__ . '/helpers/env.php';
 require_once __DIR__ . '/helpers/clockwork.php';
+require_once __DIR__ . '/helpers/error_handling.php';
 
 use \Clockwork\Support\Vanilla\Clockwork;
 
