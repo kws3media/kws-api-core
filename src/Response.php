@@ -13,7 +13,7 @@ class Response extends \Prefab
     public function __construct()
     {
         $this->app = \Base::instance();
-        if (strtolower($this->app->get('VERB')) === 'head') {
+        if (strtolower(Loader::get('VERB')) === 'head') {
             $this->head = true;
         }
     }

@@ -2,7 +2,6 @@
 
 namespace Kws3\ApiCore;
 
-use Kws3\ApiCore\Loader;
 
 class JSONResponse extends Response
 {
@@ -31,9 +30,9 @@ class JSONResponse extends Response
         $etag = md5(serialize($records));
         $this->sendHeader('E-Tag: '.$etag);
 
-        $this->sendHeader('Content-Type: application/json; '. 'charset='.$this->app->get('ENCODING'));
+        $this->sendHeader('Content-Type: application/json; '. 'charset='.Loader::get('ENCODING'));
 
-        if(!$error && $this->app->get('VERB') == 'POST'){
+        if(!$error && Loader::get('VERB') == 'POST'){
             $this->sendHeader("HTTP/1.0 201 Created");
         }
 

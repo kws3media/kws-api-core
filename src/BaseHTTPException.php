@@ -34,7 +34,7 @@ class BaseHTTPException extends \Exception
 
     public function send()
     {
-        $responder = $this->app->get('RESPONDER');
+        $responder = Loader::getResponder();
         if (empty($reponder)) {
             //fallback to JSONResponder
             $responder = \Kws3\ApiCore\JSONResponse::instance();

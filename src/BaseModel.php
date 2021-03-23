@@ -2,6 +2,8 @@
 
 namespace Kws3\ApiCore;
 
+use Kws3\ApiCore\Loader;
+
 class BaseModel extends \DB\Cortex
 {
   protected $app,
@@ -107,7 +109,7 @@ class BaseModel extends \DB\Cortex
   {
     if($instance->trackDeletion && $instance->softDelete){
 
-      $identity = $instance->app->get('IDENTITY');
+      $identity = Loader::getIdentity();
       $user     = $identity->user ? $identity->user->id : null;
 
       if(isset($instance->fieldConf['deleted_on'])){

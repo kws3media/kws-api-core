@@ -1,5 +1,6 @@
 <?php
 namespace Kws3\ApiCore\Test\Tests;
+use Kws3\ApiCore\Loader;
 
 class TestBase{
 
@@ -35,7 +36,7 @@ class TestBase{
     }
 
     function setDB(){
-        $config = $this->app->get('TEST_DB_CONFIG');
+        $config = Loader::get('TEST_DB_CONFIG');
         $this->app->set('DB', call_user_func(function ($config) {
             $dbconfig = $config['TEST_DB_CONFIG'];
             $dsn = $dbconfig['adapter']. ':host=' . $dbconfig['host'] . ';dbname=' . $dbconfig['dbname'];
@@ -90,11 +91,11 @@ class TestBase{
 
     function reIdentify($key){
         $this->app->set('HEADERS.Api-Key', $key);
-        $this->app->get('IDENTITY')->reIdentify();
+        Loader::getIdentity()->reIdentify();
     }
 
     function forgetIdentity(){
-        $this->app->get('IDENTITY')->forget();
+        Loader::getIdentity()->forget();
     }
 
     function resetDatabase(){
@@ -104,25 +105,25 @@ class TestBase{
         //need to do this in the right order
 
         //1. remove views
-        foreach ($this->app->get('VIEWS_LIST') as $view) {
+        foreach (Loader::get('VIEWS_LIST') as $view) {
             $mdl = "\\DBViews\\" . $view;
             $mdl::setdown();
         }
 
         //2. remove tables
-        foreach ($this->app->get('MODELS_LIST') as $model) {
+        foreach (Loader::get('MODELS_LIST') as $model) {
             $mdl = "\\Models\\Base\\". $model;
             $mdl::setdown();
         }
 
         //3. recreate tables
-        foreach ($this->app->get('MODELS_LIST') as $model) {
+        foreach (Loader::get('MODELS_LIST') as $model) {
             $mdl = "\\Models\\Base\\" . $model;
             $mdl::setup();
         }
 
         //4. recreate views
-        foreach ($this->app->get('VIEWS_LIST') as $view) {
+        foreach (Loader::get('VIEWS_LIST') as $view) {
             $mdl = "\\DBViews\\" . $view;
             $mdl::setup();
         }
@@ -172,7 +173,7 @@ class TestBase{
 
     function setColumnDefaultValue($table_name, $column_name, $default_value = 0, $data_type = 'TINYINT(1)') {
         foreach ((array) $table_name as $table) {
-          $this->app->get('DB')->exec('
+            Loader::get('DB')->exec('
               ALTER TABLE `'.$table.'`
               CHANGE COLUMN `'.$column_name.'` `'.$column_name.'` '. $data_type.' NULL DEFAULT "'. $default_value.'" ;
           ');
@@ -332,7 +333,7 @@ class TestBase{
         $mockData = $data['data'];
       }
       $this->app->mock($data['url'], $mockData);
-      $response = $this->app->get('APP_RESPONSE');
+      $response = Loader::get('APP_RESPONSE');
       return json_decode($response, true);
     }
 
