@@ -55,8 +55,8 @@ class BaseController
 
         $this->parseQS = $parseQS;
 
-        $this->params      = $this->app->get('PARAMS');
-        $this->identity    = $this->app->get('IDENTITY');
+        $this->params      = Loader::get('PARAMS');
+        $this->identity    = Loader::getIdentity();
 
         $this->setCurrentAction();
 
@@ -73,7 +73,7 @@ class BaseController
             if ($this->parseQS) {
                 $this->parseRequest();
             }
-            // $this->requestBody = $this->app->get('REQUESTBODY')->parse(); // REQUESTBODY getting null on tests
+            // $this->requestBody = Loader::getRequestBody()->parse(); // REQUESTBODY getting null on tests
             $requestBody = \Kws3\ApiCore\Utils\RequestBody::instance();
             $this->requestBody = $requestBody->parse();
 
@@ -98,9 +98,9 @@ class BaseController
     protected function setCurrentAction()
     {
         //work out method to be called
-        $pattern = $this->app->get('PATTERN');
-        $verb    = $this->app->get('VERB');
-        $routes  = $this->app->get('ROUTES');
+        $pattern = Loader::get('PATTERN');
+        $verb    = Loader::get('VERB');
+        $routes  = Loader::get('ROUTES');
 
         if ($verb != 'OPTIONS') {
             if (isset($routes[$pattern])) {
@@ -120,7 +120,7 @@ class BaseController
 
     protected function parseRequest()
     {
-        $GETS = $this->app->get('GET');
+        $GETS = Loader::get('GET');
 
         $searchParams = null;
         if (isset($GETS['q'])) {
@@ -170,7 +170,7 @@ class BaseController
     protected function getModel($key = null)
     {
         if (!$key) {
-            $identity = $this->app->get('IDENTITY');
+            $identity = Loader::getIdentity();
             if (isset($this->modelsMap[$identity->context])) {
                 return $this->modelsMap[$identity->context];
             } elseif (isset($this->modelsMap['default'])) {
