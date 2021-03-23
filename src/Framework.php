@@ -49,19 +49,6 @@ class Framework extends \Prefab
     return $instance->app;
   }
 
-  public static function registerLoader($loader)
-  {
-    self::$loader = $loader;
-  }
-
-  public static function getLoader()
-  {
-    if(!self::$loader){
-      self::$loader = Loader::class;
-    }
-    return self::$loader;
-  }
-
   public static function registerOptions($params)
   {
     $instance = self::instance();

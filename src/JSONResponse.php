@@ -19,7 +19,7 @@ class JSONResponse extends Response
 
         $status = $error == true ? parent::ERROR : parent::SUCCESS;
 
-        $metadata = Loader::getMetaDataProvider();;
+        $metadata = Loader::getMetaDataProvider();
         $metadata->setStatus($status);
         $metadata->setCount(count($records));
 

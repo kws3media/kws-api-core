@@ -20,7 +20,13 @@ class Loader extends \Prefab{
 
   public static function __callStatic($name, $arguments)
   {
-    $name = strtoupper(preg_replace("/(^get)(.*)/i", '$2', $name));
+    $name = preg_replace("/^(get|load)(.*)/i", '$2', $name);
+    return self::get($name);
+  }
+
+  public static function get($name)
+  {
+    $name = strtoupper($name);
     $f3 = \Base::instance();
 
     if(!$f3->exists($name)){
