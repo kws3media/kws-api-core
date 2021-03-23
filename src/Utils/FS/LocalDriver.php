@@ -1,7 +1,7 @@
 <?php
 namespace Kws3\ApiCore\Utils\FS;
 
-use Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Loader;
 
 class LocalDriver extends Driver
 {

@@ -2,7 +2,7 @@
 namespace Kws3\ApiCore\Utils;
 
 use \Kws3\ApiCore\BaseHTTPException as HTTPException;
-use Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Loader;
 
 class RequestBody extends \Prefab
 {

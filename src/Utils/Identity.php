@@ -3,7 +3,7 @@ namespace Kws3\ApiCore\Utils;
 
 use \Exception;
 use Kws3\ApiCore\BaseHTTPException;
-use Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Loader;
 
 class Identity extends \Prefab
 {

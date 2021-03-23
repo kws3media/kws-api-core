@@ -1,7 +1,7 @@
 <?php
 namespace Kws3\ApiCore\Test\Tests\AABasicTests;
 
-use Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Loader;
 
 class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
 

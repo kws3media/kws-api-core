@@ -3,7 +3,7 @@ namespace Kws3\ApiCore\Utils\FS;
 
 use \Aws\S3\S3Client;
 use \Aws\S3\Exception\S3Exception;
-use Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Loader;
 
 class S3Driver extends Driver
 {

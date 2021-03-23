@@ -2,7 +2,7 @@
 
 namespace Kws3\ApiCore;
 
-use Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Loader;
 
 class BaseModel extends \DB\Cortex
 {

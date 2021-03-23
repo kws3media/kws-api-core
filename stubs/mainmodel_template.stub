@@ -3,7 +3,7 @@
 namespace Models;
 
 use \Exceptions\HTTPException;
-use Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Loader;
 
 class %s extends \Models\Base\%s
 {

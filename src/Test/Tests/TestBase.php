@@ -1,6 +1,6 @@
 <?php
 namespace Kws3\ApiCore\Test\Tests;
-use Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Loader;
 
 class TestBase{
 
