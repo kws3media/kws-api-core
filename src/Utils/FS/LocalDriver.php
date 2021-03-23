@@ -1,6 +1,8 @@
 <?php
 namespace Kws3\ApiCore\Utils\FS;
 
+use Kws3\ApiCore\Loader;
+
 class LocalDriver extends Driver
 {
     protected $app;
@@ -9,7 +11,7 @@ class LocalDriver extends Driver
     public function __construct()
     {
         $this->app = \Base::instance();
-        $this->opts = $this->app->get('CONFIG')['LOCALFS'];
+        $this->opts = Loader::get('CONFIG')['LOCALFS'];
     }
 
     public function getUrl($fileObject)

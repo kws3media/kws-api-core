@@ -1,12 +1,14 @@
 <?php
 namespace Kws3\ApiCore\Utils;
 
+use Kws3\ApiCore\Loader;
+
 class Service extends \Prefab
 {
     public static function call($method = '', $params = [], $async = true)
     {
         $app = \Base::instance();
-        $wd = realpath($app->get('SERVICE_PATH'));
+        $wd = realpath(Loader::get('SERVICE_PATH'));
         $ds = DIRECTORY_SEPARATOR;
 
         $command = 'php ' . $wd . $ds . 'index.php' . ' /cli/' . $method;

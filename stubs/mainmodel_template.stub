@@ -3,6 +3,7 @@
 namespace Models;
 
 use \Exceptions\HTTPException;
+use Kws3\ApiCore\Loader;
 
 class %s extends \Models\Base\%s
 {
@@ -15,7 +16,7 @@ class %s extends \Models\Base\%s
   {
 
     $model = new self;
-    $metadata = $model->app->get('METADATAPROVIDER');
+    $metadata = Loader::getMetaDataProvider();
 
     $query = '';
     $bindings = [];
@@ -36,7 +37,7 @@ class %s extends \Models\Base\%s
   public static function getOne($id, $internal = false)
   {
     $model = new self;
-    $identity = $model->app->get('IDENTITY');
+    $identity = Loader::getIdentity();
 
     $model->load([
       $model->primary . ' = ? AND `deleted` <> 1',

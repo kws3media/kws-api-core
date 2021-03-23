@@ -3,6 +3,7 @@ namespace Kws3\ApiCore\Utils\FS;
 
 use \Aws\S3\S3Client;
 use \Aws\S3\Exception\S3Exception;
+use Kws3\ApiCore\Loader;
 
 class S3Driver extends Driver
 {
@@ -201,7 +202,7 @@ class S3Driver extends Driver
     public function __construct()
     {
         $this->app = \Base::instance();
-        $this->opts = $this->app->get('CONFIG')['S3FS'];
+        $this->opts = Loader::get('CONFIG')['S3FS'];
         $this->bucket = $this->opts['bucket'];
     }
 

@@ -2,6 +2,7 @@
 namespace Kws3\ApiCore\Utils;
 
 use \Kws3\ApiCore\BaseHTTPException as HTTPException;
+use Kws3\ApiCore\Loader;
 
 class RequestBody extends \Prefab
 {
@@ -19,11 +20,11 @@ class RequestBody extends \Prefab
 
     public function parse()
     {
-        $this->request_type      = $this->app->get('VERB');
-        $this->raw_body          = $this->app->get('BODY');
-        $this->post_body         = $this->app->get('POST');
+        $this->request_type      = Loader::get('VERB');
+        $this->raw_body          = Loader::get('BODY');
+        $this->post_body         = Loader::get('POST');
 
-        $headers = $this->app->get('HEADERS');
+        $headers = Loader::get('HEADERS');
         $this->body_content_type = '';
         if (is_array($headers) && isset($headers['Content-Type'])) {
             $this->body_content_type = $this->parseContentType($headers['Content-Type']);
