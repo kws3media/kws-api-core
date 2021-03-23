@@ -1,5 +1,6 @@
 <?php
 namespace Kws3\ApiCore\Test\Tests\AABasicTests;
+use Kws3\ApiCore\Loader;
 
 class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
 
@@ -53,7 +54,7 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
         $identity->context = 'X';
         $identity->user = null;
 
-        $this->oldIdentity = $this->app->get('IDENTITY');
+        $this->oldIdentity = Loader::getIdentity();
         $this->app->set('IDENTITY', $identity);
 
         $refl = new \ReflectionClass('\Kws3\ApiCore\BaseController');

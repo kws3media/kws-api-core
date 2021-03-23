@@ -1,6 +1,8 @@
 <?php
 namespace Kws3\ApiCore\Test\Tests\AABasicTests;
 
+use Kws3\ApiCore\Loader;
+
 class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
 
     protected $oldIdentity;
@@ -10,7 +12,7 @@ class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
         $identity->context = null;
         $identity->user = null;
 
-        $this->oldIdentity = $this->app->get('IDENTITY');
+        $this->oldIdentity = Loader::getIdentity();
         $this->app->set('IDENTITY', $identity);
     }
 
@@ -112,7 +114,7 @@ class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
 
     function testControllerAccessAuthedUserUnknownContext(){
 
-        $this->app->get('IDENTITY')->user = [];
+        Loader::getIdentity()->user = [];
 
         $controller = new \Kws3\ApiCore\BaseController($this->app);
 
@@ -206,8 +208,8 @@ class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
 
     function testControllerAccessAuthedUser(){
 
-        $this->app->get('IDENTITY')->user = [];
-        $this->app->get('IDENTITY')->context = 'G';
+        Loader::getIdentity()->user = [];
+        Loader::getIdentity()->context = 'G';
 
         $controller = new \Kws3\ApiCore\BaseController($this->app);
 
@@ -299,8 +301,8 @@ class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
 
     function testControllerAccessAuthedUser2(){
 
-        $this->app->get('IDENTITY')->user = [];
-        $this->app->get('IDENTITY')->context = 'U';
+        Loader::getIdentity()->user = [];
+        Loader::getIdentity()->context = 'U';
 
         $controller = new \Kws3\ApiCore\BaseController($this->app);
 
@@ -392,8 +394,8 @@ class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
 
     function testControllerAccessAuthedUser3(){
 
-        $this->app->get('IDENTITY')->user = [];
-        $this->app->get('IDENTITY')->context = 'V';
+        Loader::getIdentity()->user = [];
+        Loader::getIdentity()->context = 'V';
 
         $controller = new \Kws3\ApiCore\BaseController($this->app);
 
@@ -484,7 +486,7 @@ class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
 
         //when using inactive api key
 
-        $this->app->get('IDENTITY')->inactiveKey = true;
+        Loader::getIdentity()->inactiveKey = true;
 
 
         try{
