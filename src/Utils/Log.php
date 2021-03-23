@@ -1,5 +1,6 @@
 <?php
 namespace Kws3\ApiCore\Utils;
+use Kws3\ApiCore\Loader;
 
 class Log
 {
@@ -19,7 +20,7 @@ class Log
     {
         $this->app = \Base::instance();
 
-        if (!is_dir($dir = $this->app->get('LOGS'))){
+        if (!is_dir($dir = Loader::get('LOGS'))){
             mkdir($dir, \Base::MODE, TRUE);
         }
 

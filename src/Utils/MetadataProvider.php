@@ -1,5 +1,6 @@
 <?php
 namespace Kws3\ApiCore\Utils;
+use Kws3\ApiCore\Loader;
 
 class MetadataProvider extends \Prefab
 {
@@ -17,7 +18,7 @@ class MetadataProvider extends \Prefab
     {
         $this->app     = \Base::instance();
 
-        $GETS = $this->app->get('GET');
+        $GETS = Loader::get('GET');
 
         $limit = isset($GETS['limit']) ? intval($GETS['limit']) : $this->limit;
         $offset = isset($GETS['offset']) ? intval($GETS['offset']) : $this->offset;
@@ -137,7 +138,7 @@ class MetadataProvider extends \Prefab
             unset($params['_url'], $params['offset'], $params['limit']);
 
             // Get base link (without offset nor limit)
-            $_uri = explode('?', $this->app->get('PARAMS')[0]);
+            $_uri = explode('?', Loader::get('PARAMS')[0]);
             $baseLink = $_uri[0];
             if (!empty($params)) {
                 $baseLink .= '?' . urldecode(http_build_query($params)) . '&';
