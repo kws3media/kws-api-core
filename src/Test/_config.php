@@ -10,5 +10,5 @@ $config = [
 ];
 
 
-$app->set('TEST_DB_CONFIG', $config['db']);
+\Kws3\ApiCore\Loader::set('TEST_DB_CONFIG', $config['db']);
 ?>

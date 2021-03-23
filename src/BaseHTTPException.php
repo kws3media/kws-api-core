@@ -5,8 +5,6 @@ namespace Kws3\ApiCore;
 class BaseHTTPException extends \Exception
 {
 
-    protected $app;
-
     public $devMessage;
     public $errorCode;
     public $response;
@@ -21,8 +19,6 @@ class BaseHTTPException extends \Exception
             'more' => '',
             'internalCode' => '',
         )) {
-
-        $this->app = \Base::instance();
 
         $this->message = $message;
         $this->devMessage = @$errorArray['dev'];

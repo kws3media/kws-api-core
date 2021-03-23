@@ -4,7 +4,6 @@ namespace Kws3\ApiCore;
 
 class CLIBase
 {
-    protected $app;
 
     //Route params
     protected $params = [];
@@ -15,8 +14,6 @@ class CLIBase
             echo 'Na\'ah no go here!!!';
             exit;
         }
-
-        $this->app = \Base::instance();
 
         $this->params = $_SERVER['argv'];
         array_shift($this->params);
