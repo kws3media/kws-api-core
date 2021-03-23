@@ -20,13 +20,17 @@ class Loader extends \Prefab{
 
   public static function __callStatic($name, $arguments)
   {
-    $name = preg_replace("/^(get|load)(.*)/i", '$2', $name);
+    $name = preg_replace("/^(get|load)(.*)/", '$2', $name);
     return self::get($name);
   }
 
   public static function get($name)
   {
-    $name = strtoupper($name);
+    //capitalise string before "."
+    $np = explode('.', $name);
+    $np[0] = strtoupper($np[0]);
+
+    $name = implode(".", $np);
     $f3 = \Base::instance();
 
     if(!$f3->exists($name)){
