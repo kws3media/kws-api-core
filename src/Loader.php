@@ -26,11 +26,8 @@ class Loader extends \Prefab{
 
   public static function get($name)
   {
-    //capitalise string before "."
-    $np = explode('.', $name);
-    $np[0] = strtoupper($np[0]);
 
-    $name = implode(".", $np);
+    $name = self::_standardiseName($name);
     $f3 = \Base::instance();
 
     if(!$f3->exists($name)){
@@ -46,7 +43,15 @@ class Loader extends \Prefab{
 
   public static function set($name, $val)
   {
-    $name = strtoupper($name);
+    $name = self::_standardiseName($name);
     return \Base::instance()->set($name, $val);
+  }
+
+  protected static function _standardiseName($name)
+  {
+    //capitalise string before "."
+    $np = explode('.', $name);
+    $np[0] = strtoupper($np[0]);
+    return implode(".", $np);
   }
 }
