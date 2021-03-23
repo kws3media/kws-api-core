@@ -8,14 +8,18 @@ defined('K_ENV_TESTING') or define("K_ENV_TESTING", "testing");
 defined('K_ENV_DEV') or define("K_ENV_DEV", "development");
 defined('K_ENV_LOCAL') or define("K_ENV_LOCAL", "local");
 
+require_once __DIR__ . '/helpers/clockwork.php';
+
+use \Clockwork\Support\Vanilla\Clockwork;
+
 class Framework extends \Prefab
 {
 
   /** @var \Base */
   protected $app;
 
-  /** @var \Loader */
-  public static $loader;
+  protected static $enableClockWork = false;
+
 
   protected $defaultDefinition = [
     //The main endpoint that will be hit
@@ -53,6 +57,21 @@ class Framework extends \Prefab
     $instance = self::instance($params);
 
     return $instance->app;
+  }
+
+  public static function enableClockwork($opts = [])
+  {
+    if(!self::$enableClockWork){
+      Clockwork::init(
+        ['enable' => true] + $opts
+      );
+      self::$enableClockWork = true;
+    }
+  }
+
+  public static function isClockworkEnabled()
+  {
+    return self::$enableClockWork;
   }
 
   public static function registerOptions($params)
