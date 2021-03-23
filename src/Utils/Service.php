@@ -23,7 +23,7 @@ class Service extends \Prefab
 
         exec($command, $output);
 
-        if(K_ENV == K_ENV_LOCAL){
+        if(\Kws3\ApiCore\Framework::isClockworkEnabled()){
             $c = dbg()->userData("Commands")->title("Commands");
             $_command = str_replace([
                 'start /b ',

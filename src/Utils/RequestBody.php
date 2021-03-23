@@ -64,7 +64,7 @@ class RequestBody extends \Prefab
             }
         }
 
-        if(K_ENV == K_ENV_LOCAL){
+        if(\Kws3\ApiCore\Framework::isClockworkEnabled()){
             $c = dbg()->userData("RequestBody")->title("Payload");
             $c->table("Payload", [
                 ['Data' => $this->parsed_body]

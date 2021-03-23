@@ -54,7 +54,7 @@ class JSONResponse extends Response
 
                 echo $response;
 
-                if(K_ENV == K_ENV_LOCAL){
+                if(Framework::isClockworkEnabled()){
                     if($error){
                         dbg()->error($message['records']);
                     }else{
