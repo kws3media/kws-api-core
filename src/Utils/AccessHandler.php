@@ -2,12 +2,13 @@
 namespace Kws3\ApiCore\Utils;
 
 use \Kws3\ApiCore\BaseHTTPException as HTTPException;
+use \Kws3\ApiCore\Loader;
 
 class AccessHandler extends \Prefab
 {
     public static function isAllowed($currentAction, $accessList)
     {
-        $identity = \Base::instance()->get('IDENTITY');
+        $identity = Loader::getIdentity();
 
         $found = false;
         $authenticated = !empty($identity->user);
