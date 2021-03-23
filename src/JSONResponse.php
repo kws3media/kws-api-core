@@ -66,7 +66,7 @@ class JSONResponse extends Response
                     }
                 }
             } else {
-                $this->app->set('APP_RESPONSE', $response);
+                Loader::set('APP_RESPONSE', $response);
             }
         }
 

@@ -13,11 +13,11 @@ class ControllerAccessTest extends \Kws3\ApiCore\Test\Tests\TestBase{
         $identity->user = null;
 
         $this->oldIdentity = Loader::getIdentity();
-        $this->app->set('IDENTITY', $identity);
+        Loader::set('IDENTITY', $identity);
     }
 
     function afterEach(){
-        $this->app->set('IDENTITY', $this->oldIdentity);
+        Loader::set('IDENTITY', $this->oldIdentity);
     }
 
     function testControllerAccessUnAuthedUser(){

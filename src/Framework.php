@@ -156,7 +156,7 @@ class Framework extends \Prefab
 
   protected function applyOptions($params){
     foreach($params as $k => $v){
-      $this->app->set($k, $v);
+      Loader::set($k, $v);
     }
   }
 

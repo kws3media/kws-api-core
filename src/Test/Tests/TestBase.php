@@ -15,8 +15,8 @@ class TestBase{
         $this->app = \Base::instance();
 
         //less verbose errors in console
-        $this->app->set('DEBUG', 0);
-        $this->app->set('HIGHLIGHT', false);
+        Loader::set('DEBUG', 0);
+        Loader::set('HIGHLIGHT', false);
     }
 
     function before(){
@@ -37,7 +37,7 @@ class TestBase{
 
     function setDB(){
         $config = Loader::get('TEST_DB_CONFIG');
-        $this->app->set('DB', call_user_func(function ($config) {
+        Loader::set('DB', call_user_func(function ($config) {
             $dbconfig = $config['TEST_DB_CONFIG'];
             $dsn = $dbconfig['adapter']. ':host=' . $dbconfig['host'] . ';dbname=' . $dbconfig['dbname'];
 
@@ -90,7 +90,7 @@ class TestBase{
     }
 
     function reIdentify($key){
-        $this->app->set('HEADERS.Api-Key', $key);
+        Loader::set('HEADERS.Api-Key', $key);
         Loader::getIdentity()->reIdentify();
     }
 
@@ -324,7 +324,7 @@ class TestBase{
       if(isset($data['headers'])) {
         if (is_array($data['headers'])) {
           foreach ($data['headers'] as $key => $value) {
-            $this->app->set('HEADERS.'.$key, $value);
+            Loader::set('HEADERS.'.$key, $value);
           }
         }
       }

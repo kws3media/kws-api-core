@@ -23,8 +23,8 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
         );
 
 
-        $this->app->set('GET.offset', 100);
-        $this->app->set('GET.limit', 60);
+        Loader::set('GET.offset', 100);
+        Loader::set('GET.limit', 60);
 
         $method = $refl->getMethod('parseRequest');
         $method->setAccessible(true);
@@ -55,7 +55,7 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
         $identity->user = null;
 
         $this->oldIdentity = Loader::getIdentity();
-        $this->app->set('IDENTITY', $identity);
+        Loader::set('IDENTITY', $identity);
 
         $refl = new \ReflectionClass('\Kws3\ApiCore\BaseController');
         $prop = $refl->getProperty('modelsMap');
@@ -107,12 +107,12 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
 
 
         //reset Identity back to what it was
-        $this->app->set('IDENTITY', $this->oldIdentity);
+        Loader::set('IDENTITY', $this->oldIdentity);
     }
 
     function testSearch(){
-        $this->app->set('GET.offset', null);
-        $this->app->set('GET.limit', null);
+        Loader::set('GET.offset', null);
+        Loader::set('GET.limit', null);
 
         $refl = new \ReflectionClass('\Kws3\ApiCore\BaseController');
         $method = $refl->getMethod('parseRequest');
@@ -134,7 +134,7 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
 
         $ex_message = '';
         try{
-            $this->app->set('GET.q', '(field1:1,field2[gt]:2, field3[xx]: 3, field4[eq]: 4)');
+            Loader::set('GET.q', '(field1:1,field2[gt]:2, field3[xx]: 3, field4[eq]: 4)');
             $prop = $refl->getProperty('filters');
             $prop->setAccessible(true);
 
@@ -154,14 +154,14 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
             'Exception was thrown in last test as expected'
         );
 
-        $this->app->set('GET.q', '');
+        Loader::set('GET.q', '');
         $instance = new \Kws3\ApiCore\BaseController($this->app);
 
         $prop = $refl->getProperty('allowedSearchFields');
         $prop->setAccessible(true);
         $prop->setValue($instance, ['field1', 'field2', 'field3', 'field4']);
 
-        $this->app->set('GET.q', '(field1:1,field2[gt]:2, field3[xx]|: 3, field4[eq]|: 4)');
+        Loader::set('GET.q', '(field1:1,field2[gt]:2, field3[xx]|: 3, field4[eq]|: 4)');
 
         $method->invoke($instance);
 

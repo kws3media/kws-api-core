@@ -1,6 +1,7 @@
 <?php
 
 namespace Kws3\ApiCore;
+use \Kws3\ApiCore\Loader;
 
 class ConfigFactory extends \Prefab
 {
@@ -46,7 +47,7 @@ class ConfigFactory extends \Prefab
   public function setOptions($options)
   {
     foreach($options as $key=>$value){
-      $this->app->set($key, $value);
+      Loader::set($key, $value);
     }
   }
 
