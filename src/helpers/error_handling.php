@@ -54,7 +54,7 @@ function send500Response()
       "records":{
           "errorCode":500,
           "userMessage":"",
-          "devMessage":"",
+          "devMessage":"Catch-all",
           "more":"",
           "applicationCode":500
       }
