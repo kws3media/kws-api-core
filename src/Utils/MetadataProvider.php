@@ -4,7 +4,6 @@ use \Kws3\ApiCore\Loader;
 
 class MetadataProvider extends \Prefab
 {
-    protected $app    = null;
     protected $offset = 0;
     protected $limit  = 20;
     protected $status = null;
@@ -16,7 +15,6 @@ class MetadataProvider extends \Prefab
 
     public function __construct()
     {
-        $this->app     = \Base::instance();
 
         $GETS = Loader::get('GET');
 

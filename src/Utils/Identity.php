@@ -23,7 +23,6 @@ class Identity extends \Prefab
   protected $tokensModel = null;
   protected $accessTokenField = 'access_token';
 
-  protected $app;
 
   public $user = null;
   public $context = null;
@@ -39,7 +38,6 @@ class Identity extends \Prefab
       }
     }
 
-    $this->app = \Base::instance();
     $this->identify();
   }
 

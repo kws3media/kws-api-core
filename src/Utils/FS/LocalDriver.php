@@ -10,7 +10,6 @@ class LocalDriver extends Driver
 
     public function __construct()
     {
-        $this->app = \Base::instance();
         $this->opts = Loader::get('CONFIG')['LOCALFS'];
     }
 

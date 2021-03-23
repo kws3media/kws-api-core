@@ -6,7 +6,6 @@ use \Kws3\ApiCore\Loader;
 
 class RequestBody extends \Prefab
 {
-    protected $app    = null;
     protected $request_type = null;
     protected $body_content_type = null;
     protected $raw_body = null;
@@ -14,7 +13,6 @@ class RequestBody extends \Prefab
 
     public function __construct()
     {
-        $this->app     = \Base::instance();
 
     }
 

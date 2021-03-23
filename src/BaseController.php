@@ -51,8 +51,6 @@ class BaseController
 
     public function __construct(\Base $app, $parseQS = true)
     {
-        $this->app = \Base::instance();
-
         $this->parseQS = $parseQS;
 
         $this->params      = Loader::get('PARAMS');
