@@ -1,0 +1,11 @@
+{
+  "php.validate.enable": false,
+  "php.suggest.basic": false,
+  "files.trimTrailingWhitespace": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "[php]": {
+    "editor.formatOnSave": true,
+  },
+}
