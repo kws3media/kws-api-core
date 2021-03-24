@@ -14,7 +14,7 @@ class Framework extends \Prefab
   /** @var \Base */
   protected $app;
 
-  protected static $enableClockWork = false;
+  protected static $clockworkEnabled = false;
 
 
   protected $defaultDefinition = [
@@ -57,17 +57,17 @@ class Framework extends \Prefab
 
   public static function enableClockwork($opts = [])
   {
-    if(!self::$enableClockWork){
+    if(!self::$clockworkEnabled){
       Clockwork::init(
         ['enable' => true] + $opts
       );
-      self::$enableClockWork = true;
+      self::$clockworkEnabled = true;
     }
   }
 
   public static function isClockworkEnabled()
   {
-    return self::$enableClockWork;
+    return self::$clockworkEnabled;
   }
 
   public static function registerOptions($params)
