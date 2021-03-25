@@ -1,4 +1,5 @@
 <?php
+
 namespace Kws3\ApiCore;
 
 /**
@@ -6,9 +7,12 @@ namespace Kws3\ApiCore;
  * @method static \Kws3\ApiCore\Utils\RequestBody getRequestBody()
  * @method static \Kws3\ApiCore\Utils\JSONResponse getResponder()
  * @method static \Kws3\ApiCore\Utils\MetadataProvider getMetaDataProvider()
+ * @method static \DB\SQL getDB()
+ * @method static \DB\SQL getDb()
  */
 
-class Loader extends \Prefab{
+class Loader extends \Prefab
+{
 
 
   protected static $dependencyMap = [
@@ -30,8 +34,8 @@ class Loader extends \Prefab{
     $name = self::_standardiseName($name);
     $f3 = \Base::instance();
 
-    if(!$f3->exists($name)){
-      if(isset(self::$dependencyMap[$name])){
+    if (!$f3->exists($name)) {
+      if (isset(self::$dependencyMap[$name])) {
         self::set($name, call_user_func(function ($class) {
           return $class::instance();
         }, self::$dependencyMap[$name]));
