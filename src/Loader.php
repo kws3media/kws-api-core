@@ -5,10 +5,9 @@ namespace Kws3\ApiCore;
 /**
  * @method static \Kws3\ApiCore\Utils\Identity getIdentity()
  * @method static \Kws3\ApiCore\Utils\RequestBody getRequestBody()
- * @method static \Kws3\ApiCore\Utils\JSONResponse getResponder()
+ * @method static \Kws3\ApiCore\Responses\JSONResponse getResponder()
  * @method static \Kws3\ApiCore\Utils\MetadataProvider getMetaDataProvider()
  * @method static \DB\SQL getDB()
- * @method static \DB\SQL getDb()
  */
 
 class Loader extends \Prefab
@@ -17,7 +16,7 @@ class Loader extends \Prefab
 
   protected static $dependencyMap = [
     'IDENTITY' => '\\Kws3\\ApiCore\\Utils\\Identity',
-    'RESPONDER' => '\\Kws3\\ApiCore\\JSONResponse',
+    'RESPONDER' => '\\Kws3\\ApiCore\\Responses\\JSONResponse',
     'REQUESTBODY' => '\\Kws3\\ApiCore\\Utils\\RequestBody',
     'METADATAPROVIDER' => '\\Kws3\\ApiCore\\Utils\\MetadataProvider'
   ];

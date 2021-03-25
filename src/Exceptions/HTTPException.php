@@ -2,8 +2,8 @@
 
 namespace Kws3\ApiCore\Exceptions;
 
-use Kws3\ApiCore\JSONResponse;
 use Kws3\ApiCore\Loader;
+use Kws3\ApiCore\Responses\JSONResponse;
 
 class HTTPException extends Base
 {
