@@ -7,5 +7,7 @@
   "editor.detectIndentation": false,
   "[php]": {
     "editor.formatOnSave": true,
+    "editor.quickSuggestions": { "comments": true },
+    "editor.formatOnSaveMode": "modifications",
   },
 }
