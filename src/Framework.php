@@ -7,6 +7,8 @@ require_once __DIR__ . '/helpers/clockwork.php';
 require_once __DIR__ . '/helpers/error_handling.php';
 
 use \Clockwork\Support\Vanilla\Clockwork;
+use \DB\SQL;
+use \Kws3\ApiCore\DB\LoggableSQL;
 
 class Framework extends \Prefab
 {
@@ -47,7 +49,8 @@ class Framework extends \Prefab
     ]
   ];
 
-  public static function init($params){
+  public static function init($params)
+  {
 
     /** @var self */
     $instance = self::instance($params);
@@ -55,9 +58,18 @@ class Framework extends \Prefab
     return $instance->app;
   }
 
+  public static function initDB($dsn, $user = NULL, $pw = NULL, array $options = NULL)
+  {
+    if (self::isClockworkEnabled()) {
+      return new LoggableSQL($dsn, $user, $pw, $options);
+    }
+
+    return new SQL($dsn, $user, $pw, $options);
+  }
+
   public static function enableClockwork($opts = [])
   {
-    if(!self::$clockworkEnabled){
+    if (!self::$clockworkEnabled) {
       Clockwork::init(
         ['enable' => true] + $opts
       );
@@ -79,7 +91,7 @@ class Framework extends \Prefab
   public static function registerRoutes($routes = [])
   {
     $instance = self::instance();
-    if($routes){
+    if ($routes) {
       foreach ($routes as $av) {
         $definitionFiles = scandir($av);
         $_p = explode(DIRECTORY_SEPARATOR, $av);
@@ -134,8 +146,8 @@ class Framework extends \Prefab
   public static function registerCLIRoutes($routes)
   {
     $instance = self::instance();
-    if($routes){
-      foreach($routes as $CLIR){
+    if ($routes) {
+      foreach ($routes as $CLIR) {
         $definitionFiles = scandir($CLIR);
         foreach ($definitionFiles as $definitionFile) {
           $pathinfo = pathinfo($definitionFile);
@@ -169,12 +181,10 @@ class Framework extends \Prefab
     $this->applyOptions($params);
   }
 
-  protected function applyOptions($params){
-    foreach($params as $k => $v){
+  protected function applyOptions($params)
+  {
+    foreach ($params as $k => $v) {
       Loader::set($k, $v);
     }
   }
-
-
-
 }
