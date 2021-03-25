@@ -1,8 +1,9 @@
 <?php
+
 namespace Kws3\ApiCore\Utils;
 
 use \Exception;
-use Kws3\ApiCore\BaseHTTPException;
+use Kws3\ApiCore\Exceptions\HTTPException;
 use \Kws3\ApiCore\Loader;
 
 class Identity extends \Prefab
@@ -61,7 +62,7 @@ class Identity extends \Prefab
   {
 
     if(empty($this->tokensModel)){
-      throw new BaseHTTPException('tokensModel not defined', 500);
+      throw new HTTPException('tokensModel not defined', 500);
     }
 
     $api_key = Loader::get('HEADERS.' . $this->requestHeaderKey);

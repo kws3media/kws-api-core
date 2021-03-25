@@ -1,7 +1,8 @@
 <?php
+
 namespace Kws3\ApiCore\Utils;
 
-use \Kws3\ApiCore\BaseHTTPException as HTTPException;
+use \Kws3\ApiCore\Exceptions\HTTPException;
 use \Kws3\ApiCore\Loader;
 
 class RequestBody extends \Prefab
@@ -64,7 +65,7 @@ class RequestBody extends \Prefab
             }
         }
 
-        if(\Kws3\ApiCore\Framework::isClockworkEnabled()){
+    if (\Kws3\ApiCore\Framework::isClockworkEnabled()) {
             $c = dbg()->userData("RequestBody")->title("Payload");
             $c->table("Payload", [
                 ['Data' => $this->parsed_body]

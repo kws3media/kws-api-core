@@ -2,7 +2,7 @@
 
 namespace Kws3\ApiCore;
 
-use \Kws3\ApiCore\BaseHTTPException as HTTPException;
+use \Kws3\ApiCore\Exceptions\HTTPException;
 use \Kws3\ApiCore\Utils\AccessHandler;
 use \Kws3\ApiCore\Utils\Tools;
 use \Kws3\ApiCore\Framework;

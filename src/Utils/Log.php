@@ -1,5 +1,7 @@
 <?php
+
 namespace Kws3\ApiCore\Utils;
+
 use \Kws3\ApiCore\Loader;
 
 class Log

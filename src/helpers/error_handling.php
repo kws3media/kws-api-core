@@ -1,9 +1,10 @@
 <?php
+
 namespace Kws3\ApiCore\Error;
 
 function tryDBGEnd($msg = null, $trace = null){
   try{
-      if(\Kws3\ApiCore\Framework::isClockworkEnabled()){
+    if (\Kws3\ApiCore\Framework::isClockworkEnabled()) {
           if($msg){
               dbg()->error($msg);
           }

@@ -311,7 +311,7 @@ class TestBase
     try {
 
       $this->mockRequest($data);
-    } catch (\Kws3\ApiCore\BaseHTTPException $ex) {
+    } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
       $ex_message = $ex->getMessage();
     }
     $this->test->expect(

@@ -1,6 +1,7 @@
 <?php
 
 namespace Kws3\ApiCore;
+
 use \Kws3\ApiCore\Loader;
 
 class ConfigFactory extends \Prefab

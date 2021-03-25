@@ -1,7 +1,8 @@
 <?php
+
 namespace Kws3\ApiCore\Utils;
 
-use \Kws3\ApiCore\BaseHTTPException as HTTPException;
+use \Kws3\ApiCore\Exceptions\HTTPException;
 use \Kws3\ApiCore\Loader;
 
 class AccessHandler extends \Prefab

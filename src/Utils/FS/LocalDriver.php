@@ -1,4 +1,5 @@
 <?php
+
 namespace Kws3\ApiCore\Utils\FS;
 
 use \Kws3\ApiCore\Loader;

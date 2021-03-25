@@ -1,4 +1,5 @@
 <?php
+
 namespace Kws3\ApiCore\Utils;
 
 class Service extends \Prefab
@@ -23,7 +24,7 @@ class Service extends \Prefab
 
         exec($command, $output);
 
-        if(\Kws3\ApiCore\Framework::isClockworkEnabled()){
+    if (\Kws3\ApiCore\Framework::isClockworkEnabled()) {
             $c = dbg()->userData("Commands")->title("Commands");
             $_command = str_replace([
                 'start /b ',

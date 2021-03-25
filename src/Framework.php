@@ -58,7 +58,7 @@ class Framework extends \Prefab
     return $instance->app;
   }
 
-  public static function initDB($dsn, $user = NULL, $pw = NULL, array $options = NULL)
+  public static function createDB($dsn, $user = NULL, $pw = NULL, array $options = NULL)
   {
     if (self::isClockworkEnabled()) {
       return new LoggableSQL($dsn, $user, $pw, $options);

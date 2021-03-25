@@ -1,7 +1,8 @@
 <?php
+
 namespace Kws3\ApiCore\Utils\FS;
 
-use \Kws3\ApiCore\BaseHTTPException as HTTPException;
+use \Kws3\ApiCore\Exceptions\HTTPException;
 
 class Driver extends \Prefab
 {

@@ -1,4 +1,5 @@
 <?php
+
 namespace Kws3\ApiCore\Utils;
 
 class ClockworkProductionShim extends \Prefab

@@ -1,8 +1,11 @@
 <?php
+
 namespace Kws3\ApiCore\Test\Tests\AABasicTests;
+
 use \Kws3\ApiCore\Loader;
 
-class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
+class ControllerTest extends \Kws3\ApiCore\Test\Tests\TestBase
+{
 
     function testOffsetLimit(){
 
@@ -11,14 +14,14 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
         $prop = $refl->getProperty('offset');
         $prop->setAccessible(true);
         $this->test->expect(
-            $prop->getValue(new \Kws3\ApiCore\BaseController($this->app)) == 0,
+      $prop->getValue(new \Kws3\ApiCore\BaseController($this->app)) == 0,
             'offset is defaulted to 0'
         );
 
         $prop = $refl->getProperty('limit');
         $prop->setAccessible(true);
         $this->test->expect(
-            $prop->getValue(new \Kws3\ApiCore\BaseController($this->app)) == 20,
+      $prop->getValue(new \Kws3\ApiCore\BaseController($this->app)) == 20,
             'limit is defaulted to 20'
         );
 
@@ -28,7 +31,7 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
 
         $method = $refl->getMethod('parseRequest');
         $method->setAccessible(true);
-        $instance = new \Kws3\ApiCore\BaseController($this->app);
+    $instance = new \Kws3\ApiCore\BaseController($this->app);
         $method->invoke($instance);
 
         $prop = $refl->getProperty('offset');
@@ -63,7 +66,7 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
         $method = $refl->getMethod('getModel');
         $method->setAccessible(true);
 
-        $instance = new \Kws3\ApiCore\BaseController($this->app);
+    $instance = new \Kws3\ApiCore\BaseController($this->app);
 
         $prop->setValue($instance, [
             'default' => 'Hello'
@@ -94,7 +97,7 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
         $x = "xxxxxx";
         try{
             $x = $method->invoke($instance, 'Z');
-        }catch(\Kws3\ApiCore\BaseHTTPException $ex){
+    } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
             $this->test->expect(
                  ($ex->getMessage() == 'Unable to resolve model'),
                 'getModel throws an error when specified key does not exist'
@@ -121,14 +124,14 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
         $prop = $refl->getProperty('isSearch');
         $prop->setAccessible(true);
         $this->test->expect(
-            $prop->getValue(new \Kws3\ApiCore\BaseController($this->app)) == false,
+      $prop->getValue(new \Kws3\ApiCore\BaseController($this->app)) == false,
             'isSearch is defaulted to false'
         );
 
         $prop = $refl->getProperty('filters');
         $prop->setAccessible(true);
         $this->test->expect(
-            $prop->getValue(new \Kws3\ApiCore\BaseController($this->app)) === [],
+      $prop->getValue(new \Kws3\ApiCore\BaseController($this->app)) === [],
             'filters is defaulted to empty array'
         );
 
@@ -138,11 +141,11 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
             $prop = $refl->getProperty('filters');
             $prop->setAccessible(true);
 
-            $instance = new \Kws3\ApiCore\BaseController($this->app);
+      $instance = new \Kws3\ApiCore\BaseController($this->app);
             $method->invoke($instance);
 
             $filters = $prop->getValue($instance);
-        }catch(\Kws3\ApiCore\BaseHTTPException $ex){
+    } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
             $ex_message = $ex->getMessage();
             $this->test->expect(
                  ($ex->getMessage() == 'The fields you specified cannot be searched.'),
@@ -155,7 +158,7 @@ class ControllerTest extends \Kws3\Apicore\Test\Tests\TestBase{
         );
 
         Loader::set('GET.q', '');
-        $instance = new \Kws3\ApiCore\BaseController($this->app);
+    $instance = new \Kws3\ApiCore\BaseController($this->app);
 
         $prop = $refl->getProperty('allowedSearchFields');
         $prop->setAccessible(true);
