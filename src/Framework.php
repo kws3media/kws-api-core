@@ -180,7 +180,7 @@ class Framework extends \Prefab
     $this->app = \Base::instance();
 
     //patch request headers
-    $headers = Loader::get('HEADERS');
+    $headers = Loader::getHeaders();
     if (!isset($headers['Content-Type'])) {
       if (isset($_SERVER['CONTENT_TYPE'])) {
         Loader::set('HEADERS.Content-Type', $_SERVER['CONTENT_TYPE']);

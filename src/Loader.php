@@ -8,6 +8,7 @@ namespace Kws3\ApiCore;
  * @method static \Kws3\ApiCore\Responses\JSONResponse getResponder()
  * @method static \Kws3\ApiCore\Utils\MetadataProvider getMetaDataProvider()
  * @method static \DB\SQL getDB()
+ * @method static array getHeaders()
  */
 
 class Loader extends \Prefab
