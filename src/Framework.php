@@ -178,7 +178,31 @@ class Framework extends \Prefab
   public function __construct($params = [])
   {
     $this->app = \Base::instance();
+
+    //patch request headers
+    $headers = Loader::get('HEADERS');
+    if (!isset($headers['Content-Type'])) {
+      if (isset($_SERVER['CONTENT_TYPE'])) {
+        Loader::set('HEADERS.Content-Type', $_SERVER['CONTENT_TYPE']);
+      }
+    }
+    if (!isset($headers['Content-Length'])) {
+      if (isset($_SERVER['CONTENT_LENGTH'])) {
+        Loader::set('HEADERS.Content-Length', $_SERVER['CONTENT_LENGTH']);
+      }
+    }
+
+
     $this->applyOptions($params);
+
+    // All OPTIONS requests get a 200, then die
+    if (Loader::get('VERB') == 'OPTIONS') {
+      header('Access-Control-Allow-Origin: *');
+      header('Access-Control-Allow-Headers: ' . $headers["Access-Control-Request-Headers"]);
+      header('Access-Control-Allow-Methods: ' . $headers["Access-Control-Request-Method"]);
+      header("HTTP/1.0 200 Ok");
+      exit;
+    }
   }
 
   protected function applyOptions($params)
