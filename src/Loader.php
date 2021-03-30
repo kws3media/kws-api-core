@@ -7,6 +7,7 @@ namespace Kws3\ApiCore;
  * @method static \Kws3\ApiCore\Utils\RequestBody getRequestBody()
  * @method static \Kws3\ApiCore\Responses\JSONResponse getResponder()
  * @method static \Kws3\ApiCore\Utils\MetadataProvider getMetaDataProvider()
+ * @method static \Kws3\ApiCore\Log\Logger getLogger()
  * @method static \DB\SQL getDB()
  * @method static array getHeaders()
  */
@@ -19,7 +20,8 @@ class Loader extends \Prefab
     'IDENTITY' => '\\Kws3\\ApiCore\\Utils\\Identity',
     'RESPONDER' => '\\Kws3\\ApiCore\\Responses\\JSONResponse',
     'REQUESTBODY' => '\\Kws3\\ApiCore\\Utils\\RequestBody',
-    'METADATAPROVIDER' => '\\Kws3\\ApiCore\\Utils\\MetadataProvider'
+    'METADATAPROVIDER' => '\\Kws3\\ApiCore\\Utils\\MetadataProvider',
+    'LOGGER' => '\\Kws3\\ApiCore\\Log\\Logger'
   ];
 
   public static function __callStatic($name, $arguments)
