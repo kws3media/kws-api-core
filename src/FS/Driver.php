@@ -15,7 +15,7 @@ abstract class Driver extends \Prefab
 
   abstract public function getFriendlyUrl($fileObject);
 
-  abstract public function create($filePath, $destinationFolder);
+  abstract public function create($filePath, $destinationFolder, $opts = []);
 
   public function getClassName()
   {

@@ -30,7 +30,7 @@ class LocalDriver extends Driver
     return $this->getUrl($fileObject);
   }
 
-  public function create($filePath, $destinationFolder = '/')
+  public function create($filePath, $destinationFolder = '/', $opts = [])
   {
     $uploadsBase = Tools::trimSlash($this->opts['folder']);
     $folder = Tools::trimSlash($destinationFolder, true);

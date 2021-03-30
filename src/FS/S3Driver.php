@@ -220,19 +220,22 @@ class S3Driver extends Driver
     return 'http://' . implode('/', array_filter([$bucket, $fileObject->folder, $fileObject->name]));
   }
 
-  public function create($filePath, $destinationFolder = '/', $contentType = null, $acl = null, $redundancy = null)
+  public function create($filePath, $destinationFolder = '/', $opts = [])
   {
 
     $originalName = basename($filePath);
 
+    $acl = $opts['acl'] ?: null;
     if ($acl == null) {
       $acl = self::ACL_PUBLIC;
     }
 
+    $contentType = $opts['contentType'] ?: null;
     if ($contentType == null) {
       $contentType = $this->mimeByExtension($originalName);
     }
 
+    $redundancy = $opts['redundancy'] ?: null;
     if ($redundancy == null) {
       $redundancy = self::STORAGE_CLASS_STANDARD;
     }

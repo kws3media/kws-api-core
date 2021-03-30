@@ -23,7 +23,7 @@ class Loader extends \Prefab
     'REQUESTBODY' => '\\Kws3\\ApiCore\\Utils\\RequestBody',
     'METADATAPROVIDER' => '\\Kws3\\ApiCore\\Utils\\MetadataProvider',
     'LOGGER' => '\\Kws3\\ApiCore\\Log\\Logger',
-    'FILESYSTEM' => '\\Kws3\\ApiCore\\FS\\LocalDriver'
+    'FILESYSTEM' => '\\Kws3\\ApiCore\\FS\\Driver'
   ];
 
   public static function __callStatic($name, $arguments)
