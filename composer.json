@@ -19,7 +19,8 @@
     "require": {
         "bcosca/fatfree-core": "3.5.1",
         "ikkez/f3-cortex": "1.4.1",
-        "itsgoingd/clockwork": "4.1.8"
+        "itsgoingd/clockwork": "4.1.8",
+        "aws/aws-sdk-php": "^3.18"
     },
     "bin": ["bin/cli"]
 }
