@@ -71,8 +71,25 @@ class Framework extends \Prefab
   {
     if (!self::$clockworkEnabled) {
       Clockwork::init(
-        ['enable' => true] + $opts
+        [
+          'enable' => true,
+          'register_helpers' => false,
+          'api' => Loader::get('BASE') . '/__clockwork/'
+        ] + $opts
       );
+
+      $instance = self::instance();
+      $clockworkRoutes = [
+        'GET /__clockwork/latest' => 'Kws3\\ApiCore\\Controllers\\Clockwork->getClockwork',
+        'GET /__clockwork/@id' => 'Kws3\\ApiCore\\Controllers\\Clockwork->getClockwork',
+        'GET /__clockwork/@id/next' => 'Kws3\\ApiCore\\Controllers\\Clockwork->getClockwork',
+        'GET /__clockwork/@id/previous' => 'Kws3\\ApiCore\\Controllers\\Clockwork->getClockwork',
+        'GET /__clockwork/@id/previous/@limit' => 'Kws3\\ApiCore\\Controllers\\Clockwork->getClockwork'
+      ];
+      foreach ($clockworkRoutes as $k => $v) {
+        $instance->app->route($k, $v);
+      }
+
       self::$clockworkEnabled = true;
     }
   }
