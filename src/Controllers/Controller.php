@@ -1,6 +1,6 @@
 <?php
 
-namespace Kws3\ApiCore;
+namespace Kws3\ApiCore\Controllers;
 
 use \Kws3\ApiCore\Exceptions\HTTPException;
 use \Kws3\ApiCore\Utils\AccessHandler;
@@ -8,7 +8,7 @@ use \Kws3\ApiCore\Utils\Tools;
 use \Kws3\ApiCore\Framework;
 use \Kws3\ApiCore\Loader;
 
-class BaseController
+class Controller
 {
 
   protected $app;

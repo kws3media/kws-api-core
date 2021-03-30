@@ -1,8 +1,10 @@
 <?php
 
-namespace Kws3\ApiCore;
+namespace Kws3\ApiCore\Controllers;
 
-class CLIBase
+use \Kws3\ApiCore\Loader;
+
+class CLI
 {
 
   protected static $defaultLogCategory = 'cli';
