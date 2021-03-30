@@ -205,18 +205,19 @@ class S3Driver extends Driver
   {
     $this->opts = $opts;
     $this->bucket = $this->opts['bucket'];
+    if (empty($this->opts['region'])) {
+      $this->opts['region'] = 'eu-west-2';
+    }
   }
 
   public function getUrl($fileObject)
   {
-    $bucket = $fileObject->bucket ?: $this->bucket;
-    return 'http://' . implode('/', array_filter([$bucket, $fileObject->folder, $fileObject->name]));
+    return 'https://s3-' . $this->opts['region'] . '.amazonaws.com/' . implode('/', array_filter([$fileObject->bucket, $fileObject->folder, $fileObject->name]));
   }
 
   public function getFriendlyUrl($fileObject)
   {
-    $bucket = $fileObject->bucket ?: $this->bucket;
-    return 'http://' . implode('/', array_filter([$bucket, $fileObject->folder, $fileObject->name]));
+    return 'http://' . implode('/', array_filter([$fileObject->bucket, $fileObject->folder, $fileObject->name]));
   }
 
   public function create($filePath, $destinationFolder = '/', $opts = [])
@@ -292,7 +293,7 @@ class S3Driver extends Driver
 
       $this->s3 = new S3Client([
         'version' => '2006-03-01',
-        'region' => $this->opts['region'] ?: 'eu-west-2',
+        'region' => $this->opts['region'],
         'credentials' => [
           'key'    => $this->opts['access_key'],
           'secret' => $this->opts['secret'],
