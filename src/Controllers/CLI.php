@@ -4,7 +4,7 @@ namespace Kws3\ApiCore\Controllers;
 
 use \Kws3\ApiCore\Loader;
 
-class CLI
+abstract class CLI
 {
 
   protected static $defaultLogCategory = 'cli';

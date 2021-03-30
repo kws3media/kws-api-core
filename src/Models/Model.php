@@ -4,7 +4,7 @@ namespace Kws3\ApiCore\Models;
 
 use \Kws3\ApiCore\Loader;
 
-class Model extends \DB\Cortex
+abstract class Model extends \DB\Cortex
 {
   protected static $defaultLogCategory = 'application';
 
