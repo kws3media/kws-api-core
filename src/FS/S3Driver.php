@@ -204,7 +204,6 @@ class S3Driver extends Driver
   public function __construct($opts = [])
   {
     $this->opts = $opts;
-    $this->_checkOpts($opts);
     $this->bucket = $this->opts['bucket'];
   }
 
@@ -288,6 +287,9 @@ class S3Driver extends Driver
   public function getS3()
   {
     if (!$this->s3) {
+
+      $this->_checkOpts();
+
       $this->s3 = new S3Client([
         'version' => '2006-03-01',
         'region' => $this->opts['region'] ?: 'eu-west-2',
