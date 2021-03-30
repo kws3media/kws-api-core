@@ -8,7 +8,7 @@ namespace Kws3\ApiCore;
  * @method static \Kws3\ApiCore\Responses\JSONResponse getResponder()
  * @method static \Kws3\ApiCore\Utils\MetadataProvider getMetaDataProvider()
  * @method static \Kws3\ApiCore\Log\Logger getLogger()
- * @method static \Kws3\ApiCore\FS\LocalDriver getFileSystem()
+ * @method static \Kws3\ApiCore\FS\Driver getFileSystem()
  * @method static \DB\SQL getDB()
  * @method static array getHeaders()
  */
@@ -23,7 +23,7 @@ class Loader extends \Prefab
     'REQUESTBODY' => '\\Kws3\\ApiCore\\Utils\\RequestBody',
     'METADATAPROVIDER' => '\\Kws3\\ApiCore\\Utils\\MetadataProvider',
     'LOGGER' => '\\Kws3\\ApiCore\\Log\\Logger',
-    'FILESYSTEM' => '\\Kws3\\ApiCore\\FS\\Driver'
+    'FILESYSTEM' => '\\Kws3\\ApiCore\\FS\\LocalDriver'
   ];
 
   public static function __callStatic($name, $arguments)
