@@ -6,6 +6,8 @@ use \Kws3\ApiCore\Loader;
 
 class BaseModel extends \DB\Cortex
 {
+  protected static $defaultLogCategory = 'application';
+
   protected $fieldConf = [],
     $fluid = false,
     $db = 'DB',
@@ -52,7 +54,6 @@ class BaseModel extends \DB\Cortex
         }
       }
     }
-
   }
 
   protected function getNamespacedClass($fqcn)
@@ -65,14 +66,14 @@ class BaseModel extends \DB\Cortex
     $class = array_pop($givenClass);
 
     if ($curNamespace !== "Models\\Base" && class_exists($curNamespace . "\\" . $class)) {
-            //inject current model's namespace if it isn't Base
-            //the next condition will catch it and inject an extended model
+      //inject current model's namespace if it isn't Base
+      //the next condition will catch it and inject an extended model
       $class = $curNamespace . "\\" . $class;
     } elseif (class_exists("Models\\" . $class)) {
-            //inject extended models namespace
+      //inject extended models namespace
       $class = "Models\\" . $class;
     } elseif (class_exists("Models\\Base\\" . $class)) {
-            //inject base models namespace
+      //inject base models namespace
       $class = "Models\\Base\\" . $class;
     }
 
@@ -105,15 +106,15 @@ class BaseModel extends \DB\Cortex
    */
   public static function checkSoftDelete($instance)
   {
-    if($instance->trackDeletion && $instance->softDelete){
+    if ($instance->trackDeletion && $instance->softDelete) {
 
       $identity = Loader::getIdentity();
       $user     = $identity->user ? $identity->user->id : null;
 
-      if(isset($instance->fieldConf['deleted_on'])){
+      if (isset($instance->fieldConf['deleted_on'])) {
         $instance->touch('deleted_on');
       }
-      if(isset($instance->fieldConf['deleted_by'])){
+      if (isset($instance->fieldConf['deleted_by'])) {
         $instance->deleted_by = $user;
       }
       $instance->save();
@@ -210,7 +211,7 @@ class BaseModel extends \DB\Cortex
           }
 
           //work out if this the first field outside a group
-          if(empty($filter['group']) && !$first_field_found){
+          if (empty($filter['group']) && !$first_field_found) {
             $is_first_outer_field = true;
             $first_field_found = true;
           }
@@ -218,21 +219,20 @@ class BaseModel extends \DB\Cortex
           //we dont care about the join type of the first field, it will be ANDed in brackets anyway
           $joinType = ($is_first_outer_field ? '' : ' ' . $filter['jointype'] . ' ');
 
-          if(!empty($filter['group'])){
+          if (!empty($filter['group'])) {
             //separate out query groups
-            if(empty($query_groups[$filter['group']])){
+            if (empty($query_groups[$filter['group']])) {
               //ensure we don't get a starting "AND" inside group brackets
               $query_groups[$filter['group']] = '';
               $joinType = '';
             }
             $query_groups[$filter['group']] .= !empty($queryPart) ? $joinType . $queryPart : '';
-          }else{
+          } else {
             $query .= !empty($queryPart) ? $joinType . $queryPart : '';
           }
 
           $i++;
         }
-
       }
     }
 
@@ -243,9 +243,9 @@ class BaseModel extends \DB\Cortex
     }
 
     //add groups to query
-    if(count($query_groups) > 0){
-      foreach($query_groups as $qg){
-        $query .= (!empty($query) ? ' AND' : '') . ' (' . $qg .')';
+    if (count($query_groups) > 0) {
+      foreach ($query_groups as $qg) {
+        $query .= (!empty($query) ? ' AND' : '') . ' (' . $qg . ')';
       }
     }
 
@@ -274,10 +274,11 @@ class BaseModel extends \DB\Cortex
     return true;
   }
 
-  public static function getValidSortCriteria($value = '', $availableOptions = [], $default = 'id DESC'){
-    if(!empty($value)){
-      foreach($availableOptions as $option){
-        if($option['value'] == $value){
+  public static function getValidSortCriteria($value = '', $availableOptions = [], $default = 'id DESC')
+  {
+    if (!empty($value)) {
+      foreach ($availableOptions as $option) {
+        if ($option['value'] == $value) {
           return $value;
         }
       }
@@ -286,4 +287,20 @@ class BaseModel extends \DB\Cortex
     return $default;
   }
 
+
+  public function __call($name, $arguments)
+  {
+    if ($name == 'log') {
+      dbg()->info($arguments[0]);
+      Loader::getLogger()->log($arguments[0], static::$defaultLogCategory);
+    }
+  }
+
+  public static function __callStatic($name, $arguments)
+  {
+    if ($name == 'log') {
+      dbg()->info($arguments[0]);
+      Loader::getLogger()->log($arguments[0], static::$defaultLogCategory);
+    }
+  }
 }

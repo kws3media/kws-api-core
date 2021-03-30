@@ -5,39 +5,42 @@ namespace Kws3\ApiCore;
 class CLIBase
 {
 
-    //Route params
-    protected $params = [];
+  protected static $defaultLogCategory = 'cli';
 
-    public function __construct(\Base $app)
-    {
-        if (php_sapi_name() !== 'cli'){
-            echo 'Na\'ah no go here!!!';
-            exit;
-        }
+  //Route params
+  protected $params = [];
 
-        $this->params = $_SERVER['argv'];
-        array_shift($this->params);
-        array_shift($this->params);
+  public function __construct(\Base $app)
+  {
+    if (php_sapi_name() !== 'cli') {
+      $this->log('Only available via CLI', true);
+      exit;
     }
 
-    protected function log($msg, $err = null)
-    {
-        if ($err == true) {
-        echo "\033[1;97;41m " . $msg . " \e[0m" . "\n";
-        dbg()->error($msg);
-        } elseif ($err === false) {
-        echo "\033[1;97;42m " . $msg . " \e[0m" . "\n";
-        dbg()->notice($msg);
-        } else {
-        echo $msg . "\n";
-        dbg()->info($msg);
-        }
-        ob_flush();
-        flush();
-    }
+    $this->params = $_SERVER['argv'];
+    array_shift($this->params);
+    array_shift($this->params);
+  }
 
-    public function __destruct()
-    {
-        dbg()->commandExecuted($_SERVER['argv'][1], 0, $this->params);
+  protected function log($msg, $err = null)
+  {
+    if ($err == true) {
+      echo "\033[1;97;41m " . $msg . " \e[0m" . "\n";
+      dbg()->error($msg);
+    } elseif ($err === false) {
+      echo "\033[1;97;42m " . $msg . " \e[0m" . "\n";
+      dbg()->notice($msg);
+    } else {
+      echo $msg . "\n";
+      dbg()->info($msg);
     }
+    ob_flush();
+    flush();
+    Loader::getLogger()->log($msg, static::$defaultLogCategory);
+  }
+
+  public function __destruct()
+  {
+    dbg()->commandExecuted($_SERVER['argv'][1], 0, $this->params);
+  }
 }
