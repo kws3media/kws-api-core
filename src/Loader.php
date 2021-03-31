@@ -7,6 +7,7 @@ namespace Kws3\ApiCore;
  * @method static \Kws3\ApiCore\Utils\RequestBody getRequestBody()
  * @method static \Kws3\ApiCore\Responses\JSONResponse getResponder()
  * @method static \Kws3\ApiCore\Utils\MetadataProvider getMetaDataProvider()
+ * @method static \Kws3\ApiCore\Utils\Console getConsole()
  * @method static \Kws3\ApiCore\Log\Logger getLogger()
  * @method static \Kws3\ApiCore\FS\Driver getFileSystem()
  * @method static \DB\SQL getDB()
@@ -22,6 +23,7 @@ class Loader extends \Prefab
     'RESPONDER' => '\\Kws3\\ApiCore\\Responses\\JSONResponse',
     'REQUESTBODY' => '\\Kws3\\ApiCore\\Utils\\RequestBody',
     'METADATAPROVIDER' => '\\Kws3\\ApiCore\\Utils\\MetadataProvider',
+    'CONSOLE' => '\\Kws3\\ApiCore\\Utils\\Console',
     'LOGGER' => '\\Kws3\\ApiCore\\Log\\Logger',
     'FILESYSTEM' => '\\Kws3\\ApiCore\\FS\\LocalDriver'
   ];

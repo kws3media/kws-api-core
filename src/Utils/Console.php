@@ -2,9 +2,9 @@
 
 namespace Kws3\ApiCore\Utils;
 
-class Service extends \Prefab
+class Console extends \Prefab
 {
-  public static function call($method = '', $params = [], $async = true)
+  public function run($method = '', $params = [], $async = true)
   {
     $wd = getcwd();
     $ds = DIRECTORY_SEPARATOR;
