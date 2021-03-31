@@ -2,8 +2,10 @@
 
 namespace Runners;
 
-class TestCore extends Base{
-  public function help(){
+class TestCore extends Base
+{
+  public function help()
+  {
     $this->output("\n");
     $this->output("To generate a test file:", false);
     $this->output("> composer test generate testFileName");
@@ -25,65 +27,68 @@ class TestCore extends Base{
     $this->output("\n");
   }
 
-  public function run($params){
+  public function run($params)
+  {
 
     $func = array_shift($params);
 
-    if(method_exists($this, $func)){
+    if (method_exists($this, $func)) {
       $reflection = new \ReflectionMethod($this, $func);
-      if($reflection->isPublic()) {
+      if ($reflection->isPublic()) {
         $this->$func($params);
       }
-    }else{
-        $this->output('Error: Invalid command', true);
+    } else {
+      $this->output('Error: Invalid command', true);
     }
   }
 
-  public function listGroups(){
+  public function listGroups()
+  {
     $this->output("\n");
     $this->output("List of available test groups:", false);
     $testGroupFolders = glob($this->fixPath(__DIR__ . '/../../src/Test/Tests/*'), GLOB_ONLYDIR);
     foreach ($testGroupFolders as $dir) {
-        $ex = explode(DIRECTORY_SEPARATOR, $dir);
-        $namespace = end($ex);
-        $this->output(" - " . $namespace);
+      $ex = explode(DIRECTORY_SEPARATOR, $dir);
+      $namespace = end($ex);
+      $this->output(" - " . $namespace);
     }
   }
 
-  function generate($className){
+  function generate($className)
+  {
 
-    if(is_array($className)){
+    if (is_array($className)) {
       $className = array_shift($className);
     }
 
     $dir = false;
-    if(strpos($className, ':') !== false){
-        list($dir, $className) = explode(':', $className);
-        $dir = ucfirst(strtolower($dir));
-        $f = $this->fixPath(__DIR__ . '/../../src/Test/Tests/'.$dir);
-        if(!file_exists($f) || !is_dir($f)){
-            mkdir($f);
-        }
-    }else{
-        $f = $this->fixPath(__DIR__ . '/../../Test/Tests');
+    if (strpos($className, ':') !== false) {
+      list($dir, $className) = explode(':', $className);
+      $dir = ucfirst(strtolower($dir));
+      $f = $this->fixPath(__DIR__ . '/../../src/Test/Tests/' . $dir);
+      if (!file_exists($f) || !is_dir($f)) {
+        mkdir($f);
+      }
+    } else {
+      $f = $this->fixPath(__DIR__ . '/../../Test/Tests');
     }
 
     $className = ucfirst(strtolower($className));
-    if(!$this->endsWith($className, 'test')){
-        $className = $className.'Test';
-    }else{
-        $className = substr($className, 0, -4) . 'Test';
+    if (!$this->endsWith($className, 'test')) {
+      $className = $className . 'Test';
+    } else {
+      $className = substr($className, 0, -4) . 'Test';
     }
-    $f .= $this->fixPath('/'.$className.'.php');
+    $f .= $this->fixPath('/' . $className . '.php');
 
-    if(file_exists($f)){
-        $this->output('Failed to generate '.($dir ? $dir."/" : '').$className. ', file already exists', true);
-        return;
+    if (file_exists($f)) {
+      $this->output('Failed to generate ' . ($dir ? $dir . "/" : '') . $className . ', file already exists', true);
+      return;
     }
 
-    $h = fopen($f , 'w');
-    if(fwrite($h, "<?php
-namespace Tests".($dir ? "\\".$dir : '').";
+    $h = fopen($f, 'w');
+    if (fwrite($h, "<?php
+namespace Tests" . ($dir ? "\\" . $dir : '') . ";
 
 class $className extends \Tests\TestBase{
 
@@ -111,24 +116,23 @@ class $className extends \Tests\TestBase{
         //runs after EACH test method
     }
 
-}")){
-        $this->output("Generated " .$className, false);
-    }else{
-        $this->output('Failed to generate '.$className, true);
+}")) {
+      $this->output("Generated " . $className, false);
+    } else {
+      $this->output('Failed to generate ' . $className, true);
     }
 
     fclose($h);
   }
 
-  function start($groupName = null){
+  function start($groupName = null)
+  {
 
-    if(is_array($groupName)){
+    if (is_array($groupName)) {
       $groupName = array_shift($groupName);
     }
 
-    require_once($this->fixPath(__DIR__ . '/../../src/Test/_bootstrap.php'));
-    require_once($this->fixPath(__DIR__ . '/../../src/Test/_config.php'));
-
+    require_once($this->fixPath(__DIR__ . '/../../Tests/_bootstrap.php'));
 
     $passed = 0;
     $failed = 0;
@@ -136,49 +140,48 @@ class $className extends \Tests\TestBase{
     $startTime = microtime(true);
     $fileName = null;
 
-    if($this->contains($groupName, ':')){
+    if ($this->contains($groupName, ':')) {
       $_g = explode(":", $groupName);
       $groupName = $_g[0];
-      if(isset($_g[1])){
+      if (isset($_g[1])) {
         $fileName = $_g[1];
       }
     }
 
-    $baseGroupTests = glob($this->fixPath(__DIR__ . '/../../src/Test/Tests/*Test.php'));
-    $testGroupFolders = glob($this->fixPath(__DIR__ . '/../../src/Test/Tests/*'), GLOB_ONLYDIR);
+    $baseGroupTests = glob($this->fixPath(__DIR__ . '/../../Tests/*Test.php'));
+    $testGroupFolders = glob($this->fixPath(__DIR__ . '/../../Tests/*'), GLOB_ONLYDIR);
 
     $toRun = [
-        'BASE' => ['files' => $baseGroupTests, 'namespace' => null, 'name' => 'BASE']
+      'BASE' => ['files' => $baseGroupTests, 'namespace' => null, 'name' => 'BASE']
     ];
 
     foreach ($testGroupFolders as $dir) {
-        $ex = explode(DIRECTORY_SEPARATOR, $dir);
-        $namespace = end($ex);
-        $toRun[$namespace] = [
-            'files' => glob($this->fixPath(__DIR__ . '/../../src/Test/Tests/'.$namespace.'/*Test.php')),
-            'namespace' => $namespace,
-            'name' => $namespace
-        ];
+      $ex = explode(DIRECTORY_SEPARATOR, $dir);
+      $namespace = end($ex);
+      $toRun[$namespace] = [
+        'files' => glob($this->fixPath(__DIR__ . '/../../Tests/' . $namespace . '/*Test.php')),
+        'namespace' => $namespace,
+        'name' => $namespace
+      ];
     }
 
-    if($groupName){
-        if(isset($toRun[$groupName])){
-            $ret = $this->runFiles($toRun[$groupName], $fileName);
-            $passed += $ret[0];
-            $failed += $ret[1];
-            $exceptions += $ret[2];
-        }else{
-            $this->output("ERROR: Test group " . $groupName . " does not exist", true);
-            return;
-        }
-
-    }else{
-        foreach($toRun as $run){
-            $ret = $this->runFiles($run);
-            $passed += $ret[0];
-            $failed += $ret[1];
-            $exceptions += $ret[2];
-        }
+    if ($groupName) {
+      if (isset($toRun[$groupName])) {
+        $ret = $this->runFiles($toRun[$groupName], $fileName);
+        $passed += $ret[0];
+        $failed += $ret[1];
+        $exceptions += $ret[2];
+      } else {
+        $this->output("ERROR: Test group " . $groupName . " does not exist", true);
+        return;
+      }
+    } else {
+      foreach ($toRun as $run) {
+        $ret = $this->runFiles($run);
+        $passed += $ret[0];
+        $failed += $ret[1];
+        $exceptions += $ret[2];
+      }
     }
 
     $endTime = microtime(true);
@@ -187,43 +190,42 @@ class $className extends \Tests\TestBase{
     $this->output("\n\n");
     $this->output("=====================================================");
     $this->output(
-        ($passed + $failed) . ' Assertions, ' .
+      ($passed + $failed) . ' Assertions, ' .
         "\033[1;97;42m " . $passed . ' Passed' . " \e[0m, " .
-        ($failed ? "\033[1;97;41m " . $failed . ' Failed' . " \e[0m, " : $failed . ' Failed, ').
+      ($failed ? "\033[1;97;41m " . $failed . ' Failed' . " \e[0m, " : $failed . ' Failed, ') .
         ($exceptions ? "\033[1;97;41m " . $exceptions . ' Exceptions' . " \e[0m" : $exceptions . ' Exceptions')
     );
 
     $_diff = \DateTime::createFromFormat('U.u', number_format(($endTime - $startTime), 6, '.', ''));
 
-    $this->output("Total time taken: ". $_diff->format("H:i:s.u"));
+    $this->output("Total time taken: " . $_diff->format("H:i:s.u"));
     $this->output("=====================================================");
   }
 
-  protected function runFiles($obj, $fileName = null){
+  protected function runFiles($obj, $fileName = null)
+  {
 
-      $passed = 0;
-      $failed = 0;
-      $exceptions = 0;
+    $passed = 0;
+    $failed = 0;
+    $exceptions = 0;
 
-      $this->output("");
-      foreach ($obj['files'] as $tf) {
-          $f = explode(DIRECTORY_SEPARATOR, $tf);
-          $f = array_pop($f);
-          $f = str_replace('.php', '', $f);
-          if(($fileName && $f == $fileName) || !$fileName){
-            $this->output("..................... ".$obj['namespace'] . '\\' .$f." ...............");
-            $class = "\\Kws3\\ApiCore\\Test\\Tests\\".($obj['namespace'] ? $obj['namespace']."\\" : "").$f;
-            $class = new $class;
-            $class->run();
+    $this->output("");
+    foreach ($obj['files'] as $tf) {
+      $f = explode(DIRECTORY_SEPARATOR, $tf);
+      $f = array_pop($f);
+      $f = str_replace('.php', '', $f);
+      if (($fileName && $f == $fileName) || !$fileName) {
+        $this->output("..................... " . $obj['namespace'] . '\\' . $f . " ...............");
+        $class = "\\Kws3\\ApiCore\\Tests\\" . ($obj['namespace'] ? $obj['namespace'] . "\\" : "") . $f;
+        $class = new $class;
+        $class->run();
 
-            $passed += $class->passed;
-            $failed += $class->failed;
-            $exceptions += $class->exceptions;
-          }
+        $passed += $class->passed;
+        $failed += $class->failed;
+        $exceptions += $class->exceptions;
       }
+    }
 
-      return [$passed, $failed, $exceptions];
-
+    return [$passed, $failed, $exceptions];
   }
-
 }

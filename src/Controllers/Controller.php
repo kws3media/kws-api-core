@@ -8,7 +8,7 @@ use \Kws3\ApiCore\Utils\Tools;
 use \Kws3\ApiCore\Framework;
 use \Kws3\ApiCore\Loader;
 
-abstract class Controller
+class Controller
 {
 
   protected $app;

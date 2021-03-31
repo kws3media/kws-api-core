@@ -1,10 +1,10 @@
 <?php
 
-namespace Kws3\ApiCore\Test\Tests;
+namespace Kws3\ApiCore\Test;
 
 use \Kws3\ApiCore\Loader;
 
-class TestBase
+class Base
 {
 
   protected $app;
