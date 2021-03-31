@@ -67,6 +67,10 @@ class Identity extends \Prefab
 
     $api_key = Loader::get('HEADERS.' . $this->requestHeaderKey);
 
+    if (empty($api_key)) {
+      return;
+    }
+
     $token = new $this->tokensModel;
     $token->load(['`' . $this->accessTokenField . '` = ?', $api_key]);
     if ($token->dry()) {
