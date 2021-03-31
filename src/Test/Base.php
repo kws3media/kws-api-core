@@ -3,11 +3,14 @@
 namespace Kws3\ApiCore\Test;
 
 use \Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Utils\Tools;
 
 class Base
 {
 
   protected $app;
+
+  /** @var \Test */
   protected $test;
 
   public $passed = 0;
@@ -191,28 +194,22 @@ class Base
 
   function startsWith($haystack, $needle)
   {
-    $length = strlen($needle);
-    return (substr($haystack, 0, $length) === $needle);
+    return Tools::startsWith($haystack, $needle);
   }
 
   function endsWith($haystack, $needle)
   {
-    $length = strlen($needle);
-    if ($length == 0) {
-      return true;
-    }
-
-    return (substr($haystack, -$length) === $needle);
+    return Tools::endsWith($haystack, $needle);
   }
 
   function contains($haystack, $needle)
   {
-    return strpos($haystack, $needle) !== false;
+    return Tools::contains($haystack, $needle);
   }
 
   function notContains($haystack, $needle)
   {
-    return strpos($haystack, $needle) === false;
+    return !Tools::contains($haystack, $needle);
   }
 
   function arrayContains($expected, $actual)
