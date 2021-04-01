@@ -36,7 +36,7 @@ $CONFIG = [
 $configPath = fixPath($wd . '/config/apicore.php');
 if (file_exists($configPath)) {
   $repoConfig = require_once $configPath;
-  $CONFIG = array_merge_recursive($repoConfig, $CONFIG);
+  $CONFIG = $repoConfig + $CONFIG;
 }
 
 array_shift($argv);
