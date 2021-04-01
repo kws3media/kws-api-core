@@ -1,8 +1,8 @@
 <?php
 
-namespace Runners;
+namespace Kws3\ApiCore\Runners;
 
-class TestCore extends Base
+class Test extends Base
 {
   public function help()
   {
@@ -192,7 +192,7 @@ class $className extends \Tests\TestBase{
     $this->output(
       ($passed + $failed) . ' Assertions, ' .
         "\033[1;97;42m " . $passed . ' Passed' . " \e[0m, " .
-      ($failed ? "\033[1;97;41m " . $failed . ' Failed' . " \e[0m, " : $failed . ' Failed, ') .
+        ($failed ? "\033[1;97;41m " . $failed . ' Failed' . " \e[0m, " : $failed . ' Failed, ') .
         ($exceptions ? "\033[1;97;41m " . $exceptions . ' Exceptions' . " \e[0m" : $exceptions . ' Exceptions')
     );
 

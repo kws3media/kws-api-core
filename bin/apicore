@@ -17,18 +17,46 @@ spl_autoload_register(function ($class) {
 ob_implicit_flush(true);
 error_reporting(E_ALL & ~E_NOTICE);
 
-echo getcwd();
+$CONFIG = [
+  'runners_namespaces' => [
+    '\\Kws3\\ApiCore\\Runners'
+  ],
+  'test_namespaces' => []
+];
+
+
+//load bootstrap file with configurations
+$wd = getcwd();
+$configPath = fixPath($wd . '/config/apicore.php');
+if (file_exists($configPath)) {
+  $repoConfig = require_once $configPath;
+  $CONFIG = array_merge_recursive($repoConfig, $CONFIG);
+}
 
 array_shift($argv);
 
 $class_to_run = array_shift($argv);
 
-if (class_exists("Runners\\" . $class_to_run)) {
-  $runnerClass = "Runners\\" . $class_to_run;
-  $runner = new $runnerClass;
+$runnerClass = null;
+foreach ($CONFIG['runners_namespaces'] as $ns) {
+  if (class_exists($ns . "\\" . $class_to_run)) {
+    $runnerClass = $ns . "\\" . $class_to_run;
+    break;
+  }
+}
+
+if ($runnerClass) {
+  $runner = new $runnerClass($CONFIG);
   if ($argv[0] && $argv[0] == 'help') {
     $runner->help();
   } else {
     $runner->run($argv);
   }
+}
+
+
+function fixPath($path)
+{
+  $ds = DIRECTORY_SEPARATOR;
+  return str_replace(['/', '\\'], $ds, $path);
 }
