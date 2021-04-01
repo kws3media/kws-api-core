@@ -138,7 +138,7 @@ class $className extends " . $this->config['base_namespace'] . "{
       $groupName = array_shift($groupName);
     }
 
-    require_once($this->config['bootstrap_file']);
+    require_once($this->fixPath($this->config['bootstrap_file']));
 
     $passed = 0;
     $failed = 0;
