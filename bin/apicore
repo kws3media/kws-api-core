@@ -17,16 +17,22 @@ spl_autoload_register(function ($class) {
 ob_implicit_flush(true);
 error_reporting(E_ALL & ~E_NOTICE);
 
+$wd = getcwd();
+
 $CONFIG = [
   'runners_namespaces' => [
     '\\Kws3\\ApiCore\\Runners'
   ],
-  'test_namespaces' => []
+  'Test' => [
+    'namespace' => 'Kws3\ApiCore\Tests',
+    'base_namespace' => '\Kws3\ApiCore\Test\Base',
+    'folder' => $wd . '/Tests',
+    'bootstrap_file' => $wd . '/Tests/_bootstrap.php',
+  ]
 ];
 
 
 //load bootstrap file with configurations
-$wd = getcwd();
 $configPath = fixPath($wd . '/config/apicore.php');
 if (file_exists($configPath)) {
   $repoConfig = require_once $configPath;

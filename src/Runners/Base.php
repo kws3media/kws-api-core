@@ -9,7 +9,13 @@ class Base
   public function __construct($config = [])
   {
     ob_implicit_flush(true);
-    $this->config = $config;
+
+    //pick the right config values based on class name
+    $cn = explode("\\", get_class($this));
+    $curClass = array_pop($cn);
+    if (isset($config[$curClass])) {
+      $this->config = $config[$curClass];
+    }
   }
 
   public function help()
