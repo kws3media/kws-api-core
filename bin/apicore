@@ -1,8 +1,21 @@
 #!/usr/bin/env php
 <?php
 
+$wd = getcwd();
+
 //this autoloads classes from "vendor" dir if vendor dir exists
-$vendor_autoload = getcwd() . '/src/vendor/autoload.php';
+$composer_path = $wd . '/composer.json';
+$vendor_autoload = $wd . '/vendor/autoload.php';
+if (is_readable($composer_path)) {
+  $composer = file_get_contents($composer_path);
+  $composer = json_decode($composer, true);
+  if (array_key_exists('config', $composer)) {
+    if (array_key_exists('vendor-dir', $composer['config'])) {
+      $vendor_autoload = $wd . '/' . $composer['config']['vendor-dir'] . '/autoload.php';
+    }
+  }
+}
+
 if (is_readable($vendor_autoload)) {
   require_once($vendor_autoload);
 }
@@ -10,11 +23,11 @@ if (is_readable($vendor_autoload)) {
 ob_implicit_flush(true);
 error_reporting(E_ALL & ~E_NOTICE);
 
-$wd = getcwd();
+
 
 $CONFIG = [
   'runners_namespaces' => [
-    '\\Kws3\\ApiCore\\Runners' => __DIR__ . '/../src/'
+    '\\Kws3\\ApiCore\\Runners' => $wd . '/src/'
   ],
   'Test' => [
     'namespace' => 'Kws3\ApiCore\Tests',
