@@ -1,10 +1,12 @@
 <?php
-namespace Generators;
+
+namespace Kws3\ApiCore\Generators;
 
 use \PDO;
 use \RuntimeException;
 
-class ViewGenerator extends Base{
+class ViewGenerator extends Base
+{
 
   private $config = array();
   private $adapter = 'mysql';
@@ -107,7 +109,6 @@ Please ensure database connection settings are correct.", true);
         usleep(250000);
       }
     }
-
   }
 
   protected function generateDBView($view, $namespace = null, $extends = null, $classname = null)
@@ -143,7 +144,6 @@ Please ensure database connection settings are correct.", true);
     $modelTemplate = str_replace(array_keys($data), array_values($data), $modelTemplate);
 
     return $modelTemplate;
-
   }
 
   protected function getTemplate()
@@ -189,7 +189,6 @@ PHP;
     }
 
     return $VIEWS;
-
   }
 
   protected function className($t, $ns = '')
@@ -197,8 +196,8 @@ PHP;
     return $ns . ucfirst(strtolower($t));
   }
 
-  protected function normalizeSource($source){
+  protected function normalizeSource($source)
+  {
     return preg_replace("/CREATE (.*) VIEW `/", 'CREATE OR REPLACE VIEW `', $source);
   }
-
 }
