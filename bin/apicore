@@ -2,17 +2,10 @@
 <?php
 
 //this autoloads classes from "vendor" dir if vendor dir exists
-$vendor_autoload = __DIR__ . '/../vendor/autoload.php';
+$vendor_autoload = getcwd() . '/src/vendor/autoload.php';
 if (is_readable($vendor_autoload)) {
   require_once($vendor_autoload);
 }
-
-//this autoloads classes from current folder
-spl_autoload_register(function ($class) {
-  $file = preg_replace('#\\\#', '/', $class) . '.php';
-  if (stream_resolve_include_path($file))
-    require $file;
-});
 
 ob_implicit_flush(true);
 error_reporting(E_ALL & ~E_NOTICE);
@@ -21,7 +14,7 @@ $wd = getcwd();
 
 $CONFIG = [
   'runners_namespaces' => [
-    '\\Kws3\\ApiCore\\Runners'
+    '\\Kws3\\ApiCore\\Runners' => __DIR__ . '/../src/'
   ],
   'Test' => [
     'namespace' => 'Kws3\ApiCore\Tests',
@@ -36,15 +29,35 @@ $CONFIG = [
 $configPath = fixPath($wd . '/config/apicore.php');
 if (file_exists($configPath)) {
   $repoConfig = require_once $configPath;
+
+  //patch runners_namespaces by merging both default and incoming values
+  if (array_key_exists('runners_namespaces', $repoConfig)) {
+    $repoConfig['runners_namespaces'] = array_merge($repoConfig['runners_namespaces'], $CONFIG['runners_namespaces']);
+  }
+
   $CONFIG = $repoConfig + $CONFIG;
 }
+
+//this autoloads classes from current folder
+spl_autoload_register(function ($class) use ($CONFIG) {
+  $file = preg_replace('#\\\|_(?!.+\\\)#', '/', $class) . '.php';
+  if (stream_resolve_include_path($file)) {
+    require $file;
+  } else {
+    foreach ($CONFIG['runners_namespaces'] as $ns => $folder) {
+      if (stream_resolve_include_path($folder . $file)) {
+        require $folder . $file;
+      }
+    }
+  }
+});
 
 array_shift($argv);
 
 $class_to_run = array_shift($argv);
 
 $runnerClass = null;
-foreach ($CONFIG['runners_namespaces'] as $ns) {
+foreach ($CONFIG['runners_namespaces'] as $ns => $folder) {
   if (class_exists($ns . "\\" . $class_to_run)) {
     $runnerClass = $ns . "\\" . $class_to_run;
     break;
@@ -58,8 +71,23 @@ if ($runnerClass) {
   } else {
     $runner->run($argv);
   }
+} else {
+  output("$class_to_run runner not found", true);
 }
 
+
+function output($msg, $err = null)
+{
+  if ($err == true) {
+    echo "\033[1;97;41m " . $msg . " \e[0m" . "\n";
+  } elseif ($err === false) {
+    echo "\033[1;97;42m " . $msg . " \e[0m" . "\n";
+  } else {
+    echo $msg . "\n";
+  }
+  ob_flush();
+  ob_end_flush();
+}
 
 function fixPath($path)
 {
