@@ -83,22 +83,32 @@ function send500Response()
   // Clean any previous output in the buffer
   while (ob_get_level())
     ob_end_clean();
-  // Send 500 HTTP header
-  header('HTTP/1.1 500 Internal Server Error');
 
-  header('Status: 500 Internal Server Error');
-  // Access control header
-  header('Access-Control-Allow-Origin: *');
+  if (!defined('AUTOMATED_TESTING')) {
+    // Send 500 HTTP header
+    header('HTTP/1.1 500 Internal Server Error');
+
+    header('Status: 500 Internal Server Error');
+    // Access control header
+    header('Access-Control-Allow-Origin: *');
+  }
+
 
   tryDBGEnd();
 
   // Send 500 HTTP body
   // Default to JSON format
   if (!isset($_SERVER['HTTP_ACCEPT']) || $_SERVER["HTTP_ACCEPT"] != "application/xml") {
-    header('Content-type: application/json');
+    if (!defined('AUTOMATED_TESTING')) {
+      header('Content-type: application/json');
+    }
+
     $response = str_replace(array(" ", "\n"), "", $json_500_response);
   } else {
-    header('Content-type: application/xml');
+    if (!defined('AUTOMATED_TESTING')) {
+      header('Content-type: application/xml');
+    }
+
     $response = str_replace(array(" ", "\n"), "", $xml_500_response);
   }
   echo $response;

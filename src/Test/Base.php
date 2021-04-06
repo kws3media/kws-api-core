@@ -46,21 +46,20 @@ class Base
   {
     $config = Loader::get('TEST_DB_CONFIG');
     Loader::set('DB', call_user_func(function ($config) {
-      $dbconfig = $config['TEST_DB_CONFIG'];
-      $dsn = $dbconfig['adapter'] . ':host=' . $dbconfig['host'] . ';dbname=' . $dbconfig['dbname'];
+      $dsn = $config['adapter'] . ':host=' . $config['host'] . ';dbname=' . $config['dbname'];
 
       try {
-        return new \DB\SQL(
+        return \Kws3\ApiCore\Framework::createDB(
           $dsn,
-          $dbconfig['username'],
-          $dbconfig['password']
+          $config['username'],
+          $config['password']
         );
       } catch (\Exception $ex) {
         $this->op('Unable to connect to the database.', 'Uncaught Exception', true);
         $this->exceptions++;
         echo "\n";
       }
-    }, $this->app, $config));
+    }, $config['DB']));
   }
 
   function run()

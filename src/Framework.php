@@ -60,6 +60,9 @@ class Framework extends \Prefab
 
   public static function createDB($dsn, $user = NULL, $pw = NULL, array $options = NULL)
   {
+    if (empty($user)) {
+      return;
+    }
     if (self::isClockworkEnabled()) {
       return new LoggableSQL($dsn, $user, $pw, $options);
     }

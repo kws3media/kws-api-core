@@ -1,8 +1,8 @@
 <?php
 
-namespace Runners;
+namespace Kws3\ApiCore\Runners;
 
-class TestCore extends Base
+class Test extends Base
 {
   public function help()
   {
@@ -44,9 +44,11 @@ class TestCore extends Base
 
   public function listGroups()
   {
+    $folder = $this->config['folder'];
+
     $this->output("\n");
     $this->output("List of available test groups:", false);
-    $testGroupFolders = glob($this->fixPath(__DIR__ . '/../../src/Test/Tests/*'), GLOB_ONLYDIR);
+    $testGroupFolders = glob($this->fixPath($folder . '/*'), GLOB_ONLYDIR);
     foreach ($testGroupFolders as $dir) {
       $ex = explode(DIRECTORY_SEPARATOR, $dir);
       $namespace = end($ex);
@@ -57,6 +59,8 @@ class TestCore extends Base
   function generate($className)
   {
 
+    $folder = $this->config['folder'];
+
     if (is_array($className)) {
       $className = array_shift($className);
     }
@@ -65,12 +69,12 @@ class TestCore extends Base
     if (strpos($className, ':') !== false) {
       list($dir, $className) = explode(':', $className);
       $dir = ucfirst(strtolower($dir));
-      $f = $this->fixPath(__DIR__ . '/../../src/Test/Tests/' . $dir);
+      $f = $this->fixPath($folder . '/' . $dir);
       if (!file_exists($f) || !is_dir($f)) {
         mkdir($f);
       }
     } else {
-      $f = $this->fixPath(__DIR__ . '/../../Test/Tests');
+      $f = $this->fixPath($folder);
     }
 
     $className = ucfirst(strtolower($className));
@@ -88,9 +92,9 @@ class TestCore extends Base
 
     $h = fopen($f, 'w');
     if (fwrite($h, "<?php
-namespace Tests" . ($dir ? "\\" . $dir : '') . ";
+namespace " . $this->config['namespace'] . ($dir ? "\\" . $dir : '') . ";
 
-class $className extends \Tests\TestBase{
+class $className extends " . $this->config['base_namespace'] . "{
 
     /**
      * List of tests
@@ -128,11 +132,13 @@ class $className extends \Tests\TestBase{
   function start($groupName = null)
   {
 
+    $folder = $this->fixPath($this->config['folder']);
+
     if (is_array($groupName)) {
       $groupName = array_shift($groupName);
     }
 
-    require_once($this->fixPath(__DIR__ . '/../../Tests/_bootstrap.php'));
+    require_once($this->fixPath($this->config['bootstrap_file']));
 
     $passed = 0;
     $failed = 0;
@@ -148,8 +154,8 @@ class $className extends \Tests\TestBase{
       }
     }
 
-    $baseGroupTests = glob($this->fixPath(__DIR__ . '/../../Tests/*Test.php'));
-    $testGroupFolders = glob($this->fixPath(__DIR__ . '/../../Tests/*'), GLOB_ONLYDIR);
+    $baseGroupTests = glob($this->fixPath($folder . '/*Test.php'));
+    $testGroupFolders = glob($this->fixPath($folder . '/*'), GLOB_ONLYDIR);
 
     $toRun = [
       'BASE' => ['files' => $baseGroupTests, 'namespace' => null, 'name' => 'BASE']
@@ -159,7 +165,7 @@ class $className extends \Tests\TestBase{
       $ex = explode(DIRECTORY_SEPARATOR, $dir);
       $namespace = end($ex);
       $toRun[$namespace] = [
-        'files' => glob($this->fixPath(__DIR__ . '/../../Tests/' . $namespace . '/*Test.php')),
+        'files' => glob($this->fixPath($folder . '/' . $namespace . '/*Test.php')),
         'namespace' => $namespace,
         'name' => $namespace
       ];
@@ -192,7 +198,7 @@ class $className extends \Tests\TestBase{
     $this->output(
       ($passed + $failed) . ' Assertions, ' .
         "\033[1;97;42m " . $passed . ' Passed' . " \e[0m, " .
-      ($failed ? "\033[1;97;41m " . $failed . ' Failed' . " \e[0m, " : $failed . ' Failed, ') .
+        ($failed ? "\033[1;97;41m " . $failed . ' Failed' . " \e[0m, " : $failed . ' Failed, ') .
         ($exceptions ? "\033[1;97;41m " . $exceptions . ' Exceptions' . " \e[0m" : $exceptions . ' Exceptions')
     );
 
@@ -216,7 +222,7 @@ class $className extends \Tests\TestBase{
       $f = str_replace('.php', '', $f);
       if (($fileName && $f == $fileName) || !$fileName) {
         $this->output("..................... " . $obj['namespace'] . '\\' . $f . " ...............");
-        $class = "\\Kws3\\ApiCore\\Tests\\" . ($obj['namespace'] ? $obj['namespace'] . "\\" : "") . $f;
+        $class = $this->config['namespace'] . "\\" . ($obj['namespace'] ? $obj['namespace'] . "\\" : "") . $f;
         $class = new $class;
         $class->run();
 
