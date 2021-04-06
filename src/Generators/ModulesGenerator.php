@@ -1,6 +1,6 @@
 <?php
 
-namespace Generators;
+namespace Kws3\ApiCore\Generators;
 
 
 class ModulesGenerator extends Base
@@ -19,25 +19,27 @@ class ModulesGenerator extends Base
     $config = $this->config;
     $className = $this->className($config['class_name']);
 
-    if($config['type'] == 'modules'){
-      $files = array_map(function($p) use ($className){
-        return $p.$className.'.php';
-      },
-      array_column($config['templates'], 'output'));
-      $this->checkFileExsist($files);
+    if ($config['type'] == 'modules') {
+      $files = array_map(
+        function ($p) use ($className) {
+          return $p . $className . '.php';
+        },
+        array_column($config['templates'], 'output')
+      );
+      $this->checkFileExists($files);
     }
 
     foreach ($config['templates'] as $temp) {
 
       $contents = file_get_contents($temp['template']);
       $contents = str_replace('%s', $className, $contents);
-      $filename = $temp['output'].$className.'.php';
-      $this->checkFileExsist($filename);
+      $filename = $temp['output'] . $className . '.php';
+      $this->checkFileExists($filename);
 
       if (file_put_contents($filename, $contents)) {
-        $this->output("Generated " . $className . " ".$temp['name']);
+        $this->output("Generated " . $className . " " . $temp['name']);
       } else {
-        $this->output('Failed to generate ' . $className . ' '.$temp['output'], true);
+        $this->output('Failed to generate ' . $className . ' ' . $temp['output'], true);
       }
       usleep(250000);
     }
@@ -48,16 +50,15 @@ class ModulesGenerator extends Base
     return $ns . ucfirst(strtolower($t));
   }
 
-  protected function checkFileExsist($filename)
+  protected function checkFileExists($filename)
   {
     $_filename = (array) $filename;
 
-    foreach($_filename as $fn){
+    foreach ($_filename as $fn) {
       if (file_exists($fn)) {
         $this->output("The file  $fn already exists, please try different name", true);
         exit();
       }
     }
   }
-
 }
