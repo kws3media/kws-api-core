@@ -44,7 +44,7 @@ class Base
 
   function setDB()
   {
-    $config = Loader::get('TEST_DB_CONFIG');
+    $config = Loader::get('CONFIG');
     Loader::set('DB', call_user_func(function ($config) {
       $dsn = $config['adapter'] . ':host=' . $config['host'] . ';dbname=' . $config['dbname'];
 
@@ -59,7 +59,7 @@ class Base
         $this->exceptions++;
         echo "\n";
       }
-    }, $config['DB']));
+    }, $config['TEST_DB']));
   }
 
   function run()
