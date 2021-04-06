@@ -1,12 +1,12 @@
 <?php
 
-namespace Kws3\ApiCore\Utils\Reports;
+namespace Kws3\ApiCore\Reports;
 
 use \Kws3\ApiCore\Models\Model;
 use \Kws3\ApiCore\Loader;
 use \Kws3\ApiCore\Utils\Tools;
 use \Kws3\ApiCore\Exceptions\HTTPException;
-use \Kws3\ApiCore\Utils\Reports\QueryOptions;
+use \Kws3\ApiCore\Reports\QueryOptions;
 
 class QueryGenerator extends Model
 {

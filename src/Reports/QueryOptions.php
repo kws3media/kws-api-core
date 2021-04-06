@@ -1,6 +1,6 @@
 <?php
 
-namespace Kws3\ApiCore\Utils\Reports;
+namespace Kws3\ApiCore\Reports;
 
 class QueryOptions
 {
