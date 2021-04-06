@@ -6,7 +6,6 @@ use \Kws3\ApiCore\Models\Model;
 use \Kws3\ApiCore\Loader;
 use \Kws3\ApiCore\Utils\Tools;
 use \Kws3\ApiCore\Exceptions\HTTPException;
-use \Kws3\ApiCore\Reports\QueryOptions;
 
 class QueryGenerator extends Model
 {
@@ -69,11 +68,10 @@ class QueryGenerator extends Model
     $this->DB = Loader::getDB();
   }
 
-  public function mainQuery($filters, $offset = null, $limit = null)
+  public function mainQuery($filters, $fields, $offset = null, $limit = null)
   {
     $query = $this->buildQuery($filters);
     $bindings = $this->buildBindings($filters);
-    $fields = $this->buildFields();
 
     //Sanitize limit and offset
     $offset = filter_var($offset, FILTER_SANITIZE_NUMBER_INT);
@@ -86,11 +84,10 @@ class QueryGenerator extends Model
     return empty($results) ? [] : $results;
   }
 
-  public function countQuery($filters)
+  public function countQuery($filters, $fields)
   {
     $query = $this->buildQuery($filters);
     $bindings = $this->buildBindings($filters);
-    $fields = $this->buildFields();
 
     $count_query = 'SELECT count(*) as total FROM (' . 'SELECT ' . $fields . $query . ') as count_query;';
     $count_results = $this->DB->exec($count_query, $bindings);
@@ -118,23 +115,6 @@ class QueryGenerator extends Model
     $query .= !empty($this->model->order_by) ? " ORDER BY " . $this->model->order_by : '';
 
     return str_ireplace([';'], '', $query);
-  }
-
-  protected function buildFields()
-  {
-    $fields = $this->model->field_names;
-
-    preg_match_all('/\[\[([^\]]+)\]\]/', $fields, $matches);
-
-    foreach ($matches[1] as $key => $value) {
-      $pat = explode(':', $value);
-      if (method_exists(new QueryOptions(), $pat[0])) {
-        $case_string = QueryOptions::{$pat[0]}($pat[1]);
-        $fields = str_replace($matches[0][$key], $case_string, $fields);
-      }
-    }
-
-    return str_ireplace([';'], '', $fields);
   }
 
   protected function buildBindings($filters)
