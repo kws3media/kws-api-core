@@ -27,7 +27,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 $CONFIG = [
   'runners_namespaces' => [
-    '\\Kws3\\ApiCore\\Runners' => $wd . '/src/'
+    '\\Kws3\\ApiCore\\Runners' => __DIR__ . '/../src/'
   ],
   'Test' => [
     'namespace' => 'Kws3\ApiCore\Tests',
