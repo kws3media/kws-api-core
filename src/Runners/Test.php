@@ -92,35 +92,42 @@ class Test extends Base
 
     $h = fopen($f, 'w');
     if (fwrite($h, "<?php
+
 namespace " . $this->config['namespace'] . ($dir ? "\\" . $dir : '') . ";
 
-class $className extends " . $this->config['base_namespace'] . "{
+class $className extends " . $this->config['base_namespace'] .
+    "
+{
 
-    /**
-     * List of tests
-     * ================
-     * [ ] test description 1
-     * [ ] test description 2
-     *
-     */
+  /**
+   * List of tests
+   * ================
+   * [ ] test description 1
+   * [ ] test description 2
+   *
+   */
 
-    function before(){
-        //runs before running ANY test method
-    }
+  function before()
+  {
+    //runs before running ANY test method
+  }
 
-    function after(){
-        //runs after running ALL test methods
-    }
+  function after()
+  {
+    //runs after running ALL test methods
+  }
 
-    function beforeEach(){
-        //runs before EACH test method
-    }
+  function beforeEach()
+  {
+    //runs before EACH test method
+  }
 
-    function afterEach(){
-        //runs after EACH test method
-    }
-
-}")) {
+  function afterEach()
+  {
+    //runs after EACH test method
+  }
+}
+")) {
       $this->output("Generated " . $className, false);
     } else {
       $this->output('Failed to generate ' . $className, true);
