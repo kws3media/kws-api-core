@@ -31,9 +31,9 @@ class QueryOptions
     preg_match_all('/\[\[([^\]]+)\]\]/', $fields, $matches);
 
     foreach ($matches[1] as $key => $value) {
-      $pat = explode(':', $value);
-      //if (method_exists(__CLASS__, $pat[0])) {
-      $case_string = static::{$pat[0]}($pat[1]);
+      list($methodName, $parameter) = explode(':', $value);
+      //if (method_exists(__CLASS__, $methodName)) {
+      $case_string = static::{$methodName}($parameter);
       $fields = str_replace($matches[0][$key], $case_string, $fields);
       //}
     }
