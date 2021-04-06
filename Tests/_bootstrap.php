@@ -7,8 +7,8 @@ spl_autoload_register(function ($class) {
 
   $file = preg_replace('#\\\|_(?!.+\\\)#', '/', $class) . '.php';
   $file = str_replace('Kws3/ApiCore/Tests', 'Tests', $file);
-
-  if (stream_resolve_include_path($file))
+  if (stream_resolve_include_path($file)) {
     require $file;
+  }
 });
 $app = \Base::instance();

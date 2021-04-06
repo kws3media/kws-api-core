@@ -54,12 +54,20 @@ if (file_exists($configPath)) {
 //this autoloads classes from current folder
 spl_autoload_register(function ($class) use ($CONFIG) {
   $file = preg_replace('#\\\|_(?!.+\\\)#', '/', $class) . '.php';
+  $validNs = ['Runners', 'Generators'];
+  $baseNsParts = explode('/', $file);
+  $baseNS = array_shift($baseNsParts);
+  if (!in_array($baseNS, $validNs)) {
+    return;
+  }
+
   if (stream_resolve_include_path($file)) {
     require $file;
   } else {
     foreach ($CONFIG['runners_namespaces'] as $ns => $folder) {
       if (stream_resolve_include_path($folder . $file)) {
         require $folder . $file;
+        break;
       }
     }
   }
