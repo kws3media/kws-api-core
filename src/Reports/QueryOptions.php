@@ -26,6 +26,21 @@ class QueryOptions
     return $case_string;
   }
 
+  public static function buildFields($fields)
+  {
+    preg_match_all('/\[\[([^\]]+)\]\]/', $fields, $matches);
+
+    foreach ($matches[1] as $key => $value) {
+      $pat = explode(':', $value);
+      //if (method_exists(__CLASS__, $pat[0])) {
+      $case_string = static::{$pat[0]}($pat[1]);
+      $fields = str_replace($matches[0][$key], $case_string, $fields);
+      //}
+    }
+
+    return str_ireplace([';'], '', $fields);
+  }
+
   public static function formatDateDMY($field)
   {
     $_field = self::getAliases($field);
