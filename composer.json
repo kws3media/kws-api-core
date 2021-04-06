@@ -2,6 +2,7 @@
     "name": "kws3/api-core",
     "version": "1.0.0",
     "description": "KWS3 Api Core",
+    "license": "MIT",
     "scripts":{
         "test": "php bin/apicore Test"
     },
