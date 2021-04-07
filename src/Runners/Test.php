@@ -2,6 +2,8 @@
 
 namespace Kws3\ApiCore\Runners;
 
+use \Kws3\ApiCore\Utils\ConsoleColor;
+
 class Test extends Base
 {
   public function help()
@@ -204,9 +206,9 @@ class $className extends " . $this->config['base_namespace'] .
     $this->output("=====================================================");
     $this->output(
       ($passed + $failed) . ' Assertions, ' .
-        "\033[1;97;42m " . $passed . ' Passed' . " \e[0m, " .
-        ($failed ? "\033[1;97;41m " . $failed . ' Failed' . " \e[0m, " : $failed . ' Failed, ') .
-        ($exceptions ? "\033[1;97;41m " . $exceptions . ' Exceptions' . " \e[0m" : $exceptions . ' Exceptions')
+      ConsoleColor::success(" " . $passed . ' Passed ') . ", " .
+      ($failed ? ConsoleColor::error(" " . $failed . ' Failed ') . ", " : $failed . ' Failed, ') .
+      ($exceptions ? ConsoleColor::warning(" " . $exceptions . ' Exceptions ') . ", " : $exceptions . ' Exceptions, ')
     );
 
     $_diff = \DateTime::createFromFormat('U.u', number_format(($endTime - $startTime), 6, '.', ''));

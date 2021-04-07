@@ -37,7 +37,7 @@ class ModulesGenerator extends Base
       $this->checkFileExists($filename);
 
       if (file_put_contents($filename, $contents)) {
-        $this->output("Generated " . $className . " " . $temp['name']);
+        $this->output("Generated " . $className . " " . $temp['name'], false);
       } else {
         $this->output('Failed to generate ' . $className . ' ' . $temp['output'], true);
       }

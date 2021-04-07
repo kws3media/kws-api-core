@@ -4,6 +4,7 @@ namespace Kws3\ApiCore\Test;
 
 use \Kws3\ApiCore\Loader;
 use \Kws3\ApiCore\Utils\Tools;
+use \Kws3\ApiCore\Utils\ConsoleColor;
 
 class Base
 {
@@ -375,9 +376,9 @@ class Base
   function op($txt, $msg, $err = false)
   {
     if ($err) {
-      echo "  -> \033[1;97;41m " . $msg . " \e[0m" . " - $txt\n";
+      echo "  -> " . ConsoleColor::error(" " . $msg . " ") . " - $txt\n";
     } else {
-      echo "  -> \033[1;97;42m " . $msg . " \e[0m" . " - $txt\n";
+      echo "  -> " . ConsoleColor::success(" " . $msg . " ") . " - $txt\n";
     }
     ob_flush();
     ob_end_flush();

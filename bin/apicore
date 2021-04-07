@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+use \Kws3\ApiCore\Utils\ConsoleColor;
+
 $wd = getcwd();
 
 //this autoloads classes from "vendor" dir if vendor dir exists
@@ -100,9 +102,9 @@ if ($runnerClass) {
 function output($msg, $err = null)
 {
   if ($err == true) {
-    echo "\033[1;97;41m " . $msg . " \e[0m" . "\n";
+    echo ConsoleColor::error(" " . $msg . " ") . "\n";
   } elseif ($err === false) {
-    echo "\033[1;97;42m " . $msg . " \e[0m" . "\n";
+    echo ConsoleColor::success(" " . $msg . " ") . "\n";
   } else {
     echo $msg . "\n";
   }

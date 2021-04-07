@@ -2,15 +2,17 @@
 
 namespace Kws3\ApiCore\Generators;
 
+use \Kws3\ApiCore\Utils\ConsoleColor;
+
 class Base
 {
 
   protected function output($msg, $err = null)
   {
     if ($err == true) {
-      echo "\033[1;97;41m " . $msg . " \e[0m" . "\n";
+      echo ConsoleColor::error(" " . $msg . " ") . "\n";
     } elseif ($err === false) {
-      echo "\033[1;97;42m " . $msg . " \e[0m" . "\n";
+      echo ConsoleColor::success(" " . $msg . " ") . "\n";
     } else {
       echo $msg . "\n";
     }

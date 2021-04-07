@@ -3,6 +3,7 @@
 namespace Kws3\ApiCore\Controllers;
 
 use \Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Utils\ConsoleColor;
 
 abstract class CLI
 {
@@ -27,10 +28,10 @@ abstract class CLI
   protected function log($msg, $err = null)
   {
     if ($err == true) {
-      echo "\033[1;97;41m " . $msg . " \e[0m" . "\n";
+      echo ConsoleColor::error(" " . $msg . " ") . "\n";
       dbg()->error($msg);
     } elseif ($err === false) {
-      echo "\033[1;97;42m " . $msg . " \e[0m" . "\n";
+      echo ConsoleColor::success(" " . $msg . " ") . "\n";
       dbg()->notice($msg);
     } else {
       echo $msg . "\n";
