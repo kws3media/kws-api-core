@@ -18,9 +18,9 @@ class FilterOptions
       if (isset($config_option['is_dynamic']) && $config_option['is_dynamic']) {
         $methodName = $config_option['dynamic_method'];
 
-        //if ($methodName && method_exists(__CLASS__, $methodName)) {
-        $config_option['options'] = static::$methodName();
-        //}
+        if ($methodName && method_exists(static::class, $methodName)) {
+          $config_option['options'] = static::$methodName();
+        }
       }
     }
     return $configurable_options;
