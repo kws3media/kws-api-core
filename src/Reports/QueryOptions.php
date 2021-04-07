@@ -49,7 +49,7 @@ class QueryOptions
 
     $excluding_methods = [
       'getAliases', 'buildFields',
-      'buildFieldMap', 'getClassMethods'
+      'buildFieldMap', 'getFieldMaps'
     ];
 
     return array_values(
