@@ -42,9 +42,9 @@ class QueryOptions
   }
 
 
-  public static function getFieldMaps($class)
+  public static function getFieldMaps()
   {
-    $all_methods = get_class_methods($class);
+    $all_methods = get_class_methods(static::class);
 
     $excluding_methods = [
       'getAliases', 'buildFields',
