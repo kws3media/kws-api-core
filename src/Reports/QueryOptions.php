@@ -4,10 +4,6 @@ namespace Kws3\ApiCore\Reports;
 
 class QueryOptions
 {
-  public static $INTERNAL_METHODS = [
-    'getAliases', 'buildFields', 'buildFieldMap'
-  ];
-
   public static function getAliases($config)
   {
     $field = [];
@@ -43,6 +39,24 @@ class QueryOptions
     }
 
     return str_ireplace([';'], '', $fields);
+  }
+
+
+  public static function getFieldMaps($class)
+  {
+    $all_methods = get_class_methods($class);
+
+    $excluding_methods = [
+      'getAliases', 'buildFields',
+      'buildFieldMap', 'getClassMethods'
+    ];
+
+    return array_values(
+      array_diff(
+        $all_methods,
+        $excluding_methods
+      )
+    );
   }
 
   public static function formatDateDMY($field)
