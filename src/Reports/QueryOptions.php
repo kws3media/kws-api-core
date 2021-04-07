@@ -4,6 +4,10 @@ namespace Kws3\ApiCore\Reports;
 
 class QueryOptions
 {
+  public static $INTERNAL_METHODS = [
+    'getAliases', 'buildFields', 'buildFieldMap'
+  ];
+
   public static function getAliases($config)
   {
     $field = [];

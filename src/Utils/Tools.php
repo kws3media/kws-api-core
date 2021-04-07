@@ -173,4 +173,20 @@ class Tools extends \Prefab
 
     return ['searchFields' => $mapped, 'filters' => $filters];
   }
+
+  public static function getClassMethods($class)
+  {
+    $all_methods = get_class_methods($class);
+
+    if (isset($class::$INTERNAL_METHODS)) {
+      return array_values(
+        array_diff(
+          $all_methods,
+          $class::$INTERNAL_METHODS
+        )
+      );
+    }
+
+    return $all_methods;
+  }
 }
