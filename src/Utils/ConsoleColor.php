@@ -41,19 +41,19 @@ class ConsoleColor extends \Prefab
   {
     //set some base themes
     $this->setTheme('success', [
-      self::B_GREEN,
+      self::BOLD,
       self::F_WHITE,
-      self::BOLD
+      self::B_GREEN,
     ]);
     $this->setTheme('error', [
-      self::B_RED,
+      self::BOLD,
       self::F_WHITE,
-      self::BOLD
+      self::B_RED,
     ]);
     $this->setTheme('warning', [
-      self::B_YELLOW,
+      self::BOLD,
       self::F_RED,
-      self::BOLD
+      self::B_YELLOW,
     ]);
   }
 
