@@ -37,7 +37,10 @@ abstract class CLI
       echo $msg . "\n";
       dbg()->info($msg);
     }
-    ob_flush();
+    if (ob_get_level() > 0) {
+      ob_flush();
+      ob_end_flush();
+    }
     flush();
     Loader::getLogger()->log($msg, static::$defaultLogCategory);
   }

@@ -39,8 +39,11 @@ class Base
     } else {
       echo $msg . "\n";
     }
-    ob_flush();
-    ob_end_flush();
+    if (ob_get_level() > 0) {
+      ob_flush();
+      ob_end_flush();
+    }
+    flush();
   }
 
   protected function startsWith($haystack, $needle)

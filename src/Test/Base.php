@@ -380,7 +380,10 @@ class Base
     } else {
       echo "  -> " . ConsoleColor::success(" " . $msg . " ") . " - $txt\n";
     }
-    ob_flush();
-    ob_end_flush();
+    if (ob_get_level() > 0) {
+      ob_flush();
+      ob_end_flush();
+    }
+    flush();
   }
 }
