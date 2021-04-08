@@ -26,14 +26,16 @@ class GenerateModules extends Base
 
   public function run($arg = [])
   {
-    if (!isset($arg[1]) && $arg[0] != 'module') {
-      $this->output('Arguments classname is missing, for help \'composer generate help\'', true);
-      exit();
-    }
     if (!isset($arg[0])) {
       $this->output('Arguments typename is missing, for help \'composer generate help\'', true);
       exit();
     }
+
+    if (!isset($arg[1]) && $arg[0] != 'module') {
+      $this->output('Arguments classname is missing, for help \'composer generate help\'', true);
+      exit();
+    }
+
 
     $typeName = $arg[0];
 
