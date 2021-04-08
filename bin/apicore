@@ -3,6 +3,11 @@
 
 use \Kws3\ApiCore\Utils\ConsoleColor;
 
+set_error_handler(function ($num, $str, $file, $line) {
+  output($str, true);
+  output($file . ':' . $line, true);
+});
+
 $wd = getcwd();
 
 //this autoloads classes from "vendor" dir if vendor dir exists
@@ -89,7 +94,7 @@ foreach ($CONFIG['runners_namespaces'] as $ns => $folder) {
 
 if ($runnerClass) {
   $runner = new $runnerClass($CONFIG);
-  if ($argv[0] && $argv[0] == 'help') {
+  if (isset($argv[0]) && $argv[0] == 'help') {
     $runner->help();
   } else {
     $runner->run($argv);
@@ -108,8 +113,11 @@ function output($msg, $err = null)
   } else {
     echo $msg . "\n";
   }
-  ob_flush();
-  ob_end_flush();
+  if (ob_get_level() > 0) {
+    ob_flush();
+    ob_end_flush();
+  }
+  flush();
 }
 
 function fixPath($path)
