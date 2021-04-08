@@ -8,7 +8,8 @@ abstract class Model extends \DB\Cortex
 {
   protected static $defaultLogCategory = 'application';
 
-  protected $fieldConf = [],
+  protected $app,
+    $fieldConf = [],
     $fluid = false,
     $db = 'DB',
     $ttl = 0,
