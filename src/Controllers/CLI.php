@@ -10,6 +10,8 @@ abstract class CLI
 
   protected static $defaultLogCategory = 'cli';
 
+  protected $app;
+
   //Route params
   protected $params = [];
 
@@ -19,6 +21,8 @@ abstract class CLI
       $this->log('Only available via CLI', true);
       exit;
     }
+
+    $this->app = \Base::instance();
 
     $this->params = $_SERVER['argv'];
     array_shift($this->params);
