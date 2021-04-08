@@ -19,6 +19,7 @@ abstract class Model extends \DB\Cortex
 
   public function __construct()
   {
+    $this->app = \Base::instance();
 
     if (K_ENV == K_ENV_PRODUCTION) {
       $this->ttl = 86400;
