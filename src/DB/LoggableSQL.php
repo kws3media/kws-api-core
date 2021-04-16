@@ -4,10 +4,10 @@ namespace Kws3\ApiCore\DB;
 
 class LoggableSQL extends \DB\SQL
 {
-  function exec($cmds, $args = NULL, $ttl = 0, $log = TRUE)
+  function exec($cmds, $args = NULL, $ttl = 0, $log = TRUE, $stamp = false)
   {
 
-    $result = parent::exec($cmds, $args, $ttl, $log);
+    $result = parent::exec($cmds, $args, $ttl, $log, $stamp);
 
     list($duration, $cached, $query) = array_values($this->__parseLog());
     $query = $cached ? ('[CACHED] ' . $query) : $query;

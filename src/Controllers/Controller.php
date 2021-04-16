@@ -109,11 +109,11 @@ class Controller
     if ($verb != 'OPTIONS') {
       if (isset($routes[$pattern])) {
         if (
-          isset($routes[$pattern][3]) &&
-          isset($routes[$pattern][3][$verb]) &&
-          isset($routes[$pattern][3][$verb][0])
+          isset($routes[$pattern][0]) &&
+          isset($routes[$pattern][0][$verb]) &&
+          isset($routes[$pattern][0][$verb][0])
         ) {
-          $handler = explode('->', $routes[$pattern][3][$verb][0]);
+          $handler = explode('->', $routes[$pattern][0][$verb][0]);
           if (isset($handler[1])) {
             $this->currentAction = $handler[1];
           }
