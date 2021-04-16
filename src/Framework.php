@@ -196,21 +196,9 @@ class Framework extends \Prefab
   {
     $this->app = \Base::instance();
 
-    //patch request headers
-    $headers = Loader::getHeaders();
-    if (!isset($headers['Content-Type'])) {
-      if (isset($_SERVER['CONTENT_TYPE'])) {
-        Loader::set('HEADERS.Content-Type', $_SERVER['CONTENT_TYPE']);
-      }
-    }
-    if (!isset($headers['Content-Length'])) {
-      if (isset($_SERVER['CONTENT_LENGTH'])) {
-        Loader::set('HEADERS.Content-Length', $_SERVER['CONTENT_LENGTH']);
-      }
-    }
-
-
     $this->applyOptions($params);
+
+    $headers = Loader::getHeaders();
 
     // All OPTIONS requests get a 200, then die
     if (Loader::get('VERB') == 'OPTIONS') {
