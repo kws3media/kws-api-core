@@ -53,7 +53,8 @@ class Base
         return \Kws3\ApiCore\Framework::createDB(
           $dsn,
           $config['username'],
-          $config['password']
+          $config['password'],
+          [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
         );
       } catch (\Exception $ex) {
         $this->op('Unable to connect to the database.', 'Uncaught Exception', true);
