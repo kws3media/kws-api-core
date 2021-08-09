@@ -17,9 +17,15 @@
             "Kws3\\ApiCore\\": "src/"
         }
     },
+    "repositories": [
+      {
+          "type": "github",
+          "url":  "git@github.com:ekhaled/f3-cortex.git"
+      }
+    ],
     "require": {
         "bcosca/fatfree-core": "3.7.3",
-        "ikkez/f3-cortex": "1.7.2",
+        "ikkez/f3-cortex": "dev-patch-1",
         "itsgoingd/clockwork": "4.1.8",
         "aws/aws-sdk-php": "^3.18",
         "ekhaled/schema-parser-mysql": "1.3",
