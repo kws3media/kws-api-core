@@ -1,6 +1,6 @@
 {
     "name": "kws3/api-core",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "KWS3 Api Core",
     "license": "MIT",
     "scripts":{
