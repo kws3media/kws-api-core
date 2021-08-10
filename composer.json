@@ -1,6 +1,6 @@
 {
     "name": "kws3/api-core",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "description": "KWS3 Api Core",
     "license": "MIT",
     "scripts":{
@@ -17,15 +17,9 @@
             "Kws3\\ApiCore\\": "src/"
         }
     },
-    "repositories": [
-      {
-          "type": "github",
-          "url":  "git@github.com:ekhaled/f3-cortex.git"
-      }
-    ],
     "require": {
         "bcosca/fatfree-core": "3.7.3",
-        "ikkez/f3-cortex": "dev-patch-1",
+        "ekhaled/f3-cortex": "dev-master",
         "itsgoingd/clockwork": "4.1.8",
         "aws/aws-sdk-php": "^3.18",
         "ekhaled/schema-parser-mysql": "1.3",
