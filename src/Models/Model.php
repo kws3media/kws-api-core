@@ -192,7 +192,7 @@ abstract class Model extends \DB\Cortex
                 break;
               case 'in':
                 $queryPart = $field . " IN (" . $namedParam . ")";
-                $bind[$namedParam] = $value;
+                $bind[$namedParam] = explode('|', $value);
                 break;
               case 'lk':
                 $queryPart = $field . " LIKE " . $namedParam;
