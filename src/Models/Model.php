@@ -185,6 +185,10 @@ abstract class Model extends \DB\Cortex
                   $queryPart = $field . " IS NOT NULL";
                 }
                 break;
+              case 'in':
+                $queryPart = $field . " IN (" . $namedParam . ")";
+                $bind[$namedParam] = $value;
+                break;
               case 'lk':
                 $queryPart = $field . " LIKE " . $namedParam;
                 $bind[$namedParam] = '%' . $value . '%';
