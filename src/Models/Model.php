@@ -6,6 +6,11 @@ use \Kws3\ApiCore\Loader;
 
 abstract class Model extends \DB\Cortex
 {
+  const KWS_FILTER_MULTISELECT = 'multiselect';
+  const KWS_FILTER_SELECT = 'select';
+  const KWS_FILTER_DATE = 'date';
+  const KWS_FILTER_DATERANGE = 'daterange';
+
   protected static $defaultLogCategory = 'application';
 
   protected $app,
@@ -212,6 +217,20 @@ abstract class Model extends \DB\Cortex
               case 'xew':
                 $queryPart = $field . " NOT LIKE " . $namedParam;
                 $bind[$namedParam] = '%' . $value;
+                break;
+              case 'dt':
+                $queryPart = "DATE(" . $field . ") = " . $namedParam;
+                $bind[$namedParam] = $value;
+                break;
+              case 'dtbw':
+                $_values = explode(" ", $value);
+                $v_start = reset($_values);
+                $v_end = end($_values);
+                $namedParam_start = $namedParam . '_start';
+                $namedParam_end = $namedParam . '_end';
+                $queryPart = "DATE(" . $field . ") BETWEEN " . $namedParam_start . " AND " . $namedParam_end;
+                $bind[$namedParam_start] = $v_start;
+                $bind[$namedParam_end] = $v_end;
                 break;
             }
           }
