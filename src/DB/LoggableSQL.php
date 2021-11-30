@@ -4,7 +4,7 @@ namespace Kws3\ApiCore\DB;
 
 class LoggableSQL extends \DB\SQL
 {
-  function exec($cmds, $args = NULL, $ttl = 0, $log = TRUE, $stamp = false)
+  function exec($cmds, $args = NULL, $ttl = 0, $log = TRUE, $stamp = true)
   {
 
     $result = parent::exec($cmds, $args, $ttl, $log, $stamp);
