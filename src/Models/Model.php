@@ -4,6 +4,11 @@ namespace Kws3\ApiCore\Models;
 
 use \Kws3\ApiCore\Loader;
 
+/**
+ * @method static void log($msg) logs $msg to active log file as well as clockwork (if enabled)
+ * @method void log($msg) logs $msg to active log file as well as clockwork (if enabled)
+ */
+
 abstract class Model extends \DB\Cortex
 {
   const KWS_FILTER_MULTISELECT = 'multiselect';
