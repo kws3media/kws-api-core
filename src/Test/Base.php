@@ -289,7 +289,8 @@ class Base
   }
 
   /**
-   * mockException
+   * Create a request expecting it to throw an exception.
+   * If an exception is not thrown by the request, the test will fail implicitly.
    *
    * @param array
    * expected array keys:
@@ -318,7 +319,7 @@ class Base
   }
 
   /**
-   * mockRequest
+   * Create a request
    *
    * @param array
    * expected array keys:
