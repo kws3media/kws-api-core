@@ -173,24 +173,21 @@ class Base
   }
 
   /**
-   * setColumnDefaultValue
+   * Sets the default value of a column of a given table, to a given value
    *
    * @param
    * expected params:
-   * $table_name: required (string or array)
+   * $table_name: required (string)
    * $column_name: required (string)
    * $default_value: optional (string or integer) (defaults to 0)
-   * $data_type: optional (string) (has default value)
    **/
 
-  function setColumnDefaultValue($table_name, $column_name, $default_value = 0, $data_type = 'TINYINT(1)')
+  function setColumnDefaultValue($table_name, $column_name, $default_value = 0)
   {
-    foreach ((array) $table_name as $table) {
-      Loader::getDB()->exec('
-              ALTER TABLE `' . $table . '`
-              CHANGE COLUMN `' . $column_name . '` `' . $column_name . '` ' . $data_type . ' NULL DEFAULT "' . $default_value . '" ;
-          ');
-    }
+    Loader::getDB()->exec(
+    '
+      ALTER TABLE `' . $table_name . '` ALTER COLUMN `' . $column_name . '` SET DEFAULT "' . $default_value . '";
+    ');
   }
 
   function startsWith($haystack, $needle)
