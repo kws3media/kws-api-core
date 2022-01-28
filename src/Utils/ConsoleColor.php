@@ -5,6 +5,7 @@ namespace Kws3\ApiCore\Utils;
 /**
  * @method static string success()
  * @method static string error()
+ * @method static string info()
  * @method static string warning()
  * @method static string format(string $msg, array $codes)
  */
@@ -49,6 +50,11 @@ class ConsoleColor extends \Prefab
       self::BOLD,
       self::F_WHITE,
       self::B_RED,
+    ]);
+    $this->setTheme('info', [
+      self::BOLD,
+      self::F_BLUE,
+      self::B_WHITE,
     ]);
     $this->setTheme('warning', [
       self::BOLD,
