@@ -152,6 +152,7 @@ class $className extends " . $this->config['base_namespace'] .
     $passed = 0;
     $failed = 0;
     $exceptions = 0;
+    $failures = [];
     $startTime = microtime(true);
     $fileName = null;
 
@@ -186,6 +187,7 @@ class $className extends " . $this->config['base_namespace'] .
         $passed += $ret[0];
         $failed += $ret[1];
         $exceptions += $ret[2];
+        $failures = $ret[3];
       } else {
         $this->output("ERROR: Test group " . $groupName . " does not exist", true);
         return;
@@ -196,19 +198,21 @@ class $className extends " . $this->config['base_namespace'] .
         $passed += $ret[0];
         $failed += $ret[1];
         $exceptions += $ret[2];
+        $failures = array_merge($failures, $ret[3]);
       }
     }
 
     $endTime = microtime(true);
 
+    $this->renderFailures($failures);
 
     $this->output("\n\n");
     $this->output("=====================================================");
     $this->output(
       ($passed + $failed) . ' Assertions, ' .
       ConsoleColor::success(" " . $passed . ' Passed ') . ", " .
-      ($failed ? ConsoleColor::error(" " . $failed . ' Failed ') . ", " : $failed . ' Failed, ') .
-      ($exceptions ? ConsoleColor::warning(" " . $exceptions . ' Exceptions ') . ", " : $exceptions . ' Exceptions, ')
+        ($failed ? ConsoleColor::error(" " . $failed . ' Failed ') . ", " : $failed . ' Failed, ') .
+        ($exceptions ? ConsoleColor::warning(" " . $exceptions . ' Exceptions ') . ", " : $exceptions . ' Exceptions, ')
     );
 
     $_diff = \DateTime::createFromFormat('U.u', number_format(($endTime - $startTime), 6, '.', ''));
@@ -217,12 +221,31 @@ class $className extends " . $this->config['base_namespace'] .
     $this->output("=====================================================");
   }
 
+  protected function renderFailures($failures)
+  {
+    if (is_array($failures) && count($failures) > 0) {
+      $this->output("\n\n");
+      $this->output(ConsoleColor::error("====================================================="));
+      $this->output(ConsoleColor::error("                     FAILURES                        "));
+      $this->output(ConsoleColor::error("====================================================="));
+      foreach ($failures as $failure) {
+        $this->output(" - " . $failure['method']);
+        $this->output("  -> " . ConsoleColor::error(" Fail ") . "- " . $failure['text']);
+        list($file, $line) = $this->processSourceFile($failure['source']);
+        $this->output("  " . $file . ' ' . ConsoleColor::info("[Line " . $line . "]"));
+        $this->output("");
+      }
+      $this->output(ConsoleColor::error("================== END FAILURES ====================="));
+    }
+  }
+
   protected function runFiles($obj, $fileName = null)
   {
 
     $passed = 0;
     $failed = 0;
     $exceptions = 0;
+    $failures = [];
 
     $this->output("");
     foreach ($obj['files'] as $tf) {
@@ -238,9 +261,19 @@ class $className extends " . $this->config['base_namespace'] .
         $passed += $class->passed;
         $failed += $class->failed;
         $exceptions += $class->exceptions;
+        $failures = array_merge($failures, $class->failures());
       }
     }
 
-    return [$passed, $failed, $exceptions];
+    return [$passed, $failed, $exceptions, $failures];
+  }
+
+  protected function processSourceFile($source)
+  {
+    $cwd = getcwd();
+    $fileLine = explode(':', str_replace($cwd, "", $source));
+    return [
+      $fileLine[0], $fileLine[1]
+    ];
   }
 }
