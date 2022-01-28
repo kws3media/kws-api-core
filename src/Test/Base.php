@@ -289,6 +289,24 @@ class Base
   }
 
   /**
+   * Prints a description of the test to output console.
+   * @param string $msg
+   * @return void
+   */
+  function describe($msg)
+  {
+    $msgParts = preg_split("/(\r\n|\n|\r)/", trim($msg));
+    foreach ($msgParts as $msgPart) {
+      echo "  " . ConsoleColor::info(" " . trim($msgPart) . " ") . "\n";
+    }
+    if (ob_get_level() > 0) {
+      ob_flush();
+      ob_end_flush();
+    }
+    flush();
+  }
+
+  /**
    * Create a request expecting it to throw an exception.
    * If an exception is not thrown by the request, the test will fail implicitly.
    *
