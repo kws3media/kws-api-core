@@ -17,6 +17,8 @@ class Base
   public $passed = 0;
   public $failed = 0;
   public $exceptions = 0;
+  public $results = [];
+  public $failures = [];
 
   function __construct()
   {
@@ -86,6 +88,7 @@ class Base
           $this->{$m}();
           $this->afterEach();
           $this->log();
+          $this->handleResults($m);
           echo "\n";
         } catch (\Exception $ex) {
           $this->op($ex->getMessage(), 'Uncaught Exception', true);
@@ -95,6 +98,33 @@ class Base
       }
       $this->after();
     }
+  }
+
+  protected function handleResults($methodName)
+  {
+    $methodResults = $this->test->results();
+    if (is_array($methodResults) && count($methodResults) > 0) {
+      $this->results = array_merge($this->results, $methodResults);
+      foreach ($methodResults as $res) {
+        if ($res['status'] === false) {
+          $this->failures[] = [
+            'method' => $methodName,
+            'text' => $res['text'],
+            'source' => $res['source']
+          ];
+        }
+      }
+    }
+  }
+
+  function results()
+  {
+    return $this->results;
+  }
+
+  function failures()
+  {
+    return $this->failures;
   }
 
   function reIdentify($key)
@@ -185,9 +215,11 @@ class Base
   function setColumnDefaultValue($table_name, $column_name, $default_value = 0)
   {
     Loader::getDB()->exec(
+      '
+      ALTER TABLE `' . $table_name . '` ALTER COLUMN `' . $column_name . '` SET DEFAULT "' . $default_value .
+      '";
     '
-      ALTER TABLE `' . $table_name . '` ALTER COLUMN `' . $column_name . '` SET DEFAULT "' . $default_value . '";
-    ');
+    );
   }
 
   function startsWith($haystack, $needle)
