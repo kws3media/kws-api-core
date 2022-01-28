@@ -299,11 +299,7 @@ class Base
     foreach ($msgParts as $msgPart) {
       echo "  " . ConsoleColor::info(" " . trim($msgPart) . " ") . "\n";
     }
-    if (ob_get_level() > 0) {
-      ob_flush();
-      ob_end_flush();
-    }
-    flush();
+    $this->flush();
   }
 
   /**
@@ -397,6 +393,15 @@ class Base
     } else {
       echo "  -> " . ConsoleColor::success(" " . $msg . " ") . " - $txt\n";
     }
+    $this->flush();
+  }
+
+  /**
+   * Flush the output buffer
+   * @return void
+   */
+  function flush()
+  {
     if (ob_get_level() > 0) {
       ob_flush();
       ob_end_flush();
