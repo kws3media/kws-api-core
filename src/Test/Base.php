@@ -410,7 +410,7 @@ class Base
         $this->op($msg, 'Fail', true);
         $this->failed++;
       }
-      usleep(25000);
+      usleep(12500);
     }
   }
 
