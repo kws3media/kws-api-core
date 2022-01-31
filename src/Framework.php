@@ -77,7 +77,8 @@ class Framework extends \Prefab
         [
           'enable' => true,
           'register_helpers' => false,
-          'api' => Loader::get('BASE') . '/__clockwork/'
+          'api' => Loader::get('BASE') . '/__clockwork/',
+          'storage_expiration' => 60
         ] + $opts
       );
 
