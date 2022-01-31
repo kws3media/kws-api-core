@@ -20,6 +20,13 @@ class Base
   public $results = [];
   public $failures = [];
 
+  /**
+   * String array of method names that are to be run exclusively.
+   * When this array is filled, only the methods in the array will be run.
+   * @var array
+   */
+  protected $onlyRun = [];
+
   function __construct()
   {
     $this->app = \Base::instance();
@@ -71,6 +78,11 @@ class Base
     $class = get_class($this);
     $methods = get_class_methods($class);
 
+    $exclusives = null;
+    if ($this->onlyRun && is_array($this->onlyRun) && count($this->onlyRun) > 0) {
+      $exclusives = $this->onlyRun;
+    }
+
     $toRun = [];
     foreach ($methods as $meth) {
       if (stripos($meth, 'test') === 0) {
@@ -84,11 +96,23 @@ class Base
         $this->test = new \Test;
         echo "- " . $m . "\n";
         try {
-          $this->beforeEach();
-          $this->{$m}();
-          $this->afterEach();
-          $this->log();
-          $this->handleResults($m);
+          $canRunMethod = true;
+          if (!is_null($exclusives)) {
+            $canRunMethod = false;
+            if (in_array($m, $exclusives)) {
+              $canRunMethod = true;
+            }
+          }
+          if ($canRunMethod) {
+            $this->beforeEach();
+            $this->{$m}();
+            $this->afterEach();
+            $this->log();
+            $this->handleResults($m);
+          } else {
+            $this->describe('Skipping method');
+          }
+
           echo "\n";
         } catch (\Exception $ex) {
           $this->op($ex->getMessage(), 'Uncaught Exception', true);
@@ -217,7 +241,7 @@ class Base
     Loader::getDB()->exec(
       '
       ALTER TABLE `' . $table_name . '` ALTER COLUMN `' . $column_name . '` SET DEFAULT "' . $default_value .
-      '";
+        '";
     '
     );
   }
