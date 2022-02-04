@@ -70,27 +70,25 @@ class QueryGenerator extends Model
 
   public function mainQuery($filters, $fields, $offset = null, $limit = null)
   {
-    $query = $this->buildQuery($filters);
-    $bindings = $this->buildBindings($filters);
+    $query = $this->getQuery($filters);
 
     //Sanitize limit and offset
     $offset = filter_var($offset, FILTER_SANITIZE_NUMBER_INT);
     $limit = filter_var($limit, FILTER_SANITIZE_NUMBER_INT);
 
     $limit_query = $limit ? " LIMIT $offset, $limit;" : ";";
-    $main_query = 'SELECT ' . $fields . $query . $limit_query;
+    $main_query = 'SELECT ' . $fields . $query['query'] . $limit_query;
 
-    $results = $this->DB->exec($main_query, $bindings);
+    $results = $this->DB->exec($main_query, $query['bindings']);
     return empty($results) ? [] : $results;
   }
 
   public function countQuery($filters, $fields)
   {
-    $query = $this->buildQuery($filters);
-    $bindings = $this->buildBindings($filters);
+    $query = $this->getQuery($filters);
 
-    $count_query = 'SELECT count(*) as total FROM (' . 'SELECT ' . $fields . $query . ') as count_query;';
-    $count_results = $this->DB->exec($count_query, $bindings);
+    $count_query = 'SELECT count(*) as total FROM (' . 'SELECT ' . $fields . $query['query'] . ') as count_query;';
+    $count_results = $this->DB->exec($count_query, $query['bindings']);
 
     $total = 0;
     if (isset($count_results) && isset($count_results[0]['total'])) {
