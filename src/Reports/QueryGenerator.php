@@ -111,10 +111,6 @@ class QueryGenerator extends Model
 
   protected function buildQuery(&$filters)
   {
-    $options = [];
-    if ($this->model->options) {
-      $options = json_decode($this->model->options, true);
-    }
 
     $query = "";
     $query .= !empty($this->model->table_names) ? " FROM " . $this->model->table_names : '';
