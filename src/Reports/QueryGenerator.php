@@ -100,6 +100,17 @@ class QueryGenerator extends Model
     return $total;
   }
 
+  public function getQuery($filters)
+  {
+    $query = $this->buildQuery($filters);
+    $bindings = $this->buildBindings($filters);
+    $query = [
+      'query' => $query,
+      'bindings' => $bindings
+    ];
+    return $query;
+  }
+
   protected function buildQuery(&$filters)
   {
     $options = [];
