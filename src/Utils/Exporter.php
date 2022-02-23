@@ -40,7 +40,6 @@ class Exporter extends Abstracts\PaginatedIterator
 
     $this->fields_described = !empty($this->config['fields']) && is_array($this->config['fields']) ? true : false;
 
-    $this->setHeaders();
     $this->setConnection();
 
     if ($this->fields_described) {
@@ -146,6 +145,10 @@ class Exporter extends Abstracts\PaginatedIterator
     }
 
     $statement->execute();
+
+    $data = $this->__getLineAttribution();
+    dbg()->addDatabaseQuery($query, null, 0, $data);
+
     return $countOnly ? $statement->fetchColumn() : $statement->fetchAll(PDO::FETCH_ASSOC);
   }
   protected function generateFields()
@@ -164,6 +167,11 @@ class Exporter extends Abstracts\PaginatedIterator
 
   public function export()
   {
+
+    $this->setHeaders();
+    dbg()->sendHeaders();
+
+
     $headers_filled = false;
     ob_start('ob_gzhandler');
     $fp = fopen('php://output', 'w');
@@ -199,6 +207,48 @@ class Exporter extends Abstracts\PaginatedIterator
       flush();
     }
     fclose($fp);
+    dbg()->requestProcessed();
     die;
+  }
+
+  protected function __getLineAttribution()
+  {
+    $bt = debug_backtrace(0, 10);
+    array_shift($bt);
+    $base = str_replace(DIRECTORY_SEPARATOR . 'public', '', getcwd()) . DIRECTORY_SEPARATOR;
+    $data = [
+      'connection' => 'mysql',
+      'model' => '',
+      'file' => '',
+      'line' => '',
+    ];
+    $line_found = false;
+    $model_found = false;
+    foreach ($bt as $trace) {
+      $f = explode($base, $trace['file']);
+      $file = isset($f[1]) ? $f[1] : $f[0];
+      $parts = explode(DIRECTORY_SEPARATOR, $file);
+      if ($parts[0] == 'app' && !$line_found) {
+        $data['file'] = $file;
+        $data['line'] = $trace['line'];
+        $line_found = true;
+      }
+      if ($parts[0] == 'app' && $trace['class'] != 'DB\Cortex' && $trace['class'] != 'DB\CortexCollection') {
+        if (empty($data['file'])) {
+          $data['file'] = $file;
+        };
+        if (empty($data['line'])) {
+          $data['line'] =  $trace['line'];
+        };
+        $data['model'] = $trace['class'] . "::" . $trace['function'];
+        $model_found = true;
+      }
+
+      if ($line_found && $model_found) {
+        break;
+      }
+    }
+
+    return $data;
   }
 }
