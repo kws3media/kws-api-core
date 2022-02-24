@@ -30,13 +30,23 @@ class Exporter extends Abstracts\PaginatedIterator
   /** @var array */
   protected $queryObject;
 
+  /** @var array */
   protected $config;
 
+  /** @var PDO */
   protected $pdo;
+
+  /** @var array */
   protected $headers;
+
+  /** @var array */
   protected $fields;
+
+  /** @var bool */
   protected $fields_described = false;
 
+
+  /** @var array */
   protected $response_headers = [
     'Expires' => '0',
     'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
@@ -45,6 +55,14 @@ class Exporter extends Abstracts\PaginatedIterator
     'Content-Disposition' => 'attachment; filename="export.csv"',
     'Content-Transfer-Encoding' => 'binary'
   ];
+
+  /**
+   * Constructor method
+   * @param array $queryObject - object with query parameters compatible with Cortext
+   * @param int $perPage - number of rows to be returned per page, default: 20
+   * @param array $config - table name, fields defination, fields map, export filename and database connection details
+   * @return void
+   */
 
   public function __construct($queryObject, $perPage = 20, $config = [])
   {
@@ -66,6 +84,7 @@ class Exporter extends Abstracts\PaginatedIterator
 
     $this->setTotalItems($totalItems);
   }
+
   protected function setHeaders()
   {
     $new_response_headers = $this->config['response_headers'];
@@ -165,6 +184,7 @@ class Exporter extends Abstracts\PaginatedIterator
 
     return $countOnly ? $statement->fetchColumn() : $statement->fetchAll(PDO::FETCH_ASSOC);
   }
+
   protected function generateFields()
   {
     $fields = $this->fields;
