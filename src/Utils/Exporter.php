@@ -5,8 +5,22 @@ namespace Kws3\ApiCore\Utils;
 use PDO;
 use \Kws3\ApiCore\Loader;
 
-/**
 
+/**
+ *  Given a $queryObject, it prepare a paginated list of database rows based on $perPage and scoped by the $queryObject.
+ *  Once rows are ready to export, it exports the data as gzipped stream.
+ *  $config takes table name, fields defination, fields map, export filename and database connection details.
+ *  By deafault it uses db details from current app db config
+ *  $config also takes additional response headers.
+ *  Example:
+ *  $config = [
+ *  		'table' => 'table_name',
+ *  		'fields' => ['id', 'name', 'email'...],
+ *  		'fields_map' => ['id' => 'ID', 'name' => 'NAME',...],
+ *  		'filename' => 'export.csv',
+ *  		'db' => [],
+ *  		'response_headers' => ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename="export.csv"'],
+ *  	];
  *
  * @package Utils
  */
