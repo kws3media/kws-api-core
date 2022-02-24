@@ -35,7 +35,6 @@ class Exporter extends Abstracts\PaginatedIterator
   /** @var bool */
   protected $fields_described = false;
 
-  /** @var string */
   protected $export_file_name = "export.csv";
 
   /** @var array */
@@ -48,6 +47,7 @@ class Exporter extends Abstracts\PaginatedIterator
     'Content-Transfer-Encoding' => 'binary'
   ];
 
+  /** @var string */
 
   /**
    * Constructor method
@@ -107,11 +107,13 @@ class Exporter extends Abstracts\PaginatedIterator
 
   protected function setFieldsAndMap()
   {
-    $fields_map = $this->config['fields_map'];
+    $fields_map = !empty($this->config['fields_map']) ? $this->config['fields_map'] : [];
     $this->fields = $this->config['fields'];
-    $this->headers = array_map(function ($field) use ($fields_map) {
-      return isset($fields_map[$field]) ? $fields_map[$field] : ucfirst(str_replace('_', ' ', $field));
-    }, $this->config['fields']);
+    if (is_array($this->fields)) {
+      $this->headers = array_map(function ($field) use ($fields_map) {
+        return isset($fields_map[$field]) ? $fields_map[$field] : ucfirst(str_replace('_', ' ', $field));
+      }, $this->config['fields']);
+    }
   }
 
   protected function setConnection()
