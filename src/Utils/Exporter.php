@@ -35,6 +35,7 @@ class Exporter extends Abstracts\PaginatedIterator
   /** @var bool */
   protected $fields_described = false;
 
+  /** @var string */
   protected $export_file_name = "export.csv";
 
   /** @var array */
@@ -47,7 +48,6 @@ class Exporter extends Abstracts\PaginatedIterator
     'Content-Transfer-Encoding' => 'binary'
   ];
 
-  /** @var string */
 
   /**
    * Constructor method
