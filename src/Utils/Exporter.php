@@ -3,6 +3,7 @@
 namespace Kws3\ApiCore\Utils;
 
 use PDO;
+use \Exception;
 use \Kws3\ApiCore\Loader;
 
 
@@ -31,9 +32,6 @@ class Exporter extends Abstracts\PaginatedIterator
 
   /** @var array */
   protected $fields;
-
-  /** @var bool */
-  protected $fields_described = false;
 
   protected $export_file_name = "export.csv";
 
@@ -73,8 +71,6 @@ class Exporter extends Abstracts\PaginatedIterator
     $this->queryObject = $queryObject;
 
     $this->export_file_name = isset($config['filename']) ? $config['filename'] : $this->export_file_name;
-
-    $this->fields_described = !empty($this->config['fields']) && is_array($this->config['fields']) ? true : false;
 
     $this->setConnection();
 
@@ -202,10 +198,19 @@ class Exporter extends Abstracts\PaginatedIterator
 
   protected function buildQueryPrefix()
   {
-    if ($this->fields_described && isset($this->config['table'])) {
-      return "SELECT {$this->generateFields()} FROM `{$this->config['table']}`";
+    if (is_array($this->fields)) {
+      if (isset($this->config['table']) && !empty($this->config['table'])) {
+        return "SELECT {$this->generateFields()} FROM `{$this->config['table']}`";
+      } else {
+        throw new Exception('Table name is not set');
+      }
     }
-    return "SELECT";
+
+    if (is_string($this->fields)) {
+      return "SELECT {$this->fields} ";
+    }
+
+    throw new Exception('Fields are not set');
   }
 
   public function export()
@@ -220,7 +225,7 @@ class Exporter extends Abstracts\PaginatedIterator
     $fp = fopen('php://output', 'w');
 
 
-    if ($this->fields_described) {
+    if (is_array($this->headers)) {
       if (!$headers_filled) {
         fputcsv($fp, $this->headers);
         $headers_filled = true;
