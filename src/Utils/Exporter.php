@@ -30,7 +30,7 @@ class Exporter extends Abstracts\PaginatedIterator
   /** @var array */
   protected $headers;
 
-  /** @var array */
+  /** @var array | string */
   protected $fields;
 
   protected $export_file_name = "export.csv";
@@ -45,8 +45,6 @@ class Exporter extends Abstracts\PaginatedIterator
     'Content-Transfer-Encoding' => 'binary'
   ];
 
-  /** @var string */
-
   /**
    * Constructor method
    * @param array $queryObject - object with query parameters compatible with Cortext
@@ -55,8 +53,8 @@ class Exporter extends Abstracts\PaginatedIterator
    * Example:
    *  $config = [
    *  	'table' => 'table_name', (optional) can be pass along query
-   *  	'fields' => ['id', 'name', 'email'...], (optional) (default: all fields)
-   *  	'fields_map' => ['id' => 'ID', 'name' => 'NAME',...], (optional) (default: no map)
+   *  	'fields' => ['id', 'name', 'email'...], or "`id`, `name`, `email`" (required)
+   *  	'fields_map' => ['id' => 'ID', 'name' => 'NAME',...], (optional) (default: no map) (work if fields is array)
    *  	'filename' => 'export.csv', (optional) (default: export.csv)
    *  	'db' => [], (optional) (default: current app db config)
    *  	'response_headers' => ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename="export.csv"'], (optional) (default: default headers)
@@ -74,9 +72,7 @@ class Exporter extends Abstracts\PaginatedIterator
 
     $this->setConnection();
 
-    if ($this->fields_described) {
-      $this->setFieldsAndMap();
-    }
+    $this->setFieldsAndMap();
 
     $this->setItemsPerPage($perPage);
 
