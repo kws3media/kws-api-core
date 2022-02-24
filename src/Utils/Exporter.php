@@ -35,6 +35,7 @@ class Exporter extends Abstracts\PaginatedIterator
   /** @var bool */
   protected $fields_described = false;
 
+  protected $export_file_name = "export.csv";
 
   /** @var array */
   protected $response_headers = [
@@ -42,9 +43,11 @@ class Exporter extends Abstracts\PaginatedIterator
     'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
     'Cache-Control' => 'private',
     'Content-Type' => 'application/octet-stream',
-    'Content-Disposition' => 'attachment; filename="export.csv"',
+    'Content-Disposition' => 'attachment',
     'Content-Transfer-Encoding' => 'binary'
   ];
+
+  /** @var string */
 
   /**
    * Constructor method
@@ -69,6 +72,8 @@ class Exporter extends Abstracts\PaginatedIterator
 
     $this->queryObject = $queryObject;
 
+    $this->export_file_name = isset($config['filename']) ? $config['filename'] : $this->export_file_name;
+
     $this->fields_described = !empty($this->config['fields']) && is_array($this->config['fields']) ? true : false;
 
     $this->setConnection();
@@ -92,7 +97,12 @@ class Exporter extends Abstracts\PaginatedIterator
       $this->response_headers = array_merge($this->response_headers, $new_response_headers);
     }
 
+    // filename="export.csv"
+
     foreach ($this->response_headers as $type => $value) {
+      if ($type == 'Content-Disposition') {
+        $value = $value . '; filename="' . $this->export_file_name . '"';
+      }
       header($type . ': ' . $value);
     }
   }
