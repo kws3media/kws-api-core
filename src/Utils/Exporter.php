@@ -12,16 +12,6 @@ use \Kws3\ApiCore\Loader;
  *  $config takes table name, fields defination, fields map, export filename and database connection details.
  *  By deafault it uses db details from current app db config
  *  $config also takes additional response headers.
- *  Example:
- *  $config = [
- *  		'table' => 'table_name',
- *  		'fields' => ['id', 'name', 'email'...],
- *  		'fields_map' => ['id' => 'ID', 'name' => 'NAME',...],
- *  		'filename' => 'export.csv',
- *  		'db' => [],
- *  		'response_headers' => ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename="export.csv"'],
- *  	];
- *
  * @package Utils
  */
 class Exporter extends Abstracts\PaginatedIterator
@@ -61,6 +51,15 @@ class Exporter extends Abstracts\PaginatedIterator
    * @param array $queryObject - object with query parameters compatible with Cortext
    * @param int $perPage - number of rows to be returned per page, default: 20
    * @param array $config - table name, fields defination, fields map, export filename and database connection details
+   * Example:
+   *  $config = [
+   *  	'table' => 'table_name', (optional) can be pass along query
+   *  	'fields' => ['id', 'name', 'email'...], (optional) (default: all fields)
+   *  	'fields_map' => ['id' => 'ID', 'name' => 'NAME',...], (optional) (default: no map)
+   *  	'filename' => 'export.csv', (optional) (default: export.csv)
+   *  	'db' => [], (optional) (default: current app db config)
+   *  	'response_headers' => ['Content-Type' => 'text/csv', 'Content-Disposition' => 'attachment; filename="export.csv"'], (optional) (default: default headers)
+   *  	];
    * @return void
    */
 
