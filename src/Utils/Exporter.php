@@ -97,9 +97,8 @@ class Exporter extends Abstracts\PaginatedIterator
       $this->response_headers = array_merge($this->response_headers, $new_response_headers);
     }
 
-
     foreach ($this->response_headers as $type => $value) {
-      if ($type === 'Content-Disposition') {
+      if ($type == 'Content-Disposition') {
         $value = $value . '; filename="' . $this->export_file_name . '"';
       }
       header($type . ': ' . $value);
