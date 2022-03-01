@@ -8,10 +8,10 @@ use \Kws3\ApiCore\Loader;
 
 
 /**
- *  Given a $queryObject, it prepare a paginated list of database rows based on $perPage and scoped by the $queryObject.
- *  Once rows are ready to export, it exports the data as gzipped stream.
- *  $config takes table name, fields defination, fields map, export filename and database connection details.
- *  By deafault it uses db details from current app db config
+ *  Given $queryObject, prepare a paginated list of database rows based on $perPage scoped by $queryObject.
+ *  Once query execution ends, it will exports the data as gzipped stream.
+ *  $config takes table name, fields definition, column headers mapping, export filename and database connection details.
+ *  By default it uses DB details from running app config
  *  $config also takes additional response headers.
  * @package Utils
  */
