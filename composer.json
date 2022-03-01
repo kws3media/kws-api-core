@@ -19,7 +19,7 @@
     },
     "require": {
         "bcosca/fatfree-core": "3.7.3",
-        "ekhaled/f3-cortex": "dev-master",
+        "ikkez/f3-cortex": "1.7.5",
         "itsgoingd/clockwork": "4.1.8",
         "aws/aws-sdk-php": "^3.18",
         "ekhaled/schema-parser-mysql": "1.3",
