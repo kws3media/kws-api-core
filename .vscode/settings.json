@@ -9,6 +9,8 @@
   "[php]": {
     "editor.formatOnSave": true,
     "editor.quickSuggestions": { "comments": true },
-    "editor.formatOnSaveMode": "modifications",
+    "editor.formatOnSaveMode": "modifications"
   },
+  "phpcs.standard": "../ruleset.xml",
+  "phpcs.showSources": true
 }
