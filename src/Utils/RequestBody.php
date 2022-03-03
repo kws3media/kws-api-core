@@ -12,11 +12,6 @@ class RequestBody extends \Prefab
     protected $raw_body = null;
     protected $parsed_body = null;
 
-    public function __construct()
-    {
-
-    }
-
     public function parse()
     {
         $this->request_type      = Loader::get('VERB');
@@ -123,13 +118,12 @@ class RequestBody extends \Prefab
 
             // Parse the Content-Disposition to get the field name, etc.
             if (isset($headers['content-disposition'])) {
-                $filename = null;
                 preg_match(
                     '/^(.+); *name="([^"]+)"(; *filename="([^"]+)")?/',
                     $headers['content-disposition'],
                     $matches
                 );
-                list(, $type, $name) = $matches;
+                $name = $matches[2];
                 // isset($matches[4]) and $filename = $matches[4];
                 // Handle your fields here
                 switch ($name) {
