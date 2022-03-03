@@ -6,13 +6,15 @@ use Kws3\ApiCore\Loader;
 
 abstract class Base extends \Prefab
 {
-  const SUCCESS = 'SUCCESS';
-  const ERROR   = 'ERROR';
+  public const SUCCESS = 'SUCCESS';
+  public const ERROR   = 'ERROR';
 
   protected $app;
   protected $head = false;
   protected $snake = true;
   protected $envelope = true;
+
+  abstract public function send($records, $error = false);
 
   public function __construct()
   {
@@ -21,8 +23,6 @@ abstract class Base extends \Prefab
       $this->head = true;
     }
   }
-
-  abstract public function send($records, $error = false);
 
   public function sendHeader($header)
   {
@@ -50,7 +50,7 @@ abstract class Base extends \Prefab
 
   protected function getOutput($records, $error = false)
   {
-    $status = $error == true ? self::ERROR : self::SUCCESS;
+    $status = $error === true ? self::ERROR : self::SUCCESS;
 
     $metadata = Loader::getMetaDataProvider();
     $metadata->setStatus($status);
@@ -69,13 +69,9 @@ abstract class Base extends \Prefab
       $message['_meta'] = $metadata->getArray();
 
       // Handle 0 record responses, or assign the records
-      if ($metadata->getCount() === 0) {
-        // This is required to make the response JSON return an empty JS object.
-        // Without this, the JSON return an empty array: [] instead of {}
-        $message['records'] = new \stdClass();
-      } else {
-        $message['records'] = $records;
-      }
+      // stdClass Object is required to make the response JSON return an empty JS object.
+      // Without this, the JSON return an empty array: [] instead of {}
+      $message['records'] = $metadata->getCount() === 0 ? $message['records'] = new \stdClass : $message['records'] = $records;
     } else {
       $this->sendHeader('X-Record-Count: ' . $metadata->getCount());
       $this->sendHeader('X-Status: ' . $metadata->getStatus());
@@ -87,7 +83,7 @@ abstract class Base extends \Prefab
 
     $this->sendHeader('Content-Type: application/json; ' . 'charset=' . Loader::get('ENCODING'));
 
-    if (!$error && Loader::get('VERB') == 'POST') {
+    if (!$error && Loader::get('VERB') === 'POST') {
       $this->sendHeader("HTTP/1.0 201 Created");
     }
 
@@ -108,7 +104,7 @@ abstract class Base extends \Prefab
 
     $snakeArray = array_combine($keys, $snakeArray);
 
-    foreach ($snakeArray as $k => &$v) {
+    foreach ($snakeArray as &$v) {
       if (is_array($v)) {
         $v = $this->arrayKeysToCamel($v);
       }

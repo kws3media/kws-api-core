@@ -9,8 +9,14 @@ use \Kws3\ApiCore\Loader;
 class Identity extends \Prefab
 {
 
-  const CONTEXT_ADMIN           = 'A';
-  const CONTEXT_USER            = 'U';
+  public const CONTEXT_ADMIN           = 'A';
+  public const CONTEXT_USER            = 'U';
+
+  public $user = null;
+  public $context = null;
+  public $inactiveKey = false;
+  public $expiredKey = false;
+
 
   public static $identityDescriptions = [
     self::CONTEXT_ADMIN         => 'Admin',
@@ -23,12 +29,6 @@ class Identity extends \Prefab
   protected $requestHeaderKey = 'Api-Key';
   protected $tokensModel = null;
   protected $accessTokenField = 'access_token';
-
-
-  public $user = null;
-  public $context = null;
-  public $inactiveKey = false;
-  public $expiredKey = false;
 
   public function __construct($config = [])
   {
@@ -77,11 +77,11 @@ class Identity extends \Prefab
       return;
     }
 
-    if ($token->user->disabled == 1 || $token->user->deleted == 1) {
+    if ($token->user->disabled === 1 || $token->user->deleted === 1) {
       return;
     }
 
-    if ($token->active != 1) {
+    if ($token->active !== 1) {
       $this->inactiveKey = true;
       return;
     }

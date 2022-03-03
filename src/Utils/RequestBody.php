@@ -12,11 +12,6 @@ class RequestBody extends \Prefab
     protected $raw_body = null;
     protected $parsed_body = null;
 
-    public function __construct()
-    {
-
-    }
-
     public function parse()
     {
         $this->request_type      = Loader::get('VERB');
@@ -30,7 +25,7 @@ class RequestBody extends \Prefab
         }
 
         // Only attempt to parse raw request body on POST and PUT
-        if ($this->request_type == "POST" || $this->request_type == "PUT") {
+        if ($this->request_type === "POST" || $this->request_type === "PUT") {
             // Support for:
             // - JSON
             // - application/x-www-form-urlencoded
@@ -42,7 +37,7 @@ class RequestBody extends \Prefab
                 default:
                     $this->parsed_body = $this->post_body;
                     // This condition will catch where proper PUT is used instead of emulated PUT via POST
-                    if (empty($this->parsed_body) && $this->request_type == "PUT") {
+                    if (empty($this->parsed_body) && $this->request_type === "PUT") {
                         if (strpos($this->body_content_type, 'application/x-www-form-urlencoded') !== false) {
                             parse_str($this->raw_body, $this->parsed_body);
                         } elseif (strpos($this->body_content_type, 'multipart/form-data') !== false) {
@@ -106,7 +101,7 @@ class RequestBody extends \Prefab
 
         foreach ($parts as $part) {
             // If this is the last part, break
-            if ($part == "--\r\n")
+            if ($part === "--\r\n")
                 break;
 
             // Separate content from headers
@@ -123,13 +118,12 @@ class RequestBody extends \Prefab
 
             // Parse the Content-Disposition to get the field name, etc.
             if (isset($headers['content-disposition'])) {
-                $filename = null;
                 preg_match(
                     '/^(.+); *name="([^"]+)"(; *filename="([^"]+)")?/',
                     $headers['content-disposition'],
                     $matches
                 );
-                list(, $type, $name) = $matches;
+                $name = $matches[2];
                 // isset($matches[4]) and $filename = $matches[4];
                 // Handle your fields here
                 switch ($name) {

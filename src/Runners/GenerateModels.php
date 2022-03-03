@@ -10,6 +10,7 @@ class GenerateModels extends Base
     $this->output('No help options.. just run the command');
   }
 
+  //phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
   public function run($params)
   {
 

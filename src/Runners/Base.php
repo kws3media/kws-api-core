@@ -25,6 +25,7 @@ class Base
     //to be implemented by child classes
   }
 
+  //phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
   public function run($params)
   {
     //to be implemented by child classes
@@ -32,7 +33,7 @@ class Base
 
   protected function output($msg, $err = null)
   {
-    if ($err == true) {
+    if ($err === true) {
       echo ConsoleColor::error(" " . $msg . " ") . "\n";
     } elseif ($err === false) {
       echo ConsoleColor::success(" " . $msg . " ") . "\n";
@@ -55,7 +56,7 @@ class Base
   protected function endsWith($haystack, $needle)
   {
     $length = strlen($needle);
-    if ($length == 0) {
+    if ($length === 0) {
       return true;
     }
 

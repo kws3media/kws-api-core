@@ -9,7 +9,7 @@ class Base
 
   protected function output($msg, $err = null)
   {
-    if ($err == true) {
+    if ($err === true) {
       echo ConsoleColor::error(" " . $msg . " ") . "\n";
     } elseif ($err === false) {
       echo ConsoleColor::success(" " . $msg . " ") . "\n";

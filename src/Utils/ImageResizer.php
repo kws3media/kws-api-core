@@ -9,7 +9,7 @@ class ImageResizer extends \Prefab
         $img = \Intervention\Image\ImageManagerStatic::make($filePath)->orientate();
         $h = $img->height();
         $w = $img->width();
-        if($h == $height && $w == $width){
+        if($h === $height && $w === $width){
             return;
         }
         $background = \Intervention\Image\ImageManagerStatic::canvas($width, $height);
@@ -26,7 +26,7 @@ class ImageResizer extends \Prefab
         $img = \Intervention\Image\ImageManagerStatic::make($filePath);
         $h = $img->height();
         $w = $img->width();
-        if ($h == $height && $w == $width) {
+        if ($h === $height && $w === $width) {
             return;
         }
         $img->resize($width, $height, function ($c) {

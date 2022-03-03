@@ -83,7 +83,7 @@ class MetadataProvider extends \Prefab
 
     public function setCustomField($key, $val)
     {
-        if (!in_array($key, ['status', 'offset', 'count', 'limit', 'total', 'links'])) {
+        if (!in_array($key, ['status', 'offset', 'count', 'limit', 'total', 'links'], true)) {
             $this->customFields[$key] = $val;
             return true;
         }

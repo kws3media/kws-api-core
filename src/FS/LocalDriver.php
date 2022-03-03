@@ -30,6 +30,7 @@ class LocalDriver extends Driver
     return $this->getUrl($fileObject);
   }
 
+  //phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
   public function create($filePath, $destinationFolder = '/', $opts = [])
   {
     $uploadsBase = Tools::trimSlash($this->opts['folder']);
@@ -67,7 +68,7 @@ class LocalDriver extends Driver
       return Tools::trimSlash($this->opts['domain_url']);
     }
     //infer url if domain_url is not supplied
-    $scheme = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https' : 'http';
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] === 443 ? 'https' : 'http';
     $url =  $scheme . "://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}";
     return Tools::trimSlash(str_replace('index.php', '', $url));
   }

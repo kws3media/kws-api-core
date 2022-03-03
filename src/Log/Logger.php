@@ -2,7 +2,6 @@
 
 namespace Kws3\ApiCore\Log;
 
-use \Kws3\ApiCore\Log\LogWriter;
 
 class Logger extends \Prefab
 {
@@ -77,11 +76,6 @@ class Logger extends \Prefab
     }
   }
 
-  private function normaliseCategory($category)
-  {
-    return strtolower($category);
-  }
-
   public function getdefaultCategory()
   {
     return $this->defaultCategory;
@@ -123,5 +117,10 @@ class Logger extends \Prefab
   public function setDateFormat($dateFormat)
   {
     $this->dateFormat = $dateFormat;
+  }
+
+  private function normaliseCategory($category)
+  {
+    return strtolower($category);
   }
 }

@@ -17,7 +17,7 @@ class AccessHandler extends \Prefab
         $expiredKey = $identity->expiredKey;
 
         foreach ($accessList as $k => $v) {
-            if ($k == $currentAction) {
+            if ($k === $currentAction) {
                 $found = true;
 
                 if ($v === true) {
@@ -37,11 +37,11 @@ class AccessHandler extends \Prefab
                 }
 
                 if (is_array($v)) {
-                    if (!empty($identity->context) && in_array($identity->context, $v)) {
+                    if (!empty($identity->context) && in_array($identity->context, $v, true)) {
                         return true;
                     }
                 } else {
-                    if (!empty($identity->context) && ($identity->context == $v)) {
+                    if (!empty($identity->context) && ($identity->context === $v)) {
                         return true;
                     }
                 }
@@ -61,11 +61,7 @@ class AccessHandler extends \Prefab
         }
 
         //if current action has no access list, only allow authenticated users
-        if (!$found && $authenticated) {
-            return true;
-        }
-
-        return false;
+        return !$found && $authenticated;
     }
 
     public static function expiredKey()

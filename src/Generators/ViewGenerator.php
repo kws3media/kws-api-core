@@ -62,21 +62,6 @@ class ViewGenerator extends Base
     }
   }
 
-  protected function checkConditions()
-  {
-    $config = $this->config;
-
-    if (empty($config['output']) || !(file_exists($config['output']) && is_dir($config['output']) && is_writable($config['output']))) {
-      throw new RuntimeException('Please ensure that the output folder exists and is writable.');
-    }
-
-    if (!empty($this->config['template'])) {
-      if (!(file_exists($this->config['template']) && is_file($this->config['template']))) {
-        throw new RuntimeException("The specified template file does not exist.\nPlease leave the `template` option empty if you would like to use the built-in template.");
-      }
-    }
-  }
-
   public function generate()
   {
     try {
@@ -92,7 +77,7 @@ Please ensure database connection settings are correct.", true);
     $config = $this->config;
 
     foreach ($schema as $view) {
-      if (!in_array($view['name'], $config['exclude'])) {
+      if (!in_array($view['name'], $config['exclude'], true)) {
         $className = $this->className($view['name']);
         $h = fopen($config['output'] . $className . '.php', 'w');
         if (fwrite($h, $this->generateDBView(
@@ -107,6 +92,41 @@ Please ensure database connection settings are correct.", true);
 
         fclose($h);
         usleep(250000);
+      }
+    }
+  }
+
+  public function getSchema()
+  {
+    $VIEWS = [];
+    $tables = $this->DB->query('SHOW FULL TABLES WHERE `Table_type` = "VIEW"')->fetchAll(PDO::FETCH_NUM);
+
+    foreach ($tables as $tableRow) {
+
+      $view = $tableRow[0];
+      $queryResult = $this->DB->query('SHOW CREATE VIEW `' . $view . '`')->fetchAll(PDO::FETCH_NUM);
+      $sourceData = isset($queryResult) ? $queryResult[0] : ['name' => '', 'source' => ''];
+
+      $VIEWS[$sourceData[0]] = [
+        'name' => $sourceData[0],
+        'source' => $this->normalizeSource($sourceData[1])
+      ];
+    }
+
+    return $VIEWS;
+  }
+
+  protected function checkConditions()
+  {
+    $config = $this->config;
+
+    if (empty($config['output']) || !(file_exists($config['output']) && is_dir($config['output']) && is_writable($config['output']))) {
+      throw new RuntimeException('Please ensure that the output folder exists and is writable.');
+    }
+
+    if (!empty($this->config['template'])) {
+      if (!(file_exists($this->config['template']) && is_file($this->config['template']))) {
+        throw new RuntimeException("The specified template file does not exist.\nPlease leave the `template` option empty if you would like to use the built-in template.");
       }
     }
   }
@@ -149,10 +169,7 @@ Please ensure database connection settings are correct.", true);
   protected function getTemplate()
   {
     if (empty($this->_template)) {
-      if (!empty($this->config['template'])) {
-        $this->_template = file_get_contents($this->config['template']);
-      } else {
-        $this->_template = <<<PHP
+      $this->_template = !empty($this->config['template']) ? file_get_contents($this->config['template']) : <<<PHP
 <?php
 {{NAMESPACE}}
 
@@ -165,30 +182,9 @@ VIEWSOURCE;
 
 }
 PHP;
-      }
     }
 
     return $this->_template;
-  }
-
-  public function getSchema($raw = false)
-  {
-    $VIEWS = [];
-    $tables = $this->DB->query('SHOW FULL TABLES WHERE `Table_type` = "VIEW"')->fetchAll(PDO::FETCH_NUM);
-
-    foreach ($tables as $tableRow) {
-
-      $view = $tableRow[0];
-      $queryResult = $this->DB->query('SHOW CREATE VIEW `' . $view . '`')->fetchAll(PDO::FETCH_NUM);
-      $sourceData = isset($queryResult) ? $queryResult[0] : ['name' => '', 'source' => ''];
-
-      $VIEWS[$sourceData[0]] = [
-        'name' => $sourceData[0],
-        'source' => $this->normalizeSource($sourceData[1])
-      ];
-    }
-
-    return $VIEWS;
   }
 
   protected function className($t, $ns = '')
