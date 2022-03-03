@@ -15,14 +15,14 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
     $prop = $refl->getProperty('offset');
     $prop->setAccessible(true);
     $this->test->expect(
-      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) == 0,
+      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) === 0,
       'offset is defaulted to 0'
     );
 
     $prop = $refl->getProperty('limit');
     $prop->setAccessible(true);
     $this->test->expect(
-      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) == 20,
+      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) === 20,
       'limit is defaulted to 20'
     );
 
@@ -39,14 +39,14 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
     $prop->setAccessible(true);
 
     $this->test->expect(
-      $prop->getValue($instance) == 100,
+      $prop->getValue($instance) === 100,
       'offset is obeyed from GET params'
     );
 
     $prop = $refl->getProperty('limit');
     $prop->setAccessible(true);
     $this->test->expect(
-      $prop->getValue($instance) == 60,
+      $prop->getValue($instance) === 60,
       'limit is obeyed from GET params'
     );
   }
@@ -74,7 +74,7 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
     ]);
     $return = $method->invoke($instance);
     $this->test->expect(
-      $return == "Hello",
+      $return === "Hello",
       'getModel fallsback to "default"'
     );
 
@@ -85,13 +85,13 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
     ]);
     $return = $method->invoke($instance);
     $this->test->expect(
-      $return == "XInstance",
+      $return === "XInstance",
       'getModel returns the right invocation as per Identity->context'
     );
 
     $return = $method->invoke($instance, 'Y');
     $this->test->expect(
-      $return == "YInstance",
+      $return === "YInstance",
       'getModel returns the right invocation when a key exists'
     );
 
@@ -100,12 +100,12 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
       $x = $method->invoke($instance, 'Z');
     } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
       $this->test->expect(
-        ($ex->getMessage() == 'Unable to resolve model'),
+        ($ex->getMessage() === 'Unable to resolve model'),
         'getModel throws an error when specified key does not exist'
       );
     }
     $this->test->expect(
-      ($x == 'xxxxxx'),
+      ($x === 'xxxxxx'),
       'getModel did not throw an error when specified key does not exist'
     );
 
@@ -126,7 +126,7 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
     $prop = $refl->getProperty('isSearch');
     $prop->setAccessible(true);
     $this->test->expect(
-      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) == false,
+      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) === false,
       'isSearch is defaulted to false'
     );
 
@@ -150,12 +150,12 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
     } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
       $ex_message = $ex->getMessage();
       $this->test->expect(
-        ($ex->getMessage() == 'The fields you specified cannot be searched.'),
+        ($ex->getMessage() === 'The fields you specified cannot be searched.'),
         'Unspecified search params throw an exception'
       );
     }
     $this->test->expect(
-      ($ex_message != ''),
+      ($ex_message !== ''),
       'Exception was thrown in last test as expected'
     );
 
@@ -176,19 +176,19 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
 
 
     $this->test->expect(
-      ($filters[0]['field'] == 'field1' && $filters[0]['value'] == 1 && $filters[0]['condition'] == 'eq' && $filters[0]['jointype'] == 'AND'),
+      ($filters[0]['field'] === 'field1' && $filters[0]['value'] === '1' && $filters[0]['condition'] === 'eq' && $filters[0]['jointype'] === 'AND'),
       'filters values are set properly'
     );
     $this->test->expect(
-      ($filters[1]['field'] == 'field2' && $filters[1]['value'] == 2 && $filters[1]['condition'] == 'gt' && $filters[1]['jointype'] == 'AND'),
+      ($filters[1]['field'] === 'field2' && $filters[1]['value'] === '2' && $filters[1]['condition'] === 'gt' && $filters[1]['jointype'] === 'AND'),
       'filters values are set properly'
     );
     $this->test->expect(
-      ($filters[2]['field'] == 'field3' && $filters[2]['value'] == 3 && $filters[2]['condition'] == 'xx' && $filters[2]['jointype'] == 'OR'),
+      ($filters[2]['field'] === 'field3' && $filters[2]['value'] === '3' && $filters[2]['condition'] === 'xx' && $filters[2]['jointype'] === 'OR'),
       'filters values are set properly'
     );
     $this->test->expect(
-      ($filters[3]['field'] == 'field4' && $filters[3]['value'] == 4 && $filters[3]['condition'] == 'eq' && $filters[3]['jointype'] == 'OR'),
+      ($filters[3]['field'] === 'field4' && $filters[3]['value'] === '4' && $filters[3]['condition'] === 'eq' && $filters[3]['jointype'] === 'OR'),
       'filters values are set properly'
     );
   }
