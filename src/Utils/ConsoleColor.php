@@ -71,8 +71,7 @@ class ConsoleColor extends \Prefab
    */
   public function format($str, $codes = [])
   {
-    $ansi_str = "[" . implode(';', $codes) . "m" . $str . "[" . self::OFF . "m";
-    return $ansi_str;
+    return "[" . implode(';', $codes) . "m" . $str . "[" . self::OFF . "m";
   }
 
   /**
