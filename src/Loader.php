@@ -28,12 +28,6 @@ class Loader extends \Prefab
     'FILESYSTEM' => '\\Kws3\\ApiCore\\FS\\LocalDriver'
   ];
 
-  public static function __callStatic($name, $arguments)
-  {
-    $name = preg_replace("/^(get|load)(.*)/", '$2', $name);
-    return self::get($name);
-  }
-
   public static function get($name)
   {
 
@@ -63,5 +57,12 @@ class Loader extends \Prefab
     $np = explode('.', $name);
     $np[0] = strtoupper($np[0]);
     return implode(".", $np);
+  }
+
+  //phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+  public static function __callStatic($name, $arguments)
+  {
+    $name = preg_replace("/^(get|load)(.*)/", '$2', $name);
+    return self::get($name);
   }
 }
