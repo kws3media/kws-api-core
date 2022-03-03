@@ -36,5 +36,10 @@
   },
   "bin": [
     "bin/apicore"
-  ]
+  ],
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
 }
