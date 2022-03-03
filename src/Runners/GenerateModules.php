@@ -31,7 +31,7 @@ class GenerateModules extends Base
       exit();
     }
 
-    if (!isset($arg[1]) && $arg[0] != 'module') {
+    if (!isset($arg[1]) && $arg[0] !== 'module') {
       $this->output('Arguments classname is missing, for help \'composer generate help\'', true);
       exit();
     }
@@ -41,7 +41,7 @@ class GenerateModules extends Base
 
     $templates = $this->config;
 
-    if ($typeName != 'module' && !isset($templates[$typeName])) {
+    if ($typeName !== 'module' && !isset($templates[$typeName])) {
       $this->output('You may have misspelt something, for help \'composer generate help\'', true);
       exit();
     }
@@ -49,7 +49,7 @@ class GenerateModules extends Base
     $config = [
       'class_name' => $arg[1],
       'type' => $typeName,
-      'templates' => $typeName == 'module' ? $templates : [
+      'templates' => $typeName === 'module' ? $templates : [
         $typeName => $templates[$typeName]
       ]
     ];
