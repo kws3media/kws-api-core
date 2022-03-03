@@ -75,7 +75,6 @@ class QueryOptions
   public static function boolMap($field)
   {
     $_map = [0 => 'No', 1 => 'Yes', 'NULL' => 'No'];
-    $result = self::buildFieldMap($_map, $field);
-    return $result;
+    return self::buildFieldMap($_map, $field);
   }
 }
