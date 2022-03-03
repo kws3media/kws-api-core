@@ -12,29 +12,29 @@ namespace Kws3\ApiCore\Utils;
 
 class ConsoleColor extends \Prefab
 {
-  const OFF        = 0;
-  const BOLD       = 1;
-  const ITALIC     = 3;
-  const UNDERLINE  = 4;
-  const BLINK      = 5;
-  const INVERSE    = 7;
-  const HIDDEN     = 8;
-  const F_BLACK    = 90;
-  const F_RED      = 91;
-  const F_GREEN    = 92;
-  const F_YELLOW   = 93;
-  const F_BLUE     = 94;
-  const F_MAGENTA  = 95;
-  const F_CYAN     = 96;
-  const F_WHITE    = 97;
-  const B_BLACK    = 100;
-  const B_RED      = 101;
-  const B_GREEN    = 102;
-  const B_YELLOW   = 103;
-  const B_BLUE     = 104;
-  const B_MAGENTA  = 105;
-  const B_CYAN     = 106;
-  const B_WHITE    = 107;
+  public const OFF        = 0;
+  public const BOLD       = 1;
+  public const ITALIC     = 3;
+  public const UNDERLINE  = 4;
+  public const BLINK      = 5;
+  public const INVERSE    = 7;
+  public const HIDDEN     = 8;
+  public const F_BLACK    = 90;
+  public const F_RED      = 91;
+  public const F_GREEN    = 92;
+  public const F_YELLOW   = 93;
+  public const F_BLUE     = 94;
+  public const F_MAGENTA  = 95;
+  public const F_CYAN     = 96;
+  public const F_WHITE    = 97;
+  public const B_BLACK    = 100;
+  public const B_RED      = 101;
+  public const B_GREEN    = 102;
+  public const B_YELLOW   = 103;
+  public const B_BLUE     = 104;
+  public const B_MAGENTA  = 105;
+  public const B_CYAN     = 106;
+  public const B_WHITE    = 107;
 
   protected $themes = [];
 
