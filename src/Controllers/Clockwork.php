@@ -11,7 +11,7 @@ final class Clockwork
 
   public function getClockwork()
   {
-    if (K_ENV != K_ENV_LOCAL) {
+    if (K_ENV !== K_ENV_LOCAL) {
       throw new HTTPException('Not Found.', 404);
     }
 
@@ -32,12 +32,13 @@ final class Clockwork
   {
     $path = Loader::get('PATH');
     $path = str_replace('/__clockwork', '', $path);
-    if ($path == '/app') {
+    if ($path === '/app') {
       $path = '/index.html';
     }
 
     $web = new Web;
-    if ($asset = $web->asset($path)) {
+    $asset = $web->asset($path);
+    if ($asset) {
       header("Content-Type: " . $asset['mime']);
       echo file_get_contents($asset['path']);
     }
