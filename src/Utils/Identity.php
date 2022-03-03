@@ -9,8 +9,8 @@ use \Kws3\ApiCore\Loader;
 class Identity extends \Prefab
 {
 
-  const CONTEXT_ADMIN           = 'A';
-  const CONTEXT_USER            = 'U';
+  public const CONTEXT_ADMIN           = 'A';
+  public const CONTEXT_USER            = 'U';
 
   public $user = null;
   public $context = null;
