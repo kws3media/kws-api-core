@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+  webserver:
+      image: kws3/php74:latest
+      container_name: '${PROJECT_NAME}-web'
+      ports:
+          - '${APP_PORT:-80}:80'
+      links:
+        - database
+      volumes:
+        - ${DOCUMENT_ROOT-./}:/var/www/html:delegated
+        - ${PHP_INI-./docker/config/php/php.ini}:/usr/local/etc/php/php.ini:cached
+        - ${VHOSTS_DIR-./docker/config/vhosts}:/etc/apache2/sites-enabled:cached
+        - ${LOG_DIR-./docker/logs/apache2}:/var/log/apache2:delegated
+      environment:
+        APACHE_DOCUMENT_ROOT: ${APACHE_DOCUMENT_ROOT-/var/www/html}
+        WEB_ROOT: ${WEB_ROOT-/var/www/html}
+        WEB_ERROR_LOG: ${WEB_ERROR_LOG-/var/www/html/src/runtime/logs/error.log}
+        MYSQL_HOST: database
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      networks:
+        - kwail
+  database:
+    image: mysql:5.7.16
+    container_name: '${PROJECT_NAME}-db'
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    restart: 'always'
+    ports:
+      - "127.0.0.1:${HOST_MACHINE_MYSQL_PORT}:3306"
+    volumes:
+      - ${MYSQL_DATA_DIR-./docker/data/mysql}:/var/lib/mysql:delegated
+      - ${MYSQL_LOG_DIR-./docker/logs/mysql}:/var/log/mysql:delegated
+      - ./docker/config/mysql:/docker-entrypoint-initdb.d:cached
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+        - kwail
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: '${PROJECT_NAME}-phpmyadmin'
+    restart: 'always'
+    links:
+      - database
+    environment:
+      PMA_HOST: database
+      PMA_PORT: ${HOST_MACHINE_MYSQL_PORT}
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      UPLOAD_LIMIT: ${UPLOAD_LIMIT}
+      MEMORY_LIMIT: ${MEMORY_LIMIT}
+    ports:
+      - '${HOST_MACHINE_PMA_PORT}:80'
+    volumes:
+      - /sessions
+      - ${PHP_INI-./docker/config/php/php.ini}:/usr/local/etc/php/conf.d/php-phpmyadmin.ini:cached
+    networks:
+        - kwail
+networks:
+  kwail:
+    driver: bridge
