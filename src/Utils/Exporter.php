@@ -81,6 +81,64 @@ class Exporter extends Abstracts\PaginatedIterator
     $this->setTotalItems($totalItems);
   }
 
+  public function getPage($pageNumber)
+  {
+    $itemsPerPage = $this->getItemsPerPage();
+    $options = [
+      'LIMIT' => $itemsPerPage,
+      'OFFSET' => $pageNumber * $itemsPerPage
+    ];
+
+    $results = $this->execQuery($this->queryObject, $options);
+    return empty($results) ? [] : $results;
+  }
+
+  public function export()
+  {
+
+    $this->setHeaders();
+    dbg()->sendHeaders();
+
+
+    $headers_filled = false;
+    ob_start('ob_gzhandler');
+    $fp = fopen('php://output', 'w');
+
+
+    if (is_array($this->headers)) {
+      if (!$headers_filled) {
+        fputcsv($fp, $this->headers);
+        $headers_filled = true;
+      }
+    }
+
+
+    foreach ($this as $page) {
+
+      if (!$headers_filled) {
+        if (isset($page[0])) {
+          $headers = array_map(function ($item) {
+            return ucfirst(str_replace('_', ' ', $item));
+          }, array_keys($page[0]));
+          fputcsv($fp, $headers);
+          $headers_filled = true;
+        }
+      }
+
+      foreach ($page as $row) {
+        fputcsv($fp, $row);
+      }
+      if (ob_get_level() > 0) {
+        ob_flush();
+        ob_end_flush();
+      }
+      flush();
+    }
+    fclose($fp);
+    dbg()->requestProcessed();
+    die;
+  }
+
   protected function setHeaders()
   {
     $new_response_headers = $this->config['response_headers'];
@@ -90,7 +148,7 @@ class Exporter extends Abstracts\PaginatedIterator
     }
 
     foreach ($this->response_headers as $type => $value) {
-      if ($type == 'Content-Disposition') {
+      if ($type === 'Content-Disposition') {
         $value = $value . '; filename="' . $this->export_file_name . '"';
       }
       header($type . ': ' . $value);
@@ -114,18 +172,6 @@ class Exporter extends Abstracts\PaginatedIterator
     $dsn = $config['adapter'] . ':host=' . $config['host'] . ';dbname=' . $config['dbname'];
     $this->pdo = new PDO($dsn, $config['username'], $config['password']);
     $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, FALSE);
-  }
-
-  public function getPage($pageNumber)
-  {
-    $itemsPerPage = $this->getItemsPerPage();
-    $options = [
-      'LIMIT' => $itemsPerPage,
-      'OFFSET' => ($pageNumber * $itemsPerPage)
-    ];
-
-    $results = $this->execQuery($this->queryObject, $options);
-    return empty($results) ? [] : $results;
   }
 
   protected function execQuery($qobj, $options = [], $countOnly = false)
@@ -209,52 +255,6 @@ class Exporter extends Abstracts\PaginatedIterator
     throw new Exception('Fields are not set');
   }
 
-  public function export()
-  {
-
-    $this->setHeaders();
-    dbg()->sendHeaders();
-
-
-    $headers_filled = false;
-    ob_start('ob_gzhandler');
-    $fp = fopen('php://output', 'w');
-
-
-    if (is_array($this->headers)) {
-      if (!$headers_filled) {
-        fputcsv($fp, $this->headers);
-        $headers_filled = true;
-      }
-    }
-
-
-    foreach ($this as $page) {
-
-      if (!$headers_filled) {
-        if (isset($page[0])) {
-          $headers = array_map(function ($item) {
-            return ucfirst(str_replace('_', ' ', $item));
-          }, array_keys($page[0]));
-          fputcsv($fp, $headers);
-          $headers_filled = true;
-        }
-      }
-
-      foreach ($page as $row) {
-        fputcsv($fp, $row);
-      }
-      if (ob_get_level() > 0) {
-        ob_flush();
-        ob_end_flush();
-      }
-      flush();
-    }
-    fclose($fp);
-    dbg()->requestProcessed();
-    die;
-  }
-
   protected function __getLineAttribution()
   {
     $bt = debug_backtrace(0, 10);
@@ -272,12 +272,12 @@ class Exporter extends Abstracts\PaginatedIterator
       $f = explode($base, $trace['file']);
       $file = isset($f[1]) ? $f[1] : $f[0];
       $parts = explode(DIRECTORY_SEPARATOR, $file);
-      if ($parts[0] == 'app' && !$line_found) {
+      if ($parts[0] === 'app' && !$line_found) {
         $data['file'] = $file;
         $data['line'] = $trace['line'];
         $line_found = true;
       }
-      if ($parts[0] == 'app' && $trace['class'] != 'DB\Cortex' && $trace['class'] != 'DB\CortexCollection') {
+      if ($parts[0] === 'app' && $trace['class'] !== 'DB\Cortex' && $trace['class'] !== 'DB\CortexCollection') {
         if (empty($data['file'])) {
           $data['file'] = $file;
         };

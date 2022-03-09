@@ -51,7 +51,7 @@ class PaginatedRows extends Abstracts\PaginatedIterator
   {
     $itemsPerPage = $this->getItemsPerPage();
     $options = [
-      'offset' => ($pageNumber * $itemsPerPage),
+      'offset' => $pageNumber * $itemsPerPage,
       'limit' => $itemsPerPage
     ];
 

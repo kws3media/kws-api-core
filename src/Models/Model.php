@@ -55,6 +55,22 @@ abstract class Model extends \DB\Cortex
   }
 
   /**
+   * Given $queryObject, it returns a paginated list of
+   * database rows based on $perPage and scoped by the $queryObject.
+   *
+   * This paginated list can be iterated over transparently like an array,
+   * while it lazily loads the rows in each iteration.
+   *
+   * @param array $queryObject - object with query parameters compatible with objects used in $model->load() or $model->find()
+   * @param int $perPage - number of rows to be returned per page, default: 20
+   * @return Traversable - object with rows in chunks of $perPage
+   */
+  public function findPaginated($queryObject, $perPage = 20)
+  {
+    return new PaginatedRows($this, $queryObject, $perPage);
+  }
+
+  /**
    * automatically patches the modified and created dates
    * on models that have those fields
    */
@@ -303,22 +319,6 @@ abstract class Model extends \DB\Cortex
     }
 
     return $class;
-  }
-
-  /**
-   * Given $queryObject, it returns a paginated list of
-   * database rows based on $perPage and scoped by the $queryObject.
-   *
-   * This paginated list can be iterated over transparently like an array,
-   * while it lazily loads the rows in each iteration.
-   *
-   * @param array $queryObject - object with query parameters compatible with objects used in $model->load() or $model->find()
-   * @param int $perPage - number of rows to be returned per page, default: 20
-   * @return Traversable - object with rows in chunks of $perPage
-   */
-  public function findPaginated($queryObject, $perPage = 20)
-  {
-    return new PaginatedRows($this, $queryObject, $perPage);
   }
 
 
