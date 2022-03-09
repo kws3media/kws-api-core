@@ -18,25 +18,20 @@ use \Kws3\ApiCore\Loader;
 class Exporter extends Abstracts\PaginatedIterator
 {
 
-  /** @var array */
-  protected $queryObject;
 
-  /** @var array */
-  protected $config;
+  protected array $queryObject;
 
-  /** @var PDO */
-  protected $pdo;
+  protected array $config;
 
-  /** @var array */
-  protected $headers;
+  protected PDO $pdo;
 
-  /** @var array | string */
-  protected $fields;
+  protected array $headers;
+
+  protected mixed $fields;
 
   protected $export_file_name = "export.csv";
 
-  /** @var array */
-  protected $response_headers = [
+  protected array $response_headers = [
     'Expires' => '0',
     'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
     'Cache-Control' => 'private',

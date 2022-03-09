@@ -13,8 +13,7 @@ use \Kws3\ApiCore\DB\LoggableSQL;
 class Framework extends \Prefab
 {
 
-  /** @var \Base */
-  protected $app;
+  protected \Base $app;
 
   protected $defaultDefinition = [
     //The main endpoint that will be hit

@@ -17,15 +17,13 @@ class Base
 
   protected $app;
 
-  /** @var \Test */
-  protected $test;
+  protected \Test $test;
 
   /**
    * String array of method names that are to be run exclusively.
    * When this array is filled, only the methods in the array will be run.
-   * @var array
    */
-  protected $onlyRun = [];
+  protected array $onlyRun = [];
 
   function __construct()
   {

@@ -15,20 +15,16 @@ use \OutOfBoundsException;
  */
 abstract class PaginatedIterator implements ArrayAccess, Iterator, Countable
 {
-  /** @var bool */
-  protected $shouldCache = false; //increases memory usage, use carefully
 
-  /** @var array */
-  protected $cache = [];
+  protected bool $shouldCache = false; //increases memory usage, use carefully
 
-  /** @var int */
-  protected $index = 0;
+  protected array $cache = [];
 
-  /** @var int */
-  private $totalItems = 0;
+  protected int $index = 0;
 
-  /** @var int */
-  private $itemsPerPage = 10;
+  private int $totalItems = 0;
+
+  private int $itemsPerPage = 10;
 
   /**
    * Return the contents of $pageNumber
