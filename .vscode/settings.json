@@ -8,8 +8,7 @@
   "editor.detectIndentation": false,
   "[php]": {
     "editor.formatOnSave": true,
-    "editor.quickSuggestions": { "comments": true },
-    "editor.formatOnSaveMode": "modifications"
+    "editor.quickSuggestions": { "comments": true }
   },
   "phpcs.standard": "../ruleset.xml",
   "phpcs.showSources": true
