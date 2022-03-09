@@ -20,11 +20,11 @@
   },
   "require": {
     "bcosca/fatfree-core": "3.7.3",
-    "ekhaled/f3-cortex": "dev-master",
+    "ikkez/f3-cortex": "1.7.5",
     "itsgoingd/clockwork": "4.1.8",
     "aws/aws-sdk-php": "^3.18",
     "ekhaled/schema-parser-mysql": "1.3",
-    "ekhaled/f3-cortex-model-generator": "1.7",
+    "ekhaled/f3-cortex-model-generator": "1.8",
     "davedevelopment/phpmig": "1.5",
     "pimple/pimple": "~3.0",
     "phpmailer/phpmailer": "^5.2",
@@ -38,6 +38,7 @@
     "bin/apicore"
   ],
   "config": {
+    "platform":{"php": "5.5"},
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }

@@ -172,4 +172,30 @@ class Tools extends \Prefab
 
     return ['searchFields' => $mapped, 'filters' => $filters];
   }
+
+  /**
+   * Removes indentation from multiline strings. Works with both tabs and spaces.
+   * @param string $str
+   * @return string
+   */
+  public static function dedent($str)
+  {
+    // 1. Remove leading/trailing whitespace.
+    $parts = array_map(function ($part) {
+      return trim($part);
+    }, explode("\n", $str));
+
+    // 2. Find all line breaks to determine the highest common indentation level.
+    $spaces = min(array_map(function ($part) {
+      preg_match('#^\s*#', $part, $matches);
+      return strlen($matches[0]);
+    }, $parts));
+
+    // 3. Remove the common indentation from all strings.
+    $parts = array_map(function ($part) use ($spaces) {
+      return substr($part, $spaces);
+    }, $parts);
+
+    return implode("\n", $parts);
+  }
 }

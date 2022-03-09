@@ -3,6 +3,7 @@
 namespace Kws3\ApiCore\Models;
 
 use \Kws3\ApiCore\Loader;
+use \Kws3\ApiCore\Utils\PaginatedRows;
 
 /**
  * @method static void log($msg) logs $msg to active log file as well as clockwork (if enabled)
@@ -302,6 +303,22 @@ abstract class Model extends \DB\Cortex
     }
 
     return $class;
+  }
+
+  /**
+   * Given $queryObject, it returns a paginated list of
+   * database rows based on $perPage and scoped by the $queryObject.
+   *
+   * This paginated list can be iterated over transparently like an array,
+   * while it lazily loads the rows in each iteration.
+   *
+   * @param array $queryObject - object with query parameters compatible with objects used in $model->load() or $model->find()
+   * @param int $perPage - number of rows to be returned per page, default: 20
+   * @return Traversable - object with rows in chunks of $perPage
+   */
+  public function findPaginated($queryObject, $perPage = 20)
+  {
+    return new PaginatedRows($this, $queryObject, $perPage);
   }
 
 
