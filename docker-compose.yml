@@ -4,8 +4,6 @@ services:
   webserver:
       image: kws3/php74:latest
       container_name: '${PROJECT_NAME}-web'
-      ports:
-          - '${APP_PORT:-80}:80'
       volumes:
         - ${DOCUMENT_ROOT-./}:/var/www/html:delegated
         - ${PHP_INI-./docker/config/php/php.ini}:/usr/local/etc/php/php.ini:cached
