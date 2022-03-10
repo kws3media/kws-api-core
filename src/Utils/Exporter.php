@@ -100,7 +100,7 @@ class Exporter extends Abstracts\PaginatedIterator
     $fp = fopen('php://output', 'w');
 
 
-    if (is_array($this->headers)) {
+    if (is_array($this->headers) && !empty($this->headers)) {
       if (!$headers_filled) {
         fputcsv($fp, $this->headers);
         $headers_filled = true;
