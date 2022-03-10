@@ -27,7 +27,7 @@ class Exporter extends Abstracts\PaginatedIterator
 
   protected array $headers;
 
-  protected mixed $fields;
+  protected $fields;
 
   protected $export_file_name = "export.csv";
 
