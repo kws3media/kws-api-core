@@ -2,6 +2,8 @@
 
 namespace Kws3\ApiCore\Utils;
 
+use Kws3\ApiCore\Models\Model;
+
 /**
  * Given a $model and a $queryObject, it returns a paginated list of
  * database rows based on $perPage and scoped by the $queryObject.
@@ -13,15 +15,14 @@ namespace Kws3\ApiCore\Utils;
  */
 class PaginatedRows extends Abstracts\PaginatedIterator
 {
-  /** @var \Models\Base */
-  protected $model;
 
-  /** @var array */
-  protected $queryObject;
+  protected Model $model;
+
+  protected array $queryObject;
 
   /**
    * Constructor method
-   * @param \Models\Base $model - any database model instance
+   * @param Model $model - any database model instance
    * @param array $queryObject - object with query parameters compatible with objects used in $model->load() or $model->find()
    * @param int $perPage - number of rows to be returned per page, default: 20
    * @return void
@@ -51,7 +52,7 @@ class PaginatedRows extends Abstracts\PaginatedIterator
   {
     $itemsPerPage = $this->getItemsPerPage();
     $options = [
-      'offset' => ($pageNumber * $itemsPerPage),
+      'offset' => $pageNumber * $itemsPerPage,
       'limit' => $itemsPerPage
     ];
 

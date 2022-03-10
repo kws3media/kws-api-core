@@ -24,7 +24,8 @@ class LogWriter
   {
     $this->app = \Base::instance();
 
-    if (!is_dir($dir = Loader::get('LOGS'))) {
+    $dir = Loader::get('LOGS');
+    if (!is_dir($dir)) {
       mkdir($dir, \Base::MODE, TRUE);
     }
 
@@ -49,36 +50,6 @@ class LogWriter
 
     if ($this->rotate) {
       $this->rotateLogs();
-    }
-  }
-
-  private function rotateLogs()
-  {
-
-    $logFile = $this->file;
-
-    if ($this->getRotate() === true && @filesize($logFile) > $this->getMaxFileSize() * 1024) {
-
-      $max = $this->getMaxLogFiles();
-
-      //rotate already rotated files
-      for ($i = $max; $i > 0; --$i) {
-        $rotateFile = $logFile . '.' . $i;
-        if (is_file($rotateFile)) {
-          // suppress errors because it's possible multiple processes enter into this section
-          if ($i === $max) {
-            @unlink($rotateFile);
-          } else {
-            @rename($rotateFile, $logFile . '.' . ($i + 1));
-          }
-        }
-      }
-
-      //rotate current file
-      if (is_file($logFile)) {
-        // suppress errors because it's possible multiple processes enter into this section
-        @rename($logFile, $logFile . '.1');
-      }
     }
   }
 
@@ -135,5 +106,35 @@ class LogWriter
   public function setDateFormat($dateFormat)
   {
     $this->dateFormat = $dateFormat;
+  }
+
+  private function rotateLogs()
+  {
+
+    $logFile = $this->file;
+
+    if ($this->getRotate() === true && @filesize($logFile) > $this->getMaxFileSize() * 1024) {
+
+      $max = $this->getMaxLogFiles();
+
+      //rotate already rotated files
+      for ($i = $max; $i > 0; --$i) {
+        $rotateFile = $logFile . '.' . $i;
+        if (is_file($rotateFile)) {
+          // suppress errors because it's possible multiple processes enter into this section
+          if ($i === $max) {
+            @unlink($rotateFile);
+          } else {
+            @rename($rotateFile, $logFile . '.' . ($i + 1));
+          }
+        }
+      }
+
+      //rotate current file
+      if (is_file($logFile)) {
+        // suppress errors because it's possible multiple processes enter into this section
+        @rename($logFile, $logFile . '.1');
+      }
+    }
   }
 }

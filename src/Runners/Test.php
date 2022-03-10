@@ -80,11 +80,7 @@ class Test extends Base
     }
 
     $className = ucfirst(strtolower($className));
-    if (!$this->endsWith($className, 'test')) {
-      $className = $className . 'Test';
-    } else {
-      $className = substr($className, 0, -4) . 'Test';
-    }
+    $className = !$this->endsWith($className, 'test') ? $className . 'Test' : substr($className, 0, -4) . 'Test';
     $f .= $this->fixPath('/' . $className . '.php');
 
     if (file_exists($f)) {
@@ -215,7 +211,7 @@ class $className extends " . $this->config['base_namespace'] .
         ($exceptions ? ConsoleColor::warning(" " . $exceptions . ' Exceptions ') . ", " : $exceptions . ' Exceptions, ')
     );
 
-    $_diff = \DateTime::createFromFormat('U.u', number_format(($endTime - $startTime), 6, '.', ''));
+    $_diff = \DateTime::createFromFormat('U.u', number_format($endTime - $startTime, 6, '.', ''));
 
     $this->output("Total time taken: " . $_diff->format("H:i:s.u"));
     $this->output("=====================================================");
@@ -252,7 +248,7 @@ class $className extends " . $this->config['base_namespace'] .
       $f = explode(DIRECTORY_SEPARATOR, $tf);
       $f = array_pop($f);
       $f = str_replace('.php', '', $f);
-      if (($fileName && $f == $fileName) || !$fileName) {
+      if (($fileName && $f === $fileName) || !$fileName) {
         $this->output("..................... " . $obj['namespace'] . '\\' . $f . " ...............");
         $class = $this->config['namespace'] . "\\" . ($obj['namespace'] ? $obj['namespace'] . "\\" : "") . $f;
         $class = new $class;

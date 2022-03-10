@@ -19,42 +19,42 @@ class RequestBodyTest extends \Kws3\ApiCore\Test\Base
     Loader::set('BODY', $JSON);
 
     Loader::set('VERB', 'POST');
-    $rb = new \Kws3\ApiCore\Utils\RequestBody();
+    $rb = new \Kws3\ApiCore\Utils\RequestBody;
     $parsed = $rb->parse();
-    $this->test->expect($parsed["hello"] == $ARR['hello'], "Check JSON is parsed properly");
-    $this->test->expect($parsed["How"] == $ARR['How'], "Check JSON is parsed properly");
+    $this->test->expect($parsed["hello"] === $ARR['hello'], "Check JSON is parsed properly");
+    $this->test->expect($parsed["How"] === $ARR['How'], "Check JSON is parsed properly");
 
     Loader::set('VERB', 'PUT');
-    $rb = new \Kws3\ApiCore\Utils\RequestBody();
+    $rb = new \Kws3\ApiCore\Utils\RequestBody;
     $parsed = $rb->parse();
-    $this->test->expect($parsed["hello"] == $ARR['hello'], "Check JSON is parsed properly");
-    $this->test->expect($parsed["How"] == $ARR['How'], "Check JSON is parsed properly");
+    $this->test->expect($parsed["hello"] === $ARR['hello'], "Check JSON is parsed properly");
+    $this->test->expect($parsed["How"] === $ARR['How'], "Check JSON is parsed properly");
 
     Loader::set('VERB', 'GET');
-    $rb = new \Kws3\ApiCore\Utils\RequestBody();
+    $rb = new \Kws3\ApiCore\Utils\RequestBody;
     $parsed = $rb->parse();
     $this->test->expect(!isset($parsed["hello"]), "Check JSON is parsed properly");
     $this->test->expect(!isset($parsed["How"]), "Check JSON is parsed properly");
 
     Loader::set('VERB', 'DELETE');
-    $rb = new \Kws3\ApiCore\Utils\RequestBody();
+    $rb = new \Kws3\ApiCore\Utils\RequestBody;
     $parsed = $rb->parse();
     $this->test->expect(!isset($parsed["How"]), "Check JSON is parsed properly");
     $this->test->expect(!isset($parsed["hello"]), "Check JSON is parsed properly");
 
     Loader::set('HEADERS.Content-Type', 'application/xml');
     Loader::set('VERB', 'POST');
-    $rb = new \Kws3\ApiCore\Utils\RequestBody();
+    $rb = new \Kws3\ApiCore\Utils\RequestBody;
     $parsed = $rb->parse();
     $this->test->expect(!isset($parsed["How"]), "content type of application/json is only respected");
     $this->test->expect(!isset($parsed["hello"]), "content type of application/json is only respected");
 
     Loader::set('HEADERS.Content-Type', 'application/json;charset=UTF-8');
     Loader::set('VERB', 'POST');
-    $rb = new \Kws3\ApiCore\Utils\RequestBody();
+    $rb = new \Kws3\ApiCore\Utils\RequestBody;
     $parsed = $rb->parse();
-    $this->test->expect($parsed["hello"] == $ARR['hello'], "Check JSON is parsed properly with charset attribute");
-    $this->test->expect($parsed["How"] == $ARR['How'], "Check JSON is parsed properly with charset attribute");
+    $this->test->expect($parsed["hello"] === $ARR['hello'], "Check JSON is parsed properly with charset attribute");
+    $this->test->expect($parsed["How"] === $ARR['How'], "Check JSON is parsed properly with charset attribute");
   }
 
   function testFormDataParsing()
@@ -68,9 +68,9 @@ class RequestBodyTest extends \Kws3\ApiCore\Test\Base
     Loader::set('POST', null);
 
     Loader::set('VERB', 'PUT');
-    $rb = new \Kws3\ApiCore\Utils\RequestBody();
+    $rb = new \Kws3\ApiCore\Utils\RequestBody;
     $parsed = $rb->parse();
-    $this->test->expect($parsed["hello"] == $ARR['hello'], "Check x-www-form-urlencoded is parsed properly");
-    $this->test->expect($parsed["How"] == $ARR['How'], "Check x-www-form-urlencoded is parsed properly");
+    $this->test->expect($parsed["hello"] === $ARR['hello'], "Check x-www-form-urlencoded is parsed properly");
+    $this->test->expect($parsed["How"] === $ARR['How'], "Check x-www-form-urlencoded is parsed properly");
   }
 }

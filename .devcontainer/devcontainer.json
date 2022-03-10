@@ -1,0 +1,11 @@
+{
+  "name":"webserver",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "webserver",
+  "workspaceFolder": "/var/www/html",
+  "extensions": [
+    "bmewburn.vscode-intelephense-client",
+    "ikappas.phpcs",
+    "usernamehw.errorlens"
+  ]
+}

@@ -11,4 +11,5 @@ spl_autoload_register(function ($class) {
     require $file;
   }
 });
+//phpcs:ignore SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable
 $app = \Base::instance();

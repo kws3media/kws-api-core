@@ -9,15 +9,15 @@ use \Kws3\ApiCore\Utils\Tools;
 
 class S3Driver extends Driver
 {
-  const ACL_PRIVATE               = 'private';
-  const ACL_PUBLIC                = 'public-read';
-  const ACL_OPEN                  = 'public-read-write';
-  const ACL_AUTH_READ             = 'authenticated-read';
-  const ACL_OWNER_READ            = 'bucket-owner-read';
-  const ACL_OWNER_FULL_CONTROL    = 'bucket-owner-full-control';
+  public const ACL_PRIVATE               = 'private';
+  public const ACL_PUBLIC                = 'public-read';
+  public const ACL_OPEN                  = 'public-read-write';
+  public const ACL_AUTH_READ             = 'authenticated-read';
+  public const ACL_OWNER_READ            = 'bucket-owner-read';
+  public const ACL_OWNER_FULL_CONTROL    = 'bucket-owner-full-control';
 
-  const STORAGE_CLASS_STANDARD    = 'STANDARD';
-  const STORAGE_CLASS_RRS         = 'REDUCED_REDUNDANCY';
+  public const STORAGE_CLASS_STANDARD    = 'STANDARD';
+  public const STORAGE_CLASS_RRS         = 'REDUCED_REDUNDANCY';
 
 
   protected $app;
@@ -226,17 +226,17 @@ class S3Driver extends Driver
     $originalName = basename($filePath);
 
     $acl = $opts['acl'] ?: null;
-    if ($acl == null) {
+    if ($acl === null) {
       $acl = self::ACL_PUBLIC;
     }
 
     $contentType = $opts['contentType'] ?: null;
-    if ($contentType == null) {
+    if ($contentType === null) {
       $contentType = $this->mimeByExtension($originalName);
     }
 
     $redundancy = $opts['redundancy'] ?: null;
-    if ($redundancy == null) {
+    if ($redundancy === null) {
       $redundancy = self::STORAGE_CLASS_STANDARD;
     }
 
@@ -247,6 +247,7 @@ class S3Driver extends Driver
 
     try {
       // Upload data.
+      //phpcs:ignore SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable
       $result = $this->getS3()->putObject(array(
         'ACL'           => $acl,
         'SourceFile'    => $filePath,
@@ -276,7 +277,8 @@ class S3Driver extends Driver
 
   public function mimeByExtension($file)
   {
-    if (($ext = pathinfo($file, PATHINFO_EXTENSION)) !== '') {
+    $ext = pathinfo($file, PATHINFO_EXTENSION);
+    if ($ext !== '') {
       $ext = strtolower($ext);
       if (isset($this->mimeTypes[$ext])) {
         return $this->mimeTypes[$ext];

@@ -10,7 +10,7 @@ class LoggableSQL extends \DB\SQL
     $result = parent::exec($cmds, $args, $ttl, $log, $stamp);
 
     list($duration, $cached, $query) = array_values($this->__parseLog());
-    $query = $cached ? ('[CACHED] ' . $query) : $query;
+    $query = $cached ? '[CACHED] ' . $query : $query;
     $data = $this->__getLineAttribution();
     dbg()->addDatabaseQuery($query, null, $duration, $data);
 
@@ -31,7 +31,7 @@ class LoggableSQL extends \DB\SQL
       $line = end($lines);
       preg_match('/[^\(]*(\([\d\.]*ms\))\s(\[.*\]\s)?(.*)/', trim($line), $matches);
       $ret['d'] = str_replace(['(', ')', 'ms'], '', $matches[1]);
-      $ret['c'] = str_replace(['[', ']'], '', trim($matches[2])) == 'CACHED' ? true : false;
+      $ret['c'] = str_replace(['[', ']'], '', trim($matches[2])) === 'CACHED' ? true : false;
       $ret['q'] = $matches[3];
     }
 
@@ -55,12 +55,12 @@ class LoggableSQL extends \DB\SQL
       $f = explode($base, $trace['file']);
       $file = isset($f[1]) ? $f[1] : $f[0];
       $parts = explode(DIRECTORY_SEPARATOR, $file);
-      if ($parts[0] == 'app' && !$line_found) {
+      if ($parts[0] === 'app' && !$line_found) {
         $data['file'] = $file;
         $data['line'] = $trace['line'];
         $line_found = true;
       }
-      if ($parts[0] == 'app' && $trace['class'] != 'DB\Cortex' && $trace['class'] != 'DB\CortexCollection') {
+      if ($parts[0] === 'app' && $trace['class'] !== 'DB\Cortex' && $trace['class'] !== 'DB\CortexCollection') {
         if (empty($data['file'])) {
           $data['file'] = $file;
         };

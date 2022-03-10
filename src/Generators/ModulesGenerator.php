@@ -19,7 +19,7 @@ class ModulesGenerator extends Base
     $config = $this->config;
     $className = $this->className($config['class_name']);
 
-    if ($config['type'] == 'modules') {
+    if ($config['type'] === 'modules') {
       $files = array_map(
         function ($p) use ($className) {
           return $p . $className . '.php';

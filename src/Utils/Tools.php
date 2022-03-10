@@ -27,7 +27,7 @@ class Tools extends \Prefab
   public static function endsWith($haystack, $needle)
   {
     $length = strlen($needle);
-    if ($length == 0) {
+    if ($length === 0) {
       return true;
     }
 
@@ -82,8 +82,7 @@ class Tools extends \Prefab
     $parts = explode(".", $name);
     $ext = array_pop($parts);
     $fileNoExtension = implode(".", $parts);
-    $name = md5(uniqid(mt_rand(), true) . $fileNoExtension) . '.' . strtolower($ext);
-    return $name;
+    return md5(uniqid(mt_rand(), true) . $fileNoExtension) . '.' . strtolower($ext);
   }
 
   //Random pronounceable ref key
@@ -143,7 +142,7 @@ class Tools extends \Prefab
 
     // Split the strings at their colon, set left to key, and right to value.
     foreach ($splitFields as $field) {
-      if (trim($field) != "") {
+      if (trim($field) !== "") {
         $splitField = array_map('trim', explode(':', $field));
         //filter out the condition
         preg_match("/([^\[\]]*)(\[([^\[\]]+)\])?([|])?/", $splitField[0], $matches);

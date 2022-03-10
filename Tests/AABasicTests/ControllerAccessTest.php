@@ -498,7 +498,7 @@ class ControllerAccessTest extends \Kws3\ApiCore\Test\Base
       );
     } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
       $this->test->expect(
-        ((isset($ret4) === false) && $ex->getMessage() == 'Conflict.'),
+        ((isset($ret4) === false) && $ex->getMessage() === 'Conflict.'),
         'Authed user on unspecified method is not allowed if inactive key'
       );
     }
@@ -512,7 +512,7 @@ class ControllerAccessTest extends \Kws3\ApiCore\Test\Base
       );
     } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
       $this->test->expect(
-        ((isset($ret5) === false) && $ex->getMessage() == 'Conflict.'),
+        ((isset($ret5) === false) && $ex->getMessage() === 'Conflict.'),
         'Authed user on allowed method is not allowed if inactive key'
       );
     }

@@ -9,20 +9,20 @@ use \Kws3\ApiCore\Exceptions\HTTPException;
 
 class QueryGenerator extends Model
 {
+  public const TYPE_INT          = 'Int';
+  public const TYPE_TEXT         = 'Text';
+  public const TYPE_BOOL         = 'Bool';
+  public const TYPE_DATE         = 'Date';
+  public const TYPE_ENUM         = 'Enum';
+  public const TYPE_NULLABLEENUM = 'NullEnum';
+
+  public const QUERY_TYPE_LINK   = 'L';
+  public const QUERY_TYPE_RAW    = 'R';
+
+  public const IGNORABLE = 'Ignorable';
+
   protected $model;
   protected $DB;
-
-  const TYPE_INT          = 'Int';
-  const TYPE_TEXT         = 'Text';
-  const TYPE_BOOL         = 'Bool';
-  const TYPE_DATE         = 'Date';
-  const TYPE_ENUM         = 'Enum';
-  const TYPE_NULLABLEENUM = 'NullEnum';
-
-  const QUERY_TYPE_LINK   = 'L';
-  const QUERY_TYPE_RAW    = 'R';
-
-  const IGNORABLE = 'Ignorable';
 
   /** EXAMPLES OF configurable fields
    *
@@ -202,17 +202,17 @@ class QueryGenerator extends Model
   protected static function conditionForDate($options, $filters, $where)
   {
     foreach ($options as $option) {
-      if ($option['type'] == self::TYPE_DATE) {
+      if ($option['type'] === self::TYPE_DATE) {
         $param_type = 'single';
         $begin_found = 0;
         $end_found = 0;
         $pattern = '{{' . self::TYPE_DATE . ':' . $option['binding'] . '}}';
 
         foreach ($filters as $filter) {
-          if ($filter['field'] == $option['binding'] . '_begin') {
+          if ($filter['field'] === $option['binding'] . '_begin') {
             $begin_found = 1;
           }
-          if ($filter['field'] == $option['binding'] . '_end') {
+          if ($filter['field'] === $option['binding'] . '_end') {
             $end_found = 1;
           }
         }
@@ -220,13 +220,13 @@ class QueryGenerator extends Model
           $param_type = 'double';
         }
 
-        if ($param_type == 'single') {
+        if ($param_type === 'single') {
           $where = str_replace(
             $pattern,
             ' = :' . $option['binding'],
             $where
           );
-        } elseif ($param_type == 'double') {
+        } elseif ($param_type === 'double') {
           $where = str_replace(
             $pattern,
             ' BETWEEN :' . $option['binding'] . '_begin AND :' . $option['binding'] . '_end',
@@ -242,10 +242,10 @@ class QueryGenerator extends Model
   protected static function conditionForText($options, &$filters, $where)
   {
     foreach ($options as $option) {
-      if ($option['type'] == self::TYPE_TEXT) {
+      if ($option['type'] === self::TYPE_TEXT) {
         $pattern = '{{' . self::TYPE_TEXT . ':' . $option['binding'] . '}}';
         foreach ($filters as &$filter) {
-          if ($filter['field'] == $option['binding']) {
+          if ($filter['field'] === $option['binding']) {
             $raw_condition = $filter['condition'];
             switch ($raw_condition) {
               case 'lk':
@@ -283,10 +283,10 @@ class QueryGenerator extends Model
   protected static function conditionForInt($options, $filters, $where)
   {
     foreach ($options as $option) {
-      if ($option['type'] == self::TYPE_INT) {
+      if ($option['type'] === self::TYPE_INT) {
         $pattern = '{{' . self::TYPE_INT . ':' . $option['binding'] . '}}';
         foreach ($filters as $filter) {
-          if ($filter['field'] == $option['binding']) {
+          if ($filter['field'] === $option['binding']) {
             $raw_condition = $filter['condition'];
             switch ($raw_condition) {
               case 'gt':
@@ -329,19 +329,18 @@ class QueryGenerator extends Model
   protected static function conditionForNullableEnum($options, &$filters, $where)
   {
     foreach ($options as $option) {
-      if ($option['type'] == self::TYPE_NULLABLEENUM) {
+      if ($option['type'] === self::TYPE_NULLABLEENUM) {
         $pattern = '{{' . self::TYPE_NULLABLEENUM . ':' . $option['binding'] . '}}';
         foreach ($filters as $k => &$filter) {
-          if ($filter['field'] == $option['binding']) {
-            $raw_condition = $filter['condition'];
-            if (strtoupper($filter['value']) == 'NULL') {
+          if ($filter['field'] === $option['binding']) {
+            if (strtoupper($filter['value']) === 'NULL') {
               $where = str_replace(
                 $pattern,
                 ' IS NULL',
                 $where
               );
               unset($filters[$k]);
-            } elseif (strtoupper($filter['value']) == 'NOT NULL') {
+            } elseif (strtoupper($filter['value']) === 'NOT NULL') {
               $where = str_replace(
                 $pattern,
                 ' IS NOT NULL',
@@ -367,12 +366,12 @@ class QueryGenerator extends Model
   {
     foreach ($options as $option) {
       foreach ($filters as $filter) {
-        if ($filter['field'] == $option['binding']) {
-          if ($option['type'] == self::TYPE_ENUM) {
+        if ($filter['field'] === $option['binding']) {
+          if ($option['type'] === self::TYPE_ENUM) {
             $valid_values = [];
             $value = null;
             foreach ($filters as $filter) {
-              if ($filter['field'] == $option['binding']) {
+              if ($filter['field'] === $option['binding']) {
                 $value = $filter['value'];
                 foreach ($option['options'] as $enum_option) {
                   $valid_values[] = array_values($enum_option)[0];
@@ -380,7 +379,7 @@ class QueryGenerator extends Model
               }
             }
 
-            if (!in_array($value, $valid_values)) {
+            if (!in_array($value, $valid_values, true)) {
               throw new HTTPException('Precondition Failed.', 412);
             }
           }

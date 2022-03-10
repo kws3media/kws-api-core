@@ -13,8 +13,6 @@ class Controller
 
   protected $app;
 
-  protected static $defaultLogCategory = 'application';
-
   protected $requestBody;
 
   protected $identity;
@@ -49,8 +47,11 @@ class Controller
   // `post` is allowed for Admins and Franchisee Admins
   protected $accessList = [];
 
+  protected static $defaultLogCategory = 'application';
+
   private $parseQS = true;
 
+  //phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
   public function __construct(\Base $app, $parseQS = true)
   {
     $this->app = \Base::instance();
@@ -97,6 +98,7 @@ class Controller
 
   public function afterroute()
   {
+    return;
   }
 
   protected function setCurrentAction()
@@ -106,7 +108,7 @@ class Controller
     $verb    = Loader::get('VERB');
     $routes  = Loader::get('ROUTES');
 
-    if ($verb != 'OPTIONS') {
+    if ($verb !== 'OPTIONS') {
       if (isset($routes[$pattern])) {
         if (
           isset($routes[$pattern][0]) &&

@@ -12,12 +12,10 @@ use \Kws3\ApiCore\Utils\PaginatedRows;
 
 abstract class Model extends \DB\Cortex
 {
-  const KWS_FILTER_MULTISELECT = 'multiselect';
-  const KWS_FILTER_SELECT = 'select';
-  const KWS_FILTER_DATE = 'date';
-  const KWS_FILTER_DATERANGE = 'daterange';
-
-  protected static $defaultLogCategory = 'application';
+  public const KWS_FILTER_MULTISELECT = 'multiselect';
+  public const KWS_FILTER_SELECT = 'select';
+  public const KWS_FILTER_DATE = 'date';
+  public const KWS_FILTER_DATERANGE = 'daterange';
 
   protected $app,
     $fieldConf = [],
@@ -29,11 +27,13 @@ abstract class Model extends \DB\Cortex
     $softDelete = true,
     $trackDeletion = true;
 
+  protected static $defaultLogCategory = 'application';
+
   public function __construct()
   {
     $this->app = \Base::instance();
 
-    if (K_ENV == K_ENV_PRODUCTION) {
+    if (K_ENV === K_ENV_PRODUCTION) {
       $this->ttl = 86400;
     }
 
@@ -54,43 +54,20 @@ abstract class Model extends \DB\Cortex
     });
   }
 
-  protected function fixRelations()
+  /**
+   * Given $queryObject, it returns a paginated list of
+   * database rows based on $perPage and scoped by the $queryObject.
+   *
+   * This paginated list can be iterated over transparently like an array,
+   * while it lazily loads the rows in each iteration.
+   *
+   * @param array $queryObject - object with query parameters compatible with objects used in $model->load() or $model->find()
+   * @param int $perPage - number of rows to be returned per page, default: 20
+   * @return Traversable - object with rows in chunks of $perPage
+   */
+  public function findPaginated($queryObject, $perPage = 20)
   {
-    foreach ($this->fieldConf as $k => &$v) {
-      foreach ($v as $k1 => &$v1) {
-        if ($k1 == 'belongs-to-one' || $k1 == 'has-many' || $k1 == 'has-one') {
-          if (is_array($v1)) {
-            $v1[0] = $this->getNamespacedClass($v1[0]);
-          } else {
-            $v1 = $this->getNamespacedClass($v1);
-          }
-        }
-      }
-    }
-  }
-
-  protected function getNamespacedClass($fqcn)
-  {
-    $curClass = explode("\\", get_class($this));
-    array_pop($curClass);
-    $curNamespace = implode("\\", $curClass);
-
-    $givenClass = explode("\\", $fqcn);
-    $class = array_pop($givenClass);
-
-    if ($curNamespace !== "Models\\Base" && class_exists($curNamespace . "\\" . $class)) {
-      //inject current model's namespace if it isn't Base
-      //the next condition will catch it and inject an extended model
-      $class = $curNamespace . "\\" . $class;
-    } elseif (class_exists("Models\\" . $class)) {
-      //inject extended models namespace
-      $class = "Models\\" . $class;
-    } elseif (class_exists("Models\\Base\\" . $class)) {
-      //inject base models namespace
-      $class = "Models\\Base\\" . $class;
-    }
-
-    return $class;
+    return new PaginatedRows($this, $queryObject, $perPage);
   }
 
   /**
@@ -158,7 +135,6 @@ abstract class Model extends \DB\Cortex
     );
     $bind = [];
     $query = '';
-    $i = 0;
 
     $query_groups = [];
     $first_field_found = false;
@@ -170,16 +146,11 @@ abstract class Model extends \DB\Cortex
 
         if (isset($filter['field']) && isset($filter['value'])) {
           //if field does not contain a . and tablename is given, prepend it
-          if ($tablename && strpos($filter['field'], '.') == false) {
-            $field = '`' . $tablename . '`.`' . $filter['field'] . '`';
-          } else {
-            $field = '`' . $filter['field'] . '`';
-          }
+          $field = $tablename && strpos($filter['field'], '.') === false ? '`' . $tablename . '`.`' . $filter['field'] . '`' : '`' . $filter['field'] . '`';
 
           //make the fieldname not clash with already prepared statement's named params
           $namedParam = uniqid(':fq_' . $filter['field'] . '_');
           $condition = $filter['condition'];
-          $translation = $filter['translation'];
           $value = $filter['value'];
 
           $queryPart = '';
@@ -190,11 +161,7 @@ abstract class Model extends \DB\Cortex
           } else {
             switch ($condition) {
               case 'null':
-                if ($filter['value'] == 'true') {
-                  $queryPart = $field . " IS NULL";
-                } else {
-                  $queryPart = $field . " IS NOT NULL";
-                }
+                $queryPart = $filter['value'] === 'true' ? $field . " IS NULL" : $field . " IS NOT NULL";
                 break;
               case 'in':
                 $queryPart = $field . " IN (" . $namedParam . ")";
@@ -261,8 +228,6 @@ abstract class Model extends \DB\Cortex
           } else {
             $query .= !empty($queryPart) ? $joinType . $queryPart : '';
           }
-
-          $i++;
         }
       }
     }
@@ -284,9 +249,7 @@ abstract class Model extends \DB\Cortex
       return null;
     }
 
-    $qobj = array_merge([0 => $query], (array)$existingBindings, $bind);
-
-    return $qobj;
+    return array_merge([0 => $query], (array)$existingBindings, $bind);
   }
 
   /**
@@ -309,7 +272,7 @@ abstract class Model extends \DB\Cortex
   {
     if (!empty($value)) {
       foreach ($availableOptions as $option) {
-        if ($option['value'] == $value) {
+        if ($option['value'] === $value) {
           return $value;
         }
       }
@@ -318,26 +281,50 @@ abstract class Model extends \DB\Cortex
     return $default;
   }
 
-  /**
-   * Given $queryObject, it returns a paginated list of
-   * database rows based on $perPage and scoped by the $queryObject.
-   *
-   * This paginated list can be iterated over transparently like an array,
-   * while it lazily loads the rows in each iteration.
-   *
-   * @param array $queryObject - object with query parameters compatible with objects used in $model->load() or $model->find()
-   * @param int $perPage - number of rows to be returned per page, default: 20
-   * @return Traversable - object with rows in chunks of $perPage
-   */
-  public function findPaginated($queryObject, $perPage = 20)
+  protected function fixRelations()
   {
-    return new PaginatedRows($this, $queryObject, $perPage);
+    //phpcs:ignore SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable
+    foreach ($this->fieldConf as $k => &$v) {
+      foreach ($v as $k1 => &$v1) {
+        if ($k1 === 'belongs-to-one' || $k1 === 'has-many' || $k1 === 'has-one') {
+          if (is_array($v1)) {
+            $v1[0] = $this->getNamespacedClass($v1[0]);
+          } else {
+            $v1 = $this->getNamespacedClass($v1);
+          }
+        }
+      }
+    }
+  }
+
+  protected function getNamespacedClass($fqcn)
+  {
+    $curClass = explode("\\", get_class($this));
+    array_pop($curClass);
+    $curNamespace = implode("\\", $curClass);
+
+    $givenClass = explode("\\", $fqcn);
+    $class = array_pop($givenClass);
+
+    if ($curNamespace !== "Models\\Base" && class_exists($curNamespace . "\\" . $class)) {
+      //inject current model's namespace if it isn't Base
+      //the next condition will catch it and inject an extended model
+      $class = $curNamespace . "\\" . $class;
+    } elseif (class_exists("Models\\" . $class)) {
+      //inject extended models namespace
+      $class = "Models\\" . $class;
+    } elseif (class_exists("Models\\Base\\" . $class)) {
+      //inject base models namespace
+      $class = "Models\\Base\\" . $class;
+    }
+
+    return $class;
   }
 
 
   public function __call($name, $arguments)
   {
-    if ($name == 'log') {
+    if ($name === 'log') {
       dbg()->info($arguments[0]);
       Loader::getLogger()->log($arguments[0], static::$defaultLogCategory);
     }
@@ -345,7 +332,7 @@ abstract class Model extends \DB\Cortex
 
   public static function __callStatic($name, $arguments)
   {
-    if ($name == 'log') {
+    if ($name === 'log') {
       dbg()->info($arguments[0]);
       Loader::getLogger()->log($arguments[0], static::$defaultLogCategory);
     }

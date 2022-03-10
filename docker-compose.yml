@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  webserver:
+      image: kws3/php74:latest
+      container_name: '${PROJECT_NAME}-web'
+      volumes:
+        - ${DOCUMENT_ROOT-./}:/var/www/html:delegated
+        - ${PHP_INI-./docker/config/php/php.ini}:/usr/local/etc/php/php.ini:cached
+        - ${VHOSTS_DIR-./docker/config/vhosts}:/etc/apache2/sites-enabled:cached
+        - ${LOG_DIR-./docker/logs/apache2}:/var/log/apache2:delegated
+      environment:
+        APACHE_DOCUMENT_ROOT: ${APACHE_DOCUMENT_ROOT-/var/www/html}
+        WEB_ROOT: ${WEB_ROOT-/var/www/html}
+        WEB_ERROR_LOG: ${WEB_ERROR_LOG-/var/www/html/docker/logs/apache2/error.log}
+      networks:
+        - kwail
+networks:
+  kwail:
+    driver: bridge

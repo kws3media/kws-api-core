@@ -12,6 +12,8 @@ abstract class Base extends \Exception
 
   protected $responder;
 
+  abstract public function setResponder();
+
   public function __construct(
     $message,
     $code = 500,
@@ -33,8 +35,6 @@ abstract class Base extends \Exception
     $this->setResponder();
   }
 
-  abstract public function setResponder();
-
   public function send()
   {
 
@@ -44,7 +44,7 @@ abstract class Base extends \Exception
     if (empty($reason)) {
       $reason = $this->getMessage();
     }
-    if (PHP_SAPI != 'cli' && !headers_sent()) {
+    if (PHP_SAPI !== 'cli' && !headers_sent()) {
       header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code . ' ' . $reason);
     }
 

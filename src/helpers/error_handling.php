@@ -98,7 +98,7 @@ function send500Response()
 
   // Send 500 HTTP body
   // Default to JSON format
-  if (!isset($_SERVER['HTTP_ACCEPT']) || $_SERVER["HTTP_ACCEPT"] != "application/xml") {
+  if (!isset($_SERVER['HTTP_ACCEPT']) || $_SERVER["HTTP_ACCEPT"] !== "application/xml") {
     if (!defined('AUTOMATED_TESTING')) {
       header('Content-type: application/json');
     }

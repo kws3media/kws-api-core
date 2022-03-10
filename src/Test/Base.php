@@ -9,23 +9,21 @@ use \Kws3\ApiCore\Utils\ConsoleColor;
 class Base
 {
 
-  protected $app;
-
-  /** @var \Test */
-  protected $test;
-
   public $passed = 0;
   public $failed = 0;
   public $exceptions = 0;
   public $results = [];
   public $failures = [];
 
+  protected $app;
+
+  protected \Test $test;
+
   /**
    * String array of method names that are to be run exclusively.
    * When this array is filled, only the methods in the array will be run.
-   * @var array
    */
-  protected $onlyRun = [];
+  protected array $onlyRun = [];
 
   function __construct()
   {
@@ -38,18 +36,22 @@ class Base
 
   function before()
   {
+    return;
   }
 
   function after()
   {
+    return;
   }
 
   function beforeEach()
   {
+    return;
   }
 
   function afterEach()
   {
+    return;
   }
 
   function setDB()
@@ -99,7 +101,7 @@ class Base
           $canRunMethod = true;
           if (!is_null($exclusives)) {
             $canRunMethod = false;
-            if (in_array($m, $exclusives)) {
+            if (in_array($m, $exclusives, true)) {
               $canRunMethod = true;
             }
           }
@@ -121,23 +123,6 @@ class Base
         }
       }
       $this->after();
-    }
-  }
-
-  protected function handleResults($methodName)
-  {
-    $methodResults = $this->test->results();
-    if (is_array($methodResults) && count($methodResults) > 0) {
-      $this->results = array_merge($this->results, $methodResults);
-      foreach ($methodResults as $res) {
-        if ($res['status'] === false) {
-          $this->failures[] = [
-            'method' => $methodName,
-            'text' => $res['text'],
-            'source' => $res['source']
-          ];
-        }
-      }
     }
   }
 
@@ -278,7 +263,7 @@ class Base
             $return[$key] = $diff;
           }
         } else {
-          if ($val != $actual[$key]) {
+          if ($val !== $actual[$key]) {
             $return[$key] = $val;
           }
         }
@@ -292,7 +277,7 @@ class Base
   // assertion methods
   function assertEquals($expected, $actual, $message = null)
   {
-    $pass = $expected == $actual;
+    $pass = $expected === $actual;
     $message = $pass ? $message : $message . " - expected {$expected}, got {$actual}";
 
     return $this->test->expect(
@@ -381,7 +366,7 @@ class Base
       $ex_message = $ex->getMessage();
     }
     $this->test->expect(
-      ($ex_message != ''),
+      ($ex_message !== ''),
       "Expected Exception has thrown in this test."
     );
 
@@ -463,5 +448,22 @@ class Base
       ob_end_flush();
     }
     flush();
+  }
+
+  protected function handleResults($methodName)
+  {
+    $methodResults = $this->test->results();
+    if (is_array($methodResults) && count($methodResults) > 0) {
+      $this->results = array_merge($this->results, $methodResults);
+      foreach ($methodResults as $res) {
+        if ($res['status'] === false) {
+          $this->failures[] = [
+            'method' => $methodName,
+            'text' => $res['text'],
+            'source' => $res['source']
+          ];
+        }
+      }
+    }
   }
 }

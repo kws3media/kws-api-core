@@ -15,20 +15,16 @@ use \OutOfBoundsException;
  */
 abstract class PaginatedIterator implements ArrayAccess, Iterator, Countable
 {
-  /** @var bool */
-  protected $shouldCache = false; //increases memory usage, use carefully
 
-  /** @var array */
-  protected $cache = [];
+  protected bool $shouldCache = false; //increases memory usage, use carefully
 
-  /** @var int */
-  protected $index = 0;
+  protected array $cache = [];
 
-  /** @var int */
-  private $totalItems = 0;
+  protected int $index = 0;
 
-  /** @var int */
-  private $itemsPerPage = 10;
+  private int $totalItems = 0;
+
+  private int $itemsPerPage = 10;
 
   /**
    * Return the contents of $pageNumber
@@ -68,32 +64,12 @@ abstract class PaginatedIterator implements ArrayAccess, Iterator, Countable
   // ===========================
 
   /**
-   * Set the total number of items in dataset
-   * @param int $totalItems
-   * @return void
-   */
-  protected function setTotalItems($totalItems)
-  {
-    $this->totalItems = (int) $totalItems;
-  }
-
-  /**
    * Get total number of items in dataset
    * @return int
    */
   public function getTotalItems()
   {
     return $this->totalItems;
-  }
-
-  /**
-   * Set number of items per page
-   * @param int $itemsPerPage
-   * @return void
-   */
-  protected function setItemsPerPage($itemsPerPage)
-  {
-    $this->itemsPerPage = (int) $itemsPerPage;
   }
 
   /**
@@ -119,22 +95,24 @@ abstract class PaginatedIterator implements ArrayAccess, Iterator, Countable
   // Implemented interface validations methods
   // ===========================
 
-  public function count()
+  public function count(): int
   {
     return $this->getTotalItems();
   }
 
-  public function offsetExists($offset)
+  public function offsetExists($offset): bool
   {
     return $offset >= 0 && $offset <= $this->getTotalPages();
   }
 
-  public function offsetSet($offset, $value)
+  //phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+  public function offsetSet($offset, $value): void
   {
     throw new LogicException("Cannot set offset");
   }
 
-  public function offsetUnset($offset)
+  //phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+  public function offsetUnset($offset): void
   {
     throw new LogicException("Cannot unset offset");
   }
@@ -149,18 +127,38 @@ abstract class PaginatedIterator implements ArrayAccess, Iterator, Countable
     return $this->index;
   }
 
-  public function next()
+  public function next(): void
   {
     ++$this->index;
   }
 
-  public function rewind()
+  public function rewind(): void
   {
     $this->index = 0;
   }
 
-  public function valid()
+  public function valid(): bool
   {
     return $this->offsetExists($this->index);
+  }
+
+  /**
+   * Set the total number of items in dataset
+   * @param int $totalItems
+   * @return void
+   */
+  protected function setTotalItems($totalItems)
+  {
+    $this->totalItems = (int) $totalItems;
+  }
+
+  /**
+   * Set number of items per page
+   * @param int $itemsPerPage
+   * @return void
+   */
+  protected function setItemsPerPage($itemsPerPage)
+  {
+    $this->itemsPerPage = (int) $itemsPerPage;
   }
 }

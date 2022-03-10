@@ -13,11 +13,7 @@ use \Kws3\ApiCore\DB\LoggableSQL;
 class Framework extends \Prefab
 {
 
-  /** @var \Base */
-  protected $app;
-
-  protected static $clockworkEnabled = false;
-
+  protected \Base $app;
 
   protected $defaultDefinition = [
     //The main endpoint that will be hit
@@ -48,6 +44,27 @@ class Framework extends \Prefab
       ]
     ]
   ];
+
+
+  protected static $clockworkEnabled = false;
+
+  public function __construct($params = [])
+  {
+    $this->app = \Base::instance();
+
+    $this->applyOptions($params);
+
+    $headers = Loader::getHeaders();
+
+    // All OPTIONS requests get a 200, then die
+    if (Loader::get('VERB') === 'OPTIONS') {
+      header('Access-Control-Allow-Origin: *');
+      header('Access-Control-Allow-Headers: ' . $headers["Access-Control-Request-Headers"]);
+      header('Access-Control-Allow-Methods: ' . $headers["Access-Control-Request-Method"]);
+      header("HTTP/1.0 200 Ok");
+      exit;
+    }
+  }
 
   public static function init($params)
   {
@@ -148,7 +165,7 @@ class Framework extends \Prefab
                 if (is_array($routes) && count($routes) > 0) {
                   foreach ($routes as $k => $v) {
                     if ($v) {
-                      $_route = strtoupper($verb) . ' ' . $_prefix . ($k == '/' ? '' : $k);
+                      $_route = strtoupper($verb) . ' ' . $_prefix . ($k === '/' ? '' : $k);
                       $_routeHandler = $_handler . '->' . $v;
                       $instance->app->route($_route, $_routeHandler);
                     }
@@ -191,24 +208,6 @@ class Framework extends \Prefab
           }
         }
       }
-    }
-  }
-
-  public function __construct($params = [])
-  {
-    $this->app = \Base::instance();
-
-    $this->applyOptions($params);
-
-    $headers = Loader::getHeaders();
-
-    // All OPTIONS requests get a 200, then die
-    if (Loader::get('VERB') == 'OPTIONS') {
-      header('Access-Control-Allow-Origin: *');
-      header('Access-Control-Allow-Headers: ' . $headers["Access-Control-Request-Headers"]);
-      header('Access-Control-Allow-Methods: ' . $headers["Access-Control-Request-Method"]);
-      header("HTTP/1.0 200 Ok");
-      exit;
     }
   }
 

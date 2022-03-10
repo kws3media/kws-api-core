@@ -8,13 +8,14 @@ use \Kws3\ApiCore\Utils\ConsoleColor;
 abstract class CLI
 {
 
-  protected static $defaultLogCategory = 'cli';
-
   protected $app;
 
   //Route params
   protected $params = [];
 
+  protected static $defaultLogCategory = 'cli';
+
+  //phpcs:ignore SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
   public function __construct(\Base $app)
   {
     if (php_sapi_name() !== 'cli') {
@@ -29,9 +30,14 @@ abstract class CLI
     array_shift($this->params);
   }
 
+  public function __destruct()
+  {
+    dbg()->commandExecuted($_SERVER['argv'][1], 0, $this->params);
+  }
+
   protected function log($msg, $err = null)
   {
-    if ($err == true) {
+    if ($err === true) {
       echo ConsoleColor::error(" " . $msg . " ") . "\n";
       dbg()->error($msg);
     } elseif ($err === false) {
@@ -47,10 +53,5 @@ abstract class CLI
     }
     flush();
     Loader::getLogger()->log($msg, static::$defaultLogCategory);
-  }
-
-  public function __destruct()
-  {
-    dbg()->commandExecuted($_SERVER['argv'][1], 0, $this->params);
   }
 }
