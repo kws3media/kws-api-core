@@ -25,7 +25,7 @@ class Exporter extends Abstracts\PaginatedIterator
 
   protected PDO $pdo;
 
-  protected array $headers;
+  protected array $headers = [];
 
   protected $fields;
 
