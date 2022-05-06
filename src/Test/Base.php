@@ -58,7 +58,7 @@ class Base
   {
     $config = Loader::get('CONFIG');
     Loader::set('DB', call_user_func(function ($config) {
-      $dsn = $config['adapter'] . ':host=' . $config['host'] . ';dbname=' . $config['dbname'];
+      $dsn = $config['adapter'] . ':host=' . $config['host'] . ';port=' . ($config['port'] ?: '3306') . ';dbname=' . $config['dbname'];
 
       try {
         return \Kws3\ApiCore\Framework::createDB(
