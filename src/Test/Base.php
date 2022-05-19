@@ -224,10 +224,8 @@ class Base
   function setColumnDefaultValue($table_name, $column_name, $default_value = 0)
   {
     Loader::getDB()->exec(
-      '
-      ALTER TABLE `' . $table_name . '` ALTER COLUMN `' . $column_name . '` SET DEFAULT "' . $default_value .
-        '";
-    '
+      'ALTER TABLE `' . $table_name . '` ALTER COLUMN `' . $column_name . '` SET DEFAULT ?;',
+      $default_value
     );
   }
 
