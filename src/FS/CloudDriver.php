@@ -271,6 +271,7 @@ class CloudDriver extends Driver
         'url' => '//' . implode('/', array_filter([$this->bucket, $folder, $newFilename]))
       ];
     } catch (S3Exception $e) {
+      //dbg($e->getMessage());
     }
 
     @unlink($filePath);
@@ -302,12 +303,15 @@ class CloudDriver extends Driver
         'credentials' => [
           'key'    => $this->opts['access_key'],
           'secret' => $this->opts['secret'],
-        ]
+        ],
       ];
 
       if (isset($this->opts['endpoint'])) {
         $S3_OPTS['endpoint'] = $this->opts['endpoint'];
       };
+      if (isset($this->opts['use_path_style_endpoint'])) {
+        $S3_OPTS['use_path_style_endpoint'] = true;
+      }
 
 
       $this->s3 = new S3Client($S3_OPTS);
@@ -330,8 +334,17 @@ class CloudDriver extends Driver
       $urlType = 'local_url';
     }
 
-    $url_opts = array_merge((array) $fileObject, $this->opts);
+    $fileOpts = [
+      'bucket' => $fileObject->bucket,
+      'folder' => $fileObject->folder,
+      'name' => $fileObject->name,
+      'original_name' => $fileObject->original_name
+    ];
+
+
+    $url_opts = array_merge($fileOpts, $this->opts);
     $url = $this->opts[$urlType];
+
 
     foreach ($url_opts as $key => $value) {
       $url = str_replace('{{' . strtoupper($key) . '}}', $value, $url);
