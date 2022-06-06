@@ -212,12 +212,12 @@ class CloudDriver extends Driver
 
   public function getUrl($fileObject)
   {
-    return '';
+    return $this->generateUrlTemplate('url', $fileObject);
   }
 
   public function getFriendlyUrl($fileObject)
   {
-    return '';
+    return $this->generateUrlTemplate('freindly_url', $fileObject);
   }
 
   public function create($filePath, $destinationFolder = '/', $opts = [])
@@ -312,5 +312,20 @@ class CloudDriver extends Driver
         throw new \Exception($this->getClassName() . ": Mandatory option no set: '" . $o . "'");
       }
     }
+  }
+
+  protected function generateUrlTemplate($urlType, $fileObject)
+  {
+    if (K_ENV !== K_ENV_PRODUCTION) {
+      $urlType = 'local_url';
+    }
+
+    $url_opts = array_merge((array) $fileObject, $this->opts);
+    $url = $this->opts[$urlType];
+
+    foreach ($url_opts as $key => $value) {
+      $string = str_replace('{{' . strtoupper($key) . '}}', $value, $url);
+    }
+    return $url;
   }
 }
