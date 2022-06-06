@@ -324,7 +324,7 @@ class CloudDriver extends Driver
     $url = $this->opts[$urlType];
 
     foreach ($url_opts as $key => $value) {
-      $string = str_replace('{{' . strtoupper($key) . '}}', $value, $url);
+      $url = str_replace('{{' . strtoupper($key) . '}}', $value, $url);
     }
     return $url;
   }
