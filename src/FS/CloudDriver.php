@@ -208,6 +208,9 @@ class CloudDriver extends Driver
     if (empty($this->opts['region'])) {
       $this->opts['region'] = 'eu-west-2';
     }
+    if (empty($this->opts['version'])) {
+      $this->opts['version'] = 'latest';
+    }
   }
 
   public function getUrl($fileObject)
@@ -293,14 +296,21 @@ class CloudDriver extends Driver
 
       $this->_checkOpts();
 
-      $this->s3 = new S3Client([
-        'version' => '2006-03-01',
+      $S3_OPTS = [
+        'version' =>  $this->opts['version'],
         'region' => $this->opts['region'],
         'credentials' => [
           'key'    => $this->opts['access_key'],
           'secret' => $this->opts['secret'],
         ]
-      ]);
+      ];
+
+      if (isset($this->opts['endpoint'])) {
+        $S3_OPTS['endpoint'] = $this->opts['endpoint'];
+      };
+
+
+      $this->s3 = new S3Client($S3_OPTS);
     }
     return $this->s3;
   }
