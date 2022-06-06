@@ -330,9 +330,6 @@ class CloudDriver extends Driver
 
   protected function generateUrlTemplate($urlType, $fileObject)
   {
-    if (K_ENV !== K_ENV_PRODUCTION) {
-      $urlType = 'local_url';
-    }
 
     $fileOpts = [
       'bucket' => $fileObject->bucket,
