@@ -223,6 +223,12 @@ class CloudDriver extends Driver
     return $this->generateUrlTemplate('freindly_url', $fileObject);
   }
 
+  public function getPresignedUrl($expires = 3600)
+  {
+    return $this->createPresignedUrl($expires);
+  }
+
+
   public function create($filePath, $destinationFolder = '/', $opts = [])
   {
 
@@ -347,5 +353,18 @@ class CloudDriver extends Driver
       $url = str_replace('{{' . strtoupper($key) . '}}', $value, $url);
     }
     return $url;
+  }
+
+  protected function createPresignedUrl($expires = 3600)
+  {
+    $key = bin2hex(random_bytes(32));
+    $cmd = $this->getS3()->getCommand('GetObject', [
+      'Bucket' => $this->bucket,
+      'Key'    => $key
+    ]);
+
+    $request = $this->getS3()->createPresignedRequest($cmd, $expires);
+    $presignedUrl = (string) $request->getUri();
+    return $presignedUrl;
   }
 }
