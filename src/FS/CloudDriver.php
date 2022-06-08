@@ -277,7 +277,7 @@ class CloudDriver extends Driver
         'url' => '//' . implode('/', array_filter([$this->bucket, $folder, $newFilename]))
       ];
     } catch (S3Exception $e) {
-      //dbg($e->getMessage());
+      dbg($e->getMessage());
     }
 
     @unlink($filePath);
@@ -358,13 +358,17 @@ class CloudDriver extends Driver
   protected function createPresignedUrl($expires = 3600)
   {
     $key = bin2hex(random_bytes(32));
-    $cmd = $this->getS3()->getCommand('GetObject', [
+    $cmd = $this->getS3()->getCommand('PutObject', [
       'Bucket' => $this->bucket,
       'Key'    => $key
     ]);
 
     $request = $this->getS3()->createPresignedRequest($cmd, $expires);
     $presignedUrl = (string) $request->getUri();
-    return $presignedUrl;
+
+    return [
+      'url' => $presignedUrl,
+      'key' => $key
+    ];
   }
 }
