@@ -297,6 +297,24 @@ class CloudDriver extends Driver
     return null;
   }
 
+  public function createPresignedUrl($folder, $extension, $expires = 3200)
+  {
+    $key = Tools::generateRandomFilename("random.$extension");
+    $filename = implode('/', array_filter([$folder, $key . '.' . $extension]));
+    $cmd = $this->getS3()->getCommand('PutObject', [
+      'Bucket' => $this->bucket,
+      'Key'    => $filename,
+    ]);
+
+    $request = $this->getS3()->createPresignedRequest($cmd, $expires);
+    $presignedUrl = (string) $request->getUri();
+
+    return [
+      'url' => $presignedUrl,
+      'filename' => $filename
+    ];
+  }
+
   public function getS3()
   {
     if (!$this->s3) {
@@ -353,23 +371,5 @@ class CloudDriver extends Driver
       $url = str_replace('{{' . strtoupper($key) . '}}', $value, $url);
     }
     return $url;
-  }
-
-  protected function createPresignedUrl($folder, $extension, $expires)
-  {
-    $key = bin2hex(random_bytes(18));
-    $filename = implode('/', array_filter([$folder, $key . '.' . $extension]));
-    $cmd = $this->getS3()->getCommand('GetObject', [
-      'Bucket' => $this->bucket,
-      'Key'    => $filename
-    ]);
-
-    $request = $this->getS3()->createPresignedRequest($cmd, $expires);
-    $presignedUrl = (string) $request->getUri();
-
-    return [
-      'url' => $presignedUrl,
-      'filename' => $filename
-    ];
   }
 }
