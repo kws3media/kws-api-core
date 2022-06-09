@@ -220,7 +220,7 @@ class CloudDriver extends Driver
 
   public function getFriendlyUrl($fileObject)
   {
-    return $this->generateUrlTemplate('freindly_url', $fileObject);
+    return $this->generateUrlTemplate('friendly_url', $fileObject);
   }
 
   public function getPresignedUrl($folder, $extension, $expires = '+5 minutes')
