@@ -297,10 +297,10 @@ class CloudDriver extends Driver
     return null;
   }
 
-  public function createPresignedUrl($folder, $extension, $expires = 3200)
+  public function createPresignedUrl($folder, $originalName, $expires = 3200)
   {
-    $key = Tools::generateRandomFilename("random.$extension");
-    $filename = implode('/', array_filter([$folder, $key . '.' . $extension]));
+    $key = Tools::generateRandomFilename($originalName);
+    $filename = implode('/', array_filter([$folder, $key]));
     $cmd = $this->getS3()->getCommand('PutObject', [
       'Bucket' => $this->bucket,
       'Key'    => $filename,
