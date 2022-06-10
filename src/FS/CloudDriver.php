@@ -365,7 +365,7 @@ class CloudDriver extends Driver
 
     $request = $this->getS3()->createPresignedRequest($cmd, "+$expiry seconds");
 
-    return (string)$request->getUri();
+    return (string) $request->getUri();
   }
 
   protected function _checkOpts()
