@@ -346,7 +346,8 @@ class CloudDriver extends Driver
 
     return [
       'url' => $presignedUrl,
-      'filename' => $filename,
+      'original_name' => $originalName,
+      'name' => $filename,
       'contentType' => $contentType,
       'acl' => $acl,
       'bucket' => $this->bucket,
