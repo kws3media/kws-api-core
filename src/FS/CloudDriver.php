@@ -4,7 +4,6 @@ namespace Kws3\ApiCore\FS;
 
 use \Aws\S3\S3Client;
 use \Aws\S3\Exception\S3Exception;
-use \Kws3\ApiCore\Loader;
 use \Kws3\ApiCore\Utils\Tools;
 
 class CloudDriver extends Driver
@@ -223,9 +222,9 @@ class CloudDriver extends Driver
     return $this->generateUrlTemplate('friendly_url', $fileObject);
   }
 
-  public function getPresignedUrl($folder, $extension, $expires = '+5 minutes')
+  public function getUploadPresignedUrl($folder, $originalName, $expires = 3600, $acl = self::ACL_PUBLIC)
   {
-    return $this->createPresignedUrl($folder, $extension, $expires);
+    return $this->createPresignedUrl($folder, $originalName, $expires, $acl);
   }
 
 
@@ -297,24 +296,6 @@ class CloudDriver extends Driver
     return null;
   }
 
-  public function createPresignedUrl($folder, $originalName, $expires = 3200)
-  {
-    $key = Tools::generateRandomFilename($originalName);
-    $filename = implode('/', array_filter([$folder, $key]));
-    $cmd = $this->getS3()->getCommand('PutObject', [
-      'Bucket' => $this->bucket,
-      'Key'    => $filename,
-    ]);
-
-    $request = $this->getS3()->createPresignedRequest($cmd, $expires);
-    $presignedUrl = (string) $request->getUri();
-
-    return [
-      'url' => $presignedUrl,
-      'filename' => $filename
-    ];
-  }
-
   public function getS3()
   {
     if (!$this->s3) {
@@ -343,6 +324,35 @@ class CloudDriver extends Driver
     return $this->s3;
   }
 
+  protected function createPresignedUrl($folder, $originalName, $expires, $acl)
+  {
+    $key = Tools::generateRandomFilename($originalName);
+    $contentType = $this->mimeByExtension($originalName);
+
+    $filename = implode('/', array_filter([$folder, $key]));
+
+    if (empty($acl)) {
+      $acl = self::ACL_PUBLIC;
+    }
+
+    $cmd = $this->getS3()->getCommand('PutObject', [
+      'Bucket' => $this->bucket,
+      'Key'    => $filename,
+      'ContentType' => $contentType,
+      'ACL' => $acl
+    ]);
+
+    $request = $this->getS3()->createPresignedRequest($cmd, "+$expires seconds");
+    $presignedUrl = (string) $request->getUri();
+
+    return [
+      'url' => $presignedUrl,
+      'filename' => $filename,
+      'contentType' => $contentType,
+      'acl' => $acl
+    ];
+  }
+
   protected function _checkOpts()
   {
     foreach (['bucket', 'access_key', 'secret'] as $o) {
@@ -357,6 +367,7 @@ class CloudDriver extends Driver
 
     $fileOpts = [
       'bucket' => $fileObject->bucket,
+      'region' => $this->opts['region'],
       'folder' => $fileObject->folder,
       'name' => $fileObject->name,
       'original_name' => $fileObject->original_name
