@@ -8,21 +8,22 @@ class LocalStackDriver extends CloudDriver
 
   public function __construct($opts = [])
   {
-    if (empty($this->opts['region'])) {
-      $this->opts['region'] = 'eu-west-2';
+    if (empty($opts['region'])) {
+      $opts['region'] = 'eu-west-2';
     }
-    if (empty($this->opts['version'])) {
-      $this->opts['version'] = '2006-03-01';
+    if (empty($opts['version'])) {
+      $opts['version'] = '2006-03-01';
     }
-    if (empty($this->opts['endpoint'])) {
-      $this->opts['endpoint'] = 'http://localstack:4566';
+    if (empty($opts['endpoint'])) {
+      $opts['endpoint'] = 'http://localstack:4566';
     }
-    if (empty($this->opts['local_endpoint'])) {
-      $this->opts['local_endpoint'] = 'http://localhost:4566';
+    if (empty($opts['local_endpoint'])) {
+      $opts['local_endpoint'] = 'http://localhost:4566';
     }
-    if (empty($this->opts['use_path_style_endpoint'])) {
-      $this->opts['use_path_style_endpoint'] = true;
+    if (empty($opts['use_path_style_endpoint'])) {
+      $opts['use_path_style_endpoint'] = true;
     }
+    dbg('LocalStackDriver opts: ' . json_encode($opts));
     parent::__construct($opts);
   }
 

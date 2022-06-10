@@ -7,13 +7,13 @@ class DODriver extends CloudDriver
 
   public function __construct($opts = [])
   {
-    if (empty($this->opts['region'])) {
-      $this->opts['region'] = 'fra1';
+    if (empty($opts['region'])) {
+      $opts['region'] = 'fra1';
     }
-    if (empty($this->opts['version'])) {
-      $this->opts['version'] = 'latest';
+    if (empty($opts['version'])) {
+      $opts['version'] = 'latest';
     }
-    if (empty($this->opts['endpoint'])) {
+    if (empty($opts['endpoint'])) {
       $this->opts['endpoint'] = 'https://' . $this->opts['region'] . '.digitaloceanspaces.com';
     }
     parent::__construct($opts);
