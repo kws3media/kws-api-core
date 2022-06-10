@@ -38,7 +38,7 @@ class LocalStackDriver extends CloudDriver
 
   public function getUploadPresignedUrl($folder, $originalName, $expires = 3600, $acl = self::ACL_PUBLIC)
   {
-    $urlObj = $this->createPresignedUrl($folder, $originalName, $expires, $acl);
+    $urlObj = parent::getUploadPresignedUrl($folder, $originalName, $expires, $acl);
     $urlObj['url'] =  str_replace($this->opts['endpoint'], $this->opts['local_endpoint'], $urlObj['url']);
     return $urlObj;
   }
