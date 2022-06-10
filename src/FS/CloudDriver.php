@@ -6,7 +6,7 @@ use \Aws\S3\S3Client;
 use \Aws\S3\Exception\S3Exception;
 use \Kws3\ApiCore\Utils\Tools;
 
-class CloudDriver extends Driver
+abstract class CloudDriver extends Driver
 {
   public const ACL_PRIVATE               = 'private';
   public const ACL_PUBLIC                = 'public-read';
@@ -206,15 +206,9 @@ class CloudDriver extends Driver
     $this->bucket = $this->opts['bucket'];
   }
 
-  public function getUrl($fileObject)
-  {
-    return '';
-  }
+  abstract public function getUrl($fileObject);
 
-  public function getFriendlyUrl($fileObject)
-  {
-    return '';
-  }
+  abstract public function getFriendlyUrl($fileObject);
 
   public function getUploadPresignedUrl($folder, $originalName, $expires = 3600, $acl = self::ACL_PUBLIC)
   {
