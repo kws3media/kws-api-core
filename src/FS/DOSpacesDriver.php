@@ -2,7 +2,7 @@
 
 namespace Kws3\ApiCore\FS;
 
-class DODriver extends CloudDriver
+class DOSpacesDriver extends CloudDriver
 {
 
   public function __construct($opts = [])
