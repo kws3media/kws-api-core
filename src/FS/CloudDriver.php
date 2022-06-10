@@ -348,7 +348,11 @@ class CloudDriver extends Driver
       'url' => $presignedUrl,
       'filename' => $filename,
       'contentType' => $contentType,
-      'acl' => $acl
+      'acl' => $acl,
+      'bucket' => $this->bucket,
+      'folder' => $folder,
+      'region' => $this->opts['region'],
+      'driver' => $this->getClassName()
     ];
   }
 
