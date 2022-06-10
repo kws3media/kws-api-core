@@ -218,7 +218,12 @@ class CloudDriver extends Driver
 
   public function getUploadPresignedUrl($folder, $originalName, $expires = 3600, $acl = self::ACL_PUBLIC)
   {
-    return $this->createPresignedUrl($folder, $originalName, $expires, $acl);
+    return $this->createUploadPresignedUrl($folder, $originalName, $expires, $acl);
+  }
+
+  public function getDownloadPresignedUrl($fileObject, $expires = 3600)
+  {
+    return $this->createDownloadPresignedUrl($fileObject, $expires);
   }
 
 
@@ -318,7 +323,7 @@ class CloudDriver extends Driver
     return $this->s3;
   }
 
-  protected function createPresignedUrl($folder, $originalName, $expires, $acl)
+  protected function createUploadPresignedUrl($folder, $originalName, $expires, $acl)
   {
     $key = Tools::generateRandomFilename($originalName);
     $contentType = $this->mimeByExtension($originalName);
@@ -345,6 +350,18 @@ class CloudDriver extends Driver
       'contentType' => $contentType,
       'acl' => $acl
     ];
+  }
+
+  protected function createDownloadPresignedUrl($fileObject, $expiry = 3600)
+  {
+    $cmd = $this->getS3()->getCommand('GetObject', [
+      'Bucket' => $fileObject->bucket,
+      'Key' => implode('/', array_filter([$fileObject->folder, $fileObject->name]))
+    ]);
+
+    $request = $this->getS3()->createPresignedRequest($cmd, "+$expiry seconds");
+
+    return (string)$request->getUri();
   }
 
   protected function _checkOpts()
