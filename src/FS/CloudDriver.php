@@ -204,22 +204,16 @@ class CloudDriver extends Driver
   {
     $this->opts = $opts;
     $this->bucket = $this->opts['bucket'];
-    if (empty($this->opts['region'])) {
-      $this->opts['region'] = 'eu-west-2';
-    }
-    if (empty($this->opts['version'])) {
-      $this->opts['version'] = 'latest';
-    }
   }
 
   public function getUrl($fileObject)
   {
-    return $this->generateUrlTemplate('url', $fileObject);
+    return '';
   }
 
   public function getFriendlyUrl($fileObject)
   {
-    return $this->generateUrlTemplate('friendly_url', $fileObject);
+    return '';
   }
 
   public function getUploadPresignedUrl($folder, $originalName, $expires = 3600, $acl = self::ACL_PUBLIC)
@@ -360,27 +354,5 @@ class CloudDriver extends Driver
         throw new \Exception($this->getClassName() . ": Mandatory option no set: '" . $o . "'");
       }
     }
-  }
-
-  protected function generateUrlTemplate($urlType, $fileObject)
-  {
-
-    $fileOpts = [
-      'bucket' => $fileObject->bucket,
-      'region' => $this->opts['region'],
-      'folder' => $fileObject->folder,
-      'name' => $fileObject->name,
-      'original_name' => $fileObject->original_name
-    ];
-
-
-    $url_opts = array_merge($fileOpts, $this->opts);
-    $url = $this->opts[$urlType];
-
-
-    foreach ($url_opts as $key => $value) {
-      $url = str_replace('{{' . strtoupper($key) . '}}', $value, $url);
-    }
-    return $url;
   }
 }
