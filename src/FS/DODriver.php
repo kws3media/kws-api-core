@@ -2,8 +2,6 @@
 
 namespace Kws3\ApiCore\FS;
 
-use \Aws\S3\S3Client;
-
 class DODriver extends CloudDriver
 {
 
