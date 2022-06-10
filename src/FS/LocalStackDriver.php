@@ -23,7 +23,6 @@ class LocalStackDriver extends CloudDriver
     if (empty($opts['use_path_style_endpoint'])) {
       $opts['use_path_style_endpoint'] = true;
     }
-    dbg('LocalStackDriver opts: ' . json_encode($opts));
     parent::__construct($opts);
   }
 
