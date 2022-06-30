@@ -123,7 +123,7 @@ abstract class Model extends \DB\Cortex
    * Parser for filters
    * converts filters to a PDO friendly stringy thingy
    */
-  protected static function filteredQuery($filters, $existingQuery = '', $existingBindings = [], $tablename = NULL)
+  public static function filteredQuery($filters, $existingQuery = '', $existingBindings = [], $tablename = NULL)
   {
     $map = array(
       'eq' => '=',
