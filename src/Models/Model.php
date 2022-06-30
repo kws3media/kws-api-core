@@ -123,7 +123,7 @@ abstract class Model extends \DB\Cortex
    * Parser for filters
    * converts filters to a PDO friendly stringy thingy
    */
-  public static function filteredQuery($filters, $existingQuery = '', $existingBindings = [], $tablename = NULL, $return_query = false)
+  protected static function filteredQuery($filters, $existingQuery = '', $existingBindings = [], $tablename = NULL)
   {
     $map = array(
       'eq' => '=',
@@ -258,25 +258,36 @@ abstract class Model extends \DB\Cortex
       return null;
     }
 
-    if ($return_query) {
-      $DB = \Base::instance()->get('DB');
-      $bindings = array_merge((array)$existingBindings, $bind);
+    return array_merge([0 => $query], (array)$existingBindings, $bind);
+  }
 
-      if (count($bindings) > 0) {
-        foreach ($bindings as &$value) {
-          if (is_array($value)) {
-            $value = implode(",", array_map(function ($val) use ($DB) {
-              return $DB->quote($val);
-            }, $value));
+  public static function filteredRawQuery($filters, $existingQuery = '', $existingBindings = [])
+  {
+    $DB = \Base::instance()->get('DB');
+    $filter = self::filteredQuery($filters, $existingQuery, $existingBindings);
+    $sql = '';
+
+    if (is_array($filter) && !empty($filter[0])) {
+      $sql = $filter[0];
+
+      $args = isset($filter[1]) && is_array($filter[1]) ? $filter[1] : array_slice($filter, 1, NULL, TRUE);
+      $args = is_array($args) ? $args : array(1 => $args);
+
+      if (count($args) > 0) {
+        foreach ($args as $i => $v) {
+          if (is_array($v)) {
+            $v = implode(",", array_map(function ($s) use ($DB) {
+              return $DB->quote($s);
+            }, $v));
           } else {
-            $value = $DB->quote($value);
+            $v = $DB->quote($v);
           }
+
+          $sql = str_replace($i, $v, $sql);
         }
       }
-      return str_replace(array_keys($bindings), array_values($bindings), $query);
     }
-
-    return array_merge([0 => $query], (array)$existingBindings, $bind);
+    return $sql;
   }
 
   /**
