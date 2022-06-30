@@ -146,16 +146,7 @@ abstract class Model extends \DB\Cortex
 
         if (isset($filter['field']) && isset($filter['value'])) {
           //if field does not contain a . and tablename is given, prepend it
-          $hasDot = strpos($filter['field'], '.');
-          if ($tablename && !$hasDot) {
-            $field = '`' . $tablename . '`.`' . $filter['field'] . '`';
-          } else {
-            if (isset($filter['table']) && !$hasDot) {
-              $field = '`' . $filter['table'] . '`.`' . $filter['field'] . '`';
-            } else {
-              $field = '`' . $filter['field'] . '`';
-            }
-          }
+          $field = $tablename && strpos($filter['field'], '.') === false ? '`' . $tablename . '`.`' . $filter['field'] . '`' : (isset($filter['subquery']) ? $filter['subquery'] : (strpos($filter['field'], '.') === false ? '`' . $filter['field'] . '`' : $filter['field']));
 
           //make the fieldname not clash with already prepared statement's named params
           $namedParam = uniqid(':fq_' . $filter['field'] . '_');
@@ -261,9 +252,21 @@ abstract class Model extends \DB\Cortex
     return array_merge([0 => $query], (array)$existingBindings, $bind);
   }
 
-  public static function filteredRawQuery($filters, $existingQuery = '', $existingBindings = [])
+  public static function filteredRawQuery($filters, $existingQuery = '', $existingBindings = [], $tables)
   {
     $DB = \Base::instance()->get('DB');
+
+    if (count($filters) > 0) {
+      foreach ($filters as &$f) {
+        foreach ($tables as $key => $fields) {
+          if (in_array($f['field'], $fields)) {
+            $f['field'] = '`' . $key . '`.`' . $f['field'] . '`';
+            break;
+          }
+        }
+      }
+    }
+
     $filter = self::filteredQuery($filters, $existingQuery, $existingBindings);
     $sql = '';
 
