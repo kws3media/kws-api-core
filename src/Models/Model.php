@@ -123,7 +123,7 @@ abstract class Model extends \DB\Cortex
    * Parser for filters
    * converts filters to a PDO friendly stringy thingy
    */
-  public static function filteredQuery($filters, $existingQuery = '', $existingBindings = [], $tablename = NULL)
+  protected static function buildQuery($filters, $existingQuery = '', $existingBindings = [], $tablename = NULL, $rawFlag = false)
   {
     $map = array(
       'eq' => '=',
@@ -146,7 +146,7 @@ abstract class Model extends \DB\Cortex
 
         if (isset($filter['field']) && isset($filter['value'])) {
           //if field does not contain a . and tablename is given, prepend it
-          $field = $tablename && strpos($filter['field'], '.') === false ? '`' . $tablename . '`.`' . $filter['field'] . '`' : (isset($filter['subquery']) ? $filter['subquery'] : (strpos($filter['field'], '.') === false ? '`' . $filter['field'] . '`' : $filter['field']));
+          $field = $rawFlag ? $filter['_field'] : ($tablename && strpos($filter['field'], '.') === false ? '`' . $tablename . '`.`' . $filter['field'] . '`' : '`' . $filter['field'] . '`');
 
           //make the fieldname not clash with already prepared statement's named params
           $namedParam = uniqid(':fq_' . $filter['field'] . '_');
@@ -252,22 +252,34 @@ abstract class Model extends \DB\Cortex
     return array_merge([0 => $query], (array)$existingBindings, $bind);
   }
 
+  public static function filteredQuery($filters, $existingQuery = '', $existingBindings = [], $tablename = NULL)
+  {
+    return self::buildQuery($filters, $existingQuery, $existingBindings, $tablename);
+  }
+
   public static function filteredRawQuery($filters, $existingQuery = '', $existingBindings = [], $tables)
   {
     $DB = \Base::instance()->get('DB');
 
     if (count($filters) > 0) {
       foreach ($filters as &$f) {
+        $f['_field'] = '`' . $f['field'] . '`';
         foreach ($tables as $key => $fields) {
           if (in_array($f['field'], $fields)) {
-            $f['field'] = '`' . $key . '`.`' . $f['field'] . '`';
+            $f['_field'] = '`' . $key . '`.`' . $f['field'] . '`';
+            //Some fields are subquery in procedure
+            //So It wont work with where clause
+            //We need to pass actual subquery
+            if ($key === "subquery") {
+              $f['_field'] = $f['subquery'];
+            }
             break;
           }
         }
       }
     }
 
-    $filter = self::filteredQuery($filters, $existingQuery, $existingBindings);
+    $filter = self::buildQuery($filters, $existingQuery, $existingBindings, NULL, TRUE);
     $sql = '';
 
     if (is_array($filter) && !empty($filter[0])) {
