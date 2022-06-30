@@ -123,7 +123,7 @@ abstract class Model extends \DB\Cortex
    * Parser for filters
    * converts filters to a PDO friendly stringy thingy
    */
-  public static function filteredQuery($filters, $existingQuery = '', $existingBindings = [], $tablename = NULL)
+  public static function filteredQuery($filters, $existingQuery = '', $existingBindings = [], $tablename = NULL, $return_query = false)
   {
     $map = array(
       'eq' => '=',
@@ -146,7 +146,16 @@ abstract class Model extends \DB\Cortex
 
         if (isset($filter['field']) && isset($filter['value'])) {
           //if field does not contain a . and tablename is given, prepend it
-          $field = $tablename && strpos($filter['field'], '.') === false ? '`' . $tablename . '`.`' . $filter['field'] . '`' : '`' . $filter['field'] . '`';
+          $hasDot = strpos($filter['field'], '.');
+          if ($tablename && !$hasDot) {
+            $field = '`' . $tablename . '`.`' . $filter['field'] . '`';
+          } else {
+            if (isset($filter['table']) && !$hasDot) {
+              $field = '`' . $filter['table'] . '`.`' . $filter['field'] . '`';
+            } else {
+              $field = '`' . $filter['field'] . '`';
+            }
+          }
 
           //make the fieldname not clash with already prepared statement's named params
           $namedParam = uniqid(':fq_' . $filter['field'] . '_');
@@ -247,6 +256,24 @@ abstract class Model extends \DB\Cortex
 
     if (empty($query)) {
       return null;
+    }
+
+    if ($return_query) {
+      $DB = \Base::instance()->get('DB');
+      $bindings = array_merge((array)$existingBindings, $bind);
+
+      if (count($bindings) > 0) {
+        foreach ($bindings as &$value) {
+          if (is_array($value)) {
+            $value = implode(",", array_map(function ($val) use ($DB) {
+              return $DB->quote($val);
+            }, $value));
+          } else {
+            $value = $DB->quote($value);
+          }
+        }
+      }
+      return str_replace(array_keys($bindings), array_values($bindings), $query);
     }
 
     return array_merge([0 => $query], (array)$existingBindings, $bind);
