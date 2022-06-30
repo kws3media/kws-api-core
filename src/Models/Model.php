@@ -265,14 +265,15 @@ abstract class Model extends \DB\Cortex
       foreach ($filters as &$f) {
         $f['_field'] = '`' . $f['field'] . '`';
         foreach ($tables as $key => $fields) {
+          //Some fields are subquery in procedure
+          //So It wont work with where clause
+          //We need to pass actual subquery
+          if ($key === "subquery" && isset($fields[$f['field']])) {
+            $f['_field'] = $fields[$f['field']];
+            break;
+          }
           if (in_array($f['field'], $fields)) {
             $f['_field'] = '`' . $key . '`.`' . $f['field'] . '`';
-            //Some fields are subquery in procedure
-            //So It wont work with where clause
-            //We need to pass actual subquery
-            if ($key === "subquery") {
-              $f['_field'] = $f['subquery'];
-            }
             break;
           }
         }
