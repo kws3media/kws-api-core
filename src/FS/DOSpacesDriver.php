@@ -14,7 +14,7 @@ class DOSpacesDriver extends CloudDriver
       $opts['version'] = 'latest';
     }
     if (empty($opts['endpoint'])) {
-      $this->opts['endpoint'] = 'https://' . $this->opts['region'] . '.digitaloceanspaces.com';
+      $opts['endpoint'] = 'https://' . $opts['region'] . '.digitaloceanspaces.com';
     }
     parent::__construct($opts);
   }
