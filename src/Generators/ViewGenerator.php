@@ -54,7 +54,7 @@ class ViewGenerator extends Base
         [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
       );
     } catch (\Exception $ex) {
-      echo "DB connction error\n";
+      echo "DB connection error\n";
     }
 
     clearstatcache();
