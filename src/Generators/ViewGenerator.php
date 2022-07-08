@@ -46,11 +46,16 @@ class ViewGenerator extends Base
     $dbConfig = $this->config['DB'];
 
     $dsn = $this->adapter . ':host=' . $dbConfig['host'] . ';dbname=' . $dbConfig['dbname'];
-    $this->DB = new PDO(
-      $dsn,
-      $dbConfig['username'],
-      $dbConfig['password']
-    );
+    try {
+      $this->DB = \Kws3\ApiCore\Framework::createDB(
+        $dsn,
+        $dbConfig['username'],
+        $dbConfig['password'],
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+      );
+    } catch (\Exception $ex) {
+      echo "DB connection error\n";
+    }
 
     clearstatcache();
     try {
@@ -99,7 +104,7 @@ Please ensure database connection settings are correct.", true);
   public function getSchema()
   {
     $VIEWS = [];
-    $tables = $this->DB->query('SHOW FULL TABLES WHERE `Table_type` = "VIEW"')->fetchAll(PDO::FETCH_NUM);
+    $tables = $this->DB->query("SHOW FULL TABLES WHERE `Table_type` = 'VIEW'")->fetchAll(PDO::FETCH_NUM);
 
     foreach ($tables as $tableRow) {
 
