@@ -198,6 +198,6 @@ PHP;
 
   protected function normalizeSource($source)
   {
-    return preg_replace("/CREATE DEFINER=(.*) PROCEDURE/", 'CREATE PROCEDURE', $source);
+    return preg_replace("/CREATE (.*) PROCEDURE /", 'CREATE PROCEDURE ', $source);
   }
 }

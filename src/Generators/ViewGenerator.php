@@ -199,6 +199,6 @@ PHP;
 
   protected function normalizeSource($source)
   {
-    return preg_replace("/CREATE (.*) VIEW `/", 'CREATE OR REPLACE VIEW `', $source);
+    return preg_replace("/CREATE (.*) VIEW /", 'CREATE OR REPLACE VIEW ', $source);
   }
 }
