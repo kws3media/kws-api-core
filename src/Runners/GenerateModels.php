@@ -21,5 +21,9 @@ class GenerateModels extends Base
     //------------Generate Views--------------
     $viewGenerator = new \Kws3\ApiCore\Generators\ViewGenerator($this->config['views']);
     $viewGenerator->generate();
+
+    //------------Generate Procedures--------------
+    $procedureGenerator = new \Kws3\ApiCore\Generators\ProcedureGenerator($this->config['procedures']);
+    $procedureGenerator->generate();
   }
 }
