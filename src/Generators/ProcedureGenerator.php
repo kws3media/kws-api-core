@@ -90,7 +90,7 @@ Please ensure database connection settings are correct.", true);
           $config['namespace'],
           $config['extends']
         ))) {
-          $this->output("Generated " . $className . " Procedure Source " . $h, false);
+          $this->output("Generated " . $className . " Procedure Source ", false);
         } else {
           $this->output('Failed to generate ' . $className . ' Procedure Source ', true);
         }
