@@ -257,24 +257,26 @@ abstract class Model extends \DB\Cortex
     return self::buildQuery($filters, $existingQuery, $existingBindings, $tablename);
   }
 
-  public static function filteredRawQuery($filters, $existingQuery = '', $existingBindings = [], $tables)
+  public static function filteredRawQuery($filters, $existingQuery = '', $existingBindings = [], $tables = [])
   {
     $DB = \Base::instance()->get('DB');
 
     if (count($filters) > 0) {
       foreach ($filters as &$f) {
         $f['_field'] = '`' . $f['field'] . '`';
-        foreach ($tables as $key => $fields) {
-          //Some fields are subquery in procedure
-          //So It wont work with where clause
-          //We need to pass actual subquery
-          if ($key === "subquery" && isset($fields[$f['field']])) {
-            $f['_field'] = $fields[$f['field']];
-            break;
-          }
-          if (in_array($f['field'], $fields)) {
-            $f['_field'] = '`' . $key . '`.`' . $f['field'] . '`';
-            break;
+        if (count($tables) > 0) {
+          foreach ($tables as $key => $fields) {
+            //Some fields are subquery in procedure
+            //So It wont work with where clause
+            //We need to pass actual subquery
+            if ($key === "subquery" && isset($fields[$f['field']])) {
+              $f['_field'] = $fields[$f['field']];
+              break;
+            }
+            if (in_array($f['field'], $fields)) {
+              $f['_field'] = '`' . $key . '`.`' . $f['field'] . '`';
+              break;
+            }
           }
         }
       }
