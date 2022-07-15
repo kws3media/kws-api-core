@@ -161,9 +161,12 @@ class Base
     }
 
     //2. remove procedure
-    foreach (Loader::get('PROCEDURES_LIST') as $model) {
-      $mdl = "\\DBProcedures\\" . $model;
-      $mdl::setdown();
+    $PROCEDURES_LIST = Loader::get('PROCEDURES_LIST');
+    if (!empty($PROCEDURES_LIST)) {
+      foreach (Loader::get('PROCEDURES_LIST') as $model) {
+        $mdl = "\\DBProcedures\\" . $model;
+        $mdl::setdown();
+      }
     }
 
     //3. remove tables
@@ -185,9 +188,11 @@ class Base
     }
 
     //6. recreate procedure
-    foreach (Loader::get('PROCEDURES_LIST') as $model) {
-      $mdl = "\\DBProcedures\\" . $model;
-      $mdl::setup();
+    if (!empty($PROCEDURES_LIST)) {
+      foreach (Loader::get('PROCEDURES_LIST') as $model) {
+        $mdl = "\\DBProcedures\\" . $model;
+        $mdl::setup();
+      }
     }
   }
 
