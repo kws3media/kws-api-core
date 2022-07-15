@@ -160,22 +160,39 @@ class Base
       $mdl::setdown();
     }
 
-    //2. remove tables
+    //2. remove procedure
+    $PROCEDURES_LIST = Loader::get('PROCEDURES_LIST');
+    if (!empty($PROCEDURES_LIST)) {
+      foreach (Loader::get('PROCEDURES_LIST') as $model) {
+        $mdl = "\\DBProcedures\\" . $model;
+        $mdl::setdown();
+      }
+    }
+
+    //3. remove tables
     foreach (Loader::get('MODELS_LIST') as $model) {
       $mdl = "\\Models\\Base\\" . $model;
       $mdl::setdown();
     }
 
-    //3. recreate tables
+    //4. recreate tables
     foreach (Loader::get('MODELS_LIST') as $model) {
       $mdl = "\\Models\\Base\\" . $model;
       $mdl::setup();
     }
 
-    //4. recreate views
+    //5. recreate views
     foreach (Loader::get('VIEWS_LIST') as $view) {
       $mdl = "\\DBViews\\" . $view;
       $mdl::setup();
+    }
+
+    //6. recreate procedure
+    if (!empty($PROCEDURES_LIST)) {
+      foreach (Loader::get('PROCEDURES_LIST') as $model) {
+        $mdl = "\\DBProcedures\\" . $model;
+        $mdl::setup();
+      }
     }
   }
 

@@ -5,9 +5,8 @@ namespace Kws3\ApiCore\Generators;
 use \PDO;
 use \RuntimeException;
 
-class ViewGenerator extends Base
+class ProcedureGenerator extends Base
 {
-
   private $config = array();
   private $adapter = 'mysql';
   private $DB;
@@ -20,6 +19,7 @@ class ViewGenerator extends Base
   public function setConnection($config = array())
   {
     //declare default options
+
     $defaults = array(
       'output' => 'path/to/output/folder',
       'DB' => [
@@ -28,8 +28,8 @@ class ViewGenerator extends Base
         "password" => '',
         "dbname" => ''
       ],
-      'namespace' => 'Models\\Views',
-      'extends' => '\\Models\\Views',
+      'namespace' => 'Models\\Procedures',
+      'extends' => '\\Models\\Procedures',
       'template' => '',
       'exclude' => array()
     );
@@ -44,8 +44,8 @@ class ViewGenerator extends Base
     //store the config back into the class property
     $this->config = $defaults;
     $dbConfig = $this->config['DB'];
-
     $dsn = $this->adapter . ':host=' . $dbConfig['host'] . ';dbname=' . $dbConfig['dbname'];
+
     try {
       $this->DB = \Kws3\ApiCore\Framework::createDB(
         $dsn,
@@ -81,18 +81,18 @@ Please ensure database connection settings are correct.", true);
 
     $config = $this->config;
 
-    foreach ($schema as $view) {
-      if (!in_array($view['name'], $config['exclude'], true)) {
-        $className = $this->className($view['name']);
+    foreach ($schema as $proc) {
+      if (!in_array($proc['name'], $config['exclude'], true)) {
+        $className = $this->className($proc['name']);
         $h = fopen($config['output'] . $className . '.php', 'w');
-        if (fwrite($h, $this->generateDBView(
-          $view,
+        if (fwrite($h, $this->generateDBProcedure(
+          $proc,
           $config['namespace'],
           $config['extends']
         ))) {
-          $this->output("Generated " . $className . " View Source", false);
+          $this->output("Generated " . $className . " Procedure Source ", false);
         } else {
-          $this->output('Failed to generate ' . $className . ' View Source', true);
+          $this->output('Failed to generate ' . $className . ' Procedure Source ', true);
         }
 
         fclose($h);
@@ -103,22 +103,21 @@ Please ensure database connection settings are correct.", true);
 
   public function getSchema()
   {
-    $VIEWS = [];
-    $tables = $this->DB->query("SHOW FULL TABLES WHERE `Table_type` = 'VIEW'")->fetchAll(PDO::FETCH_NUM);
+    $PROCEDURES = [];
+    $procedures = $this->DB->query("SHOW PROCEDURE STATUS WHERE `Db` = '" . $this->config['DB']['dbname'] . "';")->fetchAll(PDO::FETCH_NUM);
 
-    foreach ($tables as $tableRow) {
-
-      $view = $tableRow[0];
-      $queryResult = $this->DB->query('SHOW CREATE VIEW `' . $view . '`')->fetchAll(PDO::FETCH_NUM);
+    foreach ($procedures as $procRow) {
+      $procedure = $procRow[1];
+      $queryResult = $this->DB->query('SHOW CREATE PROCEDURE `' . $procedure . '`')->fetchAll(PDO::FETCH_NUM);
       $sourceData = isset($queryResult) ? $queryResult[0] : ['name' => '', 'source' => ''];
 
-      $VIEWS[$sourceData[0]] = [
+      $PROCEDURES[$sourceData[0]] = [
         'name' => $sourceData[0],
-        'source' => $this->normalizeSource($sourceData[1])
+        'source' => $this->normalizeSource($sourceData[2])
       ];
     }
 
-    return $VIEWS;
+    return $PROCEDURES;
   }
 
   protected function checkConditions()
@@ -136,18 +135,18 @@ Please ensure database connection settings are correct.", true);
     }
   }
 
-  protected function generateDBView($view, $namespace = null, $extends = null, $classname = null)
+  protected function generateDBProcedure($proc, $namespace = null, $extends = null, $classname = null)
   {
     $modelTemplate = $this->getTemplate();
 
-    $viewname = strtolower($view['name']);
+    $procname = strtolower($proc['name']);
 
     $data = [
       '{{NAMESPACE}}' => '',
       '{{CLASSNAME}}' => '',
       '{{EXTENDS}}' => '',
-      '{{VIEWSOURCE}}' => $view['source'],
-      '{{VIEWNAME}}' => $viewname,
+      '{{PROCSOURCE}}' => $proc['source'],
+      '{{PROCNAME}}' => $procname,
     ];
 
     if ($namespace) {
@@ -159,7 +158,7 @@ Please ensure database connection settings are correct.", true);
     }
 
     if (!$classname) {
-      $classname = $this->className($viewname);
+      $classname = $this->className($procname);
     }
 
     $data['{{CLASSNAME}}'] = $classname;
@@ -180,10 +179,10 @@ Please ensure database connection settings are correct.", true);
 
 class {{CLASSNAME}} {{EXTENDS}}
 {
-    protected \$viewName = "{{VIEWNAME}}",
-    \$viewSource = <<<VIEWSOURCE
-{{VIEWSOURCE}}
-VIEWSOURCE;
+    protected \$procName = "{{PROCNAME}}",
+    \$procSource = <<<PROCSOURCE
+{{PROCSOURCE}}
+PROCSOURCE;
 
 }
 PHP;
@@ -199,6 +198,6 @@ PHP;
 
   protected function normalizeSource($source)
   {
-    return preg_replace("/CREATE (.*) VIEW /", 'CREATE OR REPLACE VIEW ', $source);
+    return preg_replace("/CREATE (.*) PROCEDURE /", 'CREATE PROCEDURE ', $source);
   }
 }
