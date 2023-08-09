@@ -2,6 +2,8 @@
 
 namespace Kws3\ApiCore\FS;
 
+use \Kws3\ApiCore\Utils\Tools;
+
 class DOSpacesDriver extends CloudDriver
 {
 
@@ -26,6 +28,13 @@ class DOSpacesDriver extends CloudDriver
 
   public function getFriendlyUrl($fileObject)
   {
-    return 'https://' . $fileObject->bucket . '.' . $this->opts['region'] . '.digitaloceanspaces.com/' . implode('/', array_filter([$fileObject->folder, $fileObject->name]));
+    if ($this->opts['has_cdn']) {
+      $cdn_url = 'https://' . $fileObject->bucket . '.' . $this->opts['region'] . '.cdn.digitaloceanspaces.com/';
+      if (!empty($this->opts['cdn_url'])) {
+        $cdn_url = $this->opts['cdn_url'];
+      }
+      return Tools::trimSlash($cdn_url) . "/" . implode('/', array_filter([$fileObject->folder, $fileObject->name]));
+    }
+    return $this->getUrl($fileObject);
   }
 }
