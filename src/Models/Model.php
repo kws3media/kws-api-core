@@ -167,6 +167,10 @@ abstract class Model extends \DB\Cortex
                 $queryPart = $field . " IN (" . $namedParam . ")";
                 $bind[$namedParam] = explode('|', $value);
                 break;
+              case 'xin':
+                $queryPart = $field . " NOT IN (" . $namedParam . ")";
+                $bind[$namedParam] = explode('|', $value);
+                break;
               case 'lk':
                 $queryPart = $field . " LIKE " . $namedParam;
                 $bind[$namedParam] = '%' . $value . '%';
