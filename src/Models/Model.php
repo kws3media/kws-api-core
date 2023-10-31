@@ -71,6 +71,21 @@ abstract class Model extends \DB\Cortex
   }
 
   /**
+   *
+   * @param array $filter
+   * @param array $options
+   * @param int $ttl
+   * @return mixed
+   *
+   * Overrides the base method which adds a default ttl of 60
+   * we want to ensure count queries are not cached for that long
+   */
+  public function count($filter = NULL, array $options = NULL, $ttl = 60)
+  {
+    return parent::count($filter, $options, 0);
+  }
+
+  /**
    * automatically patches the modified and created dates
    * on models that have those fields
    */
