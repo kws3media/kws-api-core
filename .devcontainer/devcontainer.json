@@ -1,11 +1,18 @@
 {
-  "name":"webserver",
+  "name": "webserver",
   "dockerComposeFile": "../docker-compose.yml",
   "service": "webserver",
   "workspaceFolder": "/var/www/html",
-  "extensions": [
-    "bmewburn.vscode-intelephense-client",
-    "ikappas.phpcs",
-    "usernamehw.errorlens"
-  ]
+  "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "ikappas.phpcs",
+        "usernamehw.errorlens",
+        "eamodio.gitlens",
+        "attilabuti.vscode-mjml"
+      ]
+    }
+  }
 }
