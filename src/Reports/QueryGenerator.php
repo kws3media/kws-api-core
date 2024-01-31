@@ -100,8 +100,8 @@ class QueryGenerator extends Model
 
   public function getQuery($filters)
   {
-    $query = $this->buildQuery($filters);
-    $bindings = $this->buildBindings($filters);
+    $query = $this->createQuery($filters);
+    $bindings = $this->createBindings($filters);
     $query = [
       'query' => $query,
       'bindings' => $bindings
@@ -109,20 +109,20 @@ class QueryGenerator extends Model
     return $query;
   }
 
-  protected function buildQuery(&$filters)
+  protected function createQuery(&$filters)
   {
 
     $query = "";
     $query .= !empty($this->model->table_names) ? " FROM " . $this->model->table_names : '';
     $query .= !empty($this->model->join_query) ? " " . $this->model->join_query : '';
-    $query .= $this->buildWhere($filters);
+    $query .= $this->createWhere($filters);
     $query .= !empty($this->model->group_by) ? " GROUP BY " . $this->model->group_by : '';
     $query .= !empty($this->model->order_by) ? " ORDER BY " . $this->model->order_by : '';
 
     return str_ireplace([';'], '', $query);
   }
 
-  protected function buildBindings($filters)
+  protected function createBindings($filters)
   {
     $bindings = [];
     foreach ($filters as $filter) {
@@ -132,7 +132,7 @@ class QueryGenerator extends Model
     return $bindings;
   }
 
-  protected function buildWhere(&$filters)
+  protected function createWhere(&$filters)
   {
     $where = ' WHERE ';
     $configurable_options = [];
@@ -140,12 +140,12 @@ class QueryGenerator extends Model
       $configurable_options = json_decode($this->model->configurable_fields, true);
     }
 
-    $where_clause = self::buildCondition($configurable_options, $filters, $this->model->where_clause);
+    $where_clause = self::createCondition($configurable_options, $filters, $this->model->where_clause);
 
     return $where . $where_clause;
   }
 
-  protected static function buildCondition($options, &$filters, $where)
+  protected static function createCondition($options, &$filters, $where)
   {
     //fix up ignorable fields
     $where = self::fixIgnorableFields($options, $filters, $where);
