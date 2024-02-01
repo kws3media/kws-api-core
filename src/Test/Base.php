@@ -9,6 +9,8 @@ use \Kws3\ApiCore\Utils\ConsoleColor;
 class Base
 {
 
+  public $isolate = true;
+
   public $passed = 0;
   public $failed = 0;
   public $exceptions = 0;
