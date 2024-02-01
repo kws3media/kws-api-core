@@ -75,7 +75,7 @@ class Base
     }, $config['TEST_DB']));
   }
 
-  function run()
+  function run($is_forked = false, $outfile = "")
   {
     $class = get_class($this);
     $methods = get_class_methods($class);
@@ -123,6 +123,16 @@ class Base
         }
       }
       $this->after();
+    }
+
+    if ($is_forked) {
+      file_put_contents($outfile, serialize([
+        'passed' => $this->passed,
+        'failed' => $this->failed,
+        'exceptions' => $this->exceptions,
+        'results' => $this->results,
+        'failures' => $this->failures,
+      ]));
     }
   }
 
