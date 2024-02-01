@@ -1,8 +1,11 @@
 <?php
 
+declare(ticks=1);
+
 namespace Kws3\ApiCore\Runners;
 
 use \Kws3\ApiCore\Utils\ConsoleColor;
+use \Kws3\ApiCore\Loader;
 
 class Test extends Base
 {
@@ -94,7 +97,7 @@ class Test extends Base
 namespace " . $this->config['namespace'] . ($dir ? "\\" . $dir : '') . ";
 
 class $className extends " . $this->config['base_namespace'] .
-    "
+      "
 {
 
   /**
@@ -206,7 +209,7 @@ class $className extends " . $this->config['base_namespace'] .
     $this->output("=====================================================");
     $this->output(
       ($passed + $failed) . ' Assertions, ' .
-      ConsoleColor::success(" " . $passed . ' Passed ') . ", " .
+        ConsoleColor::success(" " . $passed . ' Passed ') . ", " .
         ($failed ? ConsoleColor::error(" " . $failed . ' Failed ') . ", " : $failed . ' Failed, ') .
         ($exceptions ? ConsoleColor::warning(" " . $exceptions . ' Exceptions ') . ", " : $exceptions . ' Exceptions, ')
     );
@@ -243,6 +246,12 @@ class $className extends " . $this->config['base_namespace'] .
     $exceptions = 0;
     $failures = [];
 
+    $folder = Loader::get('TEMP') . "test_data/";
+    if (!is_dir($folder)) {
+      mkdir($folder, 0777, true);
+    }
+
+
     $this->output("");
     foreach ($obj['files'] as $tf) {
       $f = explode(DIRECTORY_SEPARATOR, $tf);
@@ -250,14 +259,58 @@ class $className extends " . $this->config['base_namespace'] .
       $f = str_replace('.php', '', $f);
       if (($fileName && $f === $fileName) || !$fileName) {
         $this->output("..................... " . $obj['namespace'] . '\\' . $f . " ...............");
-        $class = $this->config['namespace'] . "\\" . ($obj['namespace'] ? $obj['namespace'] . "\\" : "") . $f;
-        $class = new $class;
-        $class->run();
+        $className = $this->config['namespace'] . "\\" . ($obj['namespace'] ? $obj['namespace'] . "\\" : "") . $f;
 
-        $passed += $class->passed;
-        $failed += $class->failed;
-        $exceptions += $class->exceptions;
-        $failures = array_merge($failures, $class->failures());
+        $class = new $className;
+        if ($class->isolate) {
+          $outfile = $folder . str_replace("\\", "~", $className);
+        }
+
+
+        if ($class->isolate) {
+          if (!function_exists("pcntl_fork")) {
+            $this->output("$className has \$isolate = true; but server does not support process isolation", true);
+            die();
+          }
+
+          $pid = \pcntl_fork();
+
+          if ($pid === -1) {
+            $this->output("$className has \$isolate = true; but server does not support process isolation", true);
+            die();
+          } elseif ($pid) {
+            //We are in parent process
+            pcntl_wait($status);
+          } else {
+            //we are in child process
+
+            //this shutdown function ensures
+            //child processes do not close the database connection
+            register_shutdown_function(function () {
+              posix_kill(getmypid(), SIGKILL);
+            });
+
+            $class->run(true, $outfile);
+            exit;
+          }
+
+          if (is_file($outfile)) {
+            $testOutput = file_get_contents($outfile);
+            $results = unserialize($testOutput);
+
+            $passed += $results['passed'];
+            $failed += $results['failed'];
+            $exceptions += $results['exceptions'];
+            $failures = array_merge($failures, $results['failures']);
+            @unlink($outfile);
+          }
+        } else {
+          $class->run();
+          $passed += $class->passed;
+          $failed += $class->failed;
+          $exceptions += $class->exceptions;
+          $failures = array_merge($failures, $class->failures());
+        }
       }
     }
 
