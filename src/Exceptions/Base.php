@@ -2,6 +2,8 @@
 
 namespace Kws3\ApiCore\Exceptions;
 
+use \Kws3\ApiCore\Loader;
+
 abstract class Base extends \Exception
 {
 
@@ -25,6 +27,13 @@ abstract class Base extends \Exception
       'internalCode' => '',
     )
   ) {
+
+    if (defined('AUTOMATED_TESTING')) {
+      $DB = Loader::getDB();
+      if ($DB->trans()) {
+        $DB->rollback();
+      }
+    }
 
     $this->message = $message;
     $this->devMessage = @$errorArray['dev'];
