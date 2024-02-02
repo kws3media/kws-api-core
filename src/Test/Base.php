@@ -282,6 +282,44 @@ class Base
   // assertion methods
 
   /**
+   * Asserts $actual is empty
+   * @param mixed $actual
+   * @param mixed $expected
+   * @param string $message
+   * @return void
+   */
+  function assertEmpty($actual, $message = null)
+  {
+    $pass = empty($actual);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($this->wrapType($actual), null, "to be empty");
+
+    $this->test->expect(
+      $pass,
+      $message,
+      1
+    );
+  }
+
+  /**
+   * Asserts $actual is NOT empty
+   * @param mixed $actual
+   * @param mixed $expected
+   * @param string $message
+   * @return void
+   */
+  function assertNotEmpty($actual, $message = null)
+  {
+    $pass = !empty($actual);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($this->wrapType($actual), null, "NOT to be empty");
+
+    $this->test->expect(
+      $pass,
+      $message,
+      1
+    );
+  }
+
+  /**
    * Asserts $actual is strictly equal to $expected
    * @param mixed $actual
    * @param mixed $expected
