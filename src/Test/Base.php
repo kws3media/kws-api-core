@@ -5,6 +5,7 @@ namespace Kws3\ApiCore\Test;
 use \Kws3\ApiCore\Loader;
 use \Kws3\ApiCore\Utils\Tools;
 use \Kws3\ApiCore\Utils\ConsoleColor;
+use ReflectionException;
 
 class Base
 {
@@ -302,12 +303,20 @@ class Base
   }
 
   // assertion methods
-  function assertEquals($expected, $actual, $message = null)
+
+  /**
+   * Asserts $actual is strictly equal to $expected
+   * @param mixed $actual
+   * @param mixed $expected
+   * @param string $message
+   * @return void
+   */
+  function assertEquals($actual, $expected, $message = null)
   {
     $pass = $expected === $actual;
     $message = $pass ? $message : $message . $this->augmentErrorMessage($this->wrapType($actual), $this->wrapType($expected), "to be strictly equal to");
 
-    return $this->test->expect(
+    $this->test->expect(
       $pass,
       $message,
       1
@@ -327,7 +336,7 @@ class Base
       ? $message
       : $message . sprintf(". Arrays do not match. \nExpected %s\nActual %s", print_r($diff, true), print_r($actual, true));
 
-    return $this->test->expect(
+    $this->test->expect(
       $pass,
       $message,
       1
@@ -336,78 +345,120 @@ class Base
 
   function assertArrayNotContains($expected, $actual, $message = null)
   {
-    return $this->test->expect(
+    $this->test->expect(
       array_intersect($expected, $actual) !== $expected,
       $message,
       1
     );
   }
 
+  /**
+   * Asserts $actual contains the string $expected
+   * @param string $actual
+   * @param string $expected
+   * @param string $message
+   * @return void
+   */
   function assertContains($actual, $expected, $message = null)
   {
     $pass = $this->contains($actual, $expected);
     $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to contain");
-    return $this->test->expect(
+    $this->test->expect(
       $pass,
       $message,
       1
     );
   }
 
+  /**
+   * Asserts $actual does not contain the string $expected
+   * @param string $actual
+   * @param string $expected
+   * @param string $message
+   * @return void
+   */
   function assertNotContains($actual, $expected, $message = null)
   {
     $pass = $this->notContains($actual, $expected);
     $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to NOT contain");
 
-    return $this->test->expect(
+    $this->test->expect(
       $pass,
       $message,
       1
     );
   }
 
+  /**
+   * Asserts $actual starts with the string $expected
+   * @param string $actual
+   * @param string $expected
+   * @param string $message
+   * @return void
+   */
   function assertStartsWith($actual, $expected, $message = null)
   {
     $pass = $this->startsWith($actual, $expected);
     $message = $pass ? $message : $message .  $this->augmentErrorMessage($actual, $expected, "to start with");
 
-    return $this->test->expect(
+    $this->test->expect(
       $pass,
       $message,
       1
     );
   }
 
+  /**
+   * Asserts $actual does not start with the string $expected
+   * @param string $actual
+   * @param string $expected
+   * @param string $message
+   * @return void
+   */
   function assertNotStartsWith($actual, $expected, $message = null)
   {
     $pass = !$this->startsWith($actual, $expected);
     $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to NOT start with");
 
-    return $this->test->expect(
+    $this->test->expect(
       $pass,
       $message,
       1
     );
   }
 
+  /**
+   * Asserts $actual ends with the string $expected
+   * @param string $actual
+   * @param string $expected
+   * @param string $message
+   * @return void
+   */
   function assertEndsWith($actual, $expected, $message = null)
   {
     $pass = $this->endsWith($actual, $expected);
     $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to end with");
 
-    return $this->test->expect(
+    $this->test->expect(
       $pass,
       $message,
       1
     );
   }
 
+  /**
+   * Asserts $actual does not end with the string $expected
+   * @param string $actual
+   * @param string $expected
+   * @param string $message
+   * @return void
+   */
   function assertNotEndsWith($actual, $expected, $message = null)
   {
     $pass = !$this->endsWith($actual, $expected);
     $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to NOT end with");
 
-    return $this->test->expect(
+    $this->test->expect(
       $pass,
       $message,
       1
