@@ -279,29 +279,6 @@ class Base
     return !Tools::contains($haystack, $needle);
   }
 
-  function arrayContains($expected, $actual)
-  {
-    $return = array();
-
-    foreach ($expected as $key => $val) {
-      if (array_key_exists($key, $actual)) {
-        if (is_array($val)) {
-          $diff = $this->arrayContains($val, $actual[$key]);
-          if (count($diff)) {
-            $return[$key] = $diff;
-          }
-        } else {
-          if ($val !== $actual[$key]) {
-            $return[$key] = $val;
-          }
-        }
-      } else {
-        $return[$key] = $val;
-      }
-    }
-    return $return;
-  }
-
   // assertion methods
 
   /**
@@ -318,35 +295,6 @@ class Base
 
     $this->test->expect(
       $pass,
-      $message,
-      1
-    );
-  }
-
-  function assertArrayContains($expected, $actual, $message = null)
-  {
-    if (!is_array($expected) || !is_array($actual)) {
-      throw new \Exception('assertArrayContains expects arrays');
-    }
-
-    $diff = $this->arrayContains($expected, $actual);
-    $pass = empty($diff);
-
-    $message = $pass
-      ? $message
-      : $message . sprintf(". Arrays do not match. \nExpected %s\nActual %s", print_r($diff, true), print_r($actual, true));
-
-    $this->test->expect(
-      $pass,
-      $message,
-      1
-    );
-  }
-
-  function assertArrayNotContains($expected, $actual, $message = null)
-  {
-    $this->test->expect(
-      array_intersect($expected, $actual) !== $expected,
       $message,
       1
     );
