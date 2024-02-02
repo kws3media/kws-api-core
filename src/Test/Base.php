@@ -282,6 +282,44 @@ class Base
   // assertion methods
 
   /**
+   * Asserts isset($actual)
+   * @param mixed $actual
+   * @param mixed $expected
+   * @param string $message
+   * @return void
+   */
+  function assertIsSet($actual, $message = null)
+  {
+    $pass = isset($actual);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($this->wrapType($actual), null, "to be set");
+
+    $this->test->expect(
+      $pass,
+      $message,
+      1
+    );
+  }
+
+  /**
+   * Asserts !isset($actual)
+   * @param mixed $actual
+   * @param mixed $expected
+   * @param string $message
+   * @return void
+   */
+  function assertNotIsSet($actual, $message = null)
+  {
+    $pass = !isset($actual);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($this->wrapType($actual), null, "NOT to be set");
+
+    $this->test->expect(
+      $pass,
+      $message,
+      1
+    );
+  }
+
+  /**
    * Asserts $actual is empty
    * @param mixed $actual
    * @param mixed $expected
