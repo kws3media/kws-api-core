@@ -305,7 +305,7 @@ class Base
   function assertEquals($expected, $actual, $message = null)
   {
     $pass = $expected === $actual;
-    $message = $pass ? $message : $message . " \n     - Expected " . ConsoleColor::warning($expected) . ", got " . ConsoleColor::warning($actual);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($this->wrapType($actual), $this->wrapType($expected), "to be strictly equal to");
 
     return $this->test->expect(
       $pass,
@@ -343,10 +343,10 @@ class Base
     );
   }
 
-  function assertContains($haystack, $needle, $message)
+  function assertContains($actual, $expected, $message = null)
   {
-    $pass = $this->contains($haystack, $needle);
-    $message = $pass ? $message : $message . " \n     - Expected " . ConsoleColor::warning($haystack) . " to contain " . ConsoleColor::warning($needle);
+    $pass = $this->contains($actual, $expected);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to contain");
     return $this->test->expect(
       $pass,
       $message,
@@ -354,10 +354,61 @@ class Base
     );
   }
 
-  function assertNotContains($haystack, $needle, $message)
+  function assertNotContains($actual, $expected, $message = null)
   {
+    $pass = $this->notContains($actual, $expected);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to NOT contain");
+
     return $this->test->expect(
-      $this->notContains($haystack, $needle),
+      $pass,
+      $message,
+      1
+    );
+  }
+
+  function assertStartsWith($actual, $expected, $message = null)
+  {
+    $pass = $this->startsWith($actual, $expected);
+    $message = $pass ? $message : $message .  $this->augmentErrorMessage($actual, $expected, "to start with");
+
+    return $this->test->expect(
+      $pass,
+      $message,
+      1
+    );
+  }
+
+  function assertNotStartsWith($actual, $expected, $message = null)
+  {
+    $pass = !$this->startsWith($actual, $expected);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to NOT start with");
+
+    return $this->test->expect(
+      $pass,
+      $message,
+      1
+    );
+  }
+
+  function assertEndsWith($actual, $expected, $message = null)
+  {
+    $pass = $this->endsWith($actual, $expected);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to end with");
+
+    return $this->test->expect(
+      $pass,
+      $message,
+      1
+    );
+  }
+
+  function assertNotEndsWith($actual, $expected, $message = null)
+  {
+    $pass = !$this->endsWith($actual, $expected);
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($actual, $expected, "to NOT end with");
+
+    return $this->test->expect(
+      $pass,
       $message,
       1
     );
@@ -381,12 +432,14 @@ class Base
    * Create a request expecting it to throw an exception.
    * If an exception is not thrown by the request, the test will fail implicitly.
    *
-   * @param array
-   * expected array keys:
-   * url: required
-   * data: optional
-   * headers: array of headers (optional)
-   * identity: optional
+   * Expected array keys:
+   *  - url: required
+   *  - data: optional
+   *  - headers: array of headers (optional)
+   *  - identity: optional
+   *
+   * @param array $data
+   *
    **/
 
   function mockException($data = [])
@@ -401,21 +454,23 @@ class Base
     }
     $this->test->expect(
       ($ex_message !== ''),
-      "Expected Exception has thrown in this test."
+      "Expected Exception has thrown in this test.",
+      1
     );
 
     return $ex_message;
   }
 
   /**
-   * Create a request
+   * Create a request.
+   * Expected array keys:
+   *  - url: required
+   *  - data: optional
+   *  - headers: array of headers (optional)
+   *  - identity: optional,
    *
-   * @param array
-   * expected array keys:
-   * url: required
-   * data: optional
-   * headers: array of headers (optional)
-   * identity: optional,
+   * @param array $data
+   *
    **/
 
   function mockRequest($data = [])
@@ -499,5 +554,18 @@ class Base
         }
       }
     }
+  }
+
+  protected function augmentErrorMessage($actual, $expected, $token)
+  {
+    return " \n     • Expected " . ConsoleColor::warning($actual) . " $token " . ConsoleColor::warning($expected);
+  }
+
+  protected function wrapType($v)
+  {
+    if (is_string($v)) {
+      return '"' . $v . '"';
+    }
+    return $v;
   }
 }
