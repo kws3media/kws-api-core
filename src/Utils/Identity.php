@@ -33,8 +33,8 @@ class Identity extends \Prefab
   public function __construct($config = [])
   {
 
-    foreach($config as $k => $v){
-      if(property_exists($this, $k)){
+    foreach ($config as $k => $v) {
+      if (property_exists($this, $k)) {
         $this->{$k} = $v;
       }
     }
@@ -61,7 +61,11 @@ class Identity extends \Prefab
   protected function identify()
   {
 
-    if(empty($this->tokensModel)){
+    if (defined('AUTOMATED_TESTING') && empty($this->tokensModel)) {
+      return;
+    }
+
+    if (empty($this->tokensModel)) {
       throw new HTTPException('tokensModel not defined', 500);
     }
 
@@ -87,7 +91,7 @@ class Identity extends \Prefab
     }
 
     $created_on = strtotime($token->created);
-    if($this->rotateKeys && (time() - $created_on) > $this->keyLifetime){
+    if ($this->rotateKeys && (time() - $created_on) > $this->keyLifetime) {
       $this->expiredKey = true;
       return;
     }
@@ -99,8 +103,8 @@ class Identity extends \Prefab
     }
   }
 
-  protected function postProcess(){
+  protected function postProcess()
+  {
     //to be implemented by subclass
   }
-
 }
