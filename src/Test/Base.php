@@ -301,6 +301,25 @@ class Base
   }
 
   /**
+   * Asserts $actual is strictly NOT equal to $expected
+   * @param mixed $actual
+   * @param mixed $expected
+   * @param string $message
+   * @return void
+   */
+  function assertNotEquals($actual, $expected, $message = null)
+  {
+    $pass = $expected !== $actual;
+    $message = $pass ? $message : $message . $this->augmentErrorMessage($this->wrapType($actual), $this->wrapType($expected), "to be strictly NOT equal to");
+
+    $this->test->expect(
+      $pass,
+      $message,
+      1
+    );
+  }
+
+  /**
    * Asserts $actual contains the string $expected
    * @param string $actual
    * @param string $expected
