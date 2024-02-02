@@ -19,7 +19,7 @@ class Base
 
   protected $app;
 
-  protected \Test $test;
+  protected Tester $test;
 
   /**
    * String array of method names that are to be run exclusively.
@@ -97,7 +97,7 @@ class Base
     if (count($toRun) > 0) {
       $this->before();
       foreach ($toRun as $m) {
-        $this->test = new \Test;
+        $this->test = new Tester;
         echo "- " . $m . "\n";
         try {
           $canRunMethod = true;
@@ -305,11 +305,12 @@ class Base
   function assertEquals($expected, $actual, $message = null)
   {
     $pass = $expected === $actual;
-    $message = $pass ? $message : $message . " - expected {$expected}, got {$actual}";
+    $message = $pass ? $message : $message . " \n     - Expected " . ConsoleColor::warning($expected) . ", got " . ConsoleColor::warning($actual);
 
     return $this->test->expect(
       $pass,
-      $message
+      $message,
+      1
     );
   }
 
@@ -328,7 +329,8 @@ class Base
 
     return $this->test->expect(
       $pass,
-      $message
+      $message,
+      1
     );
   }
 
@@ -336,15 +338,19 @@ class Base
   {
     return $this->test->expect(
       array_intersect($expected, $actual) !== $expected,
-      $message
+      $message,
+      1
     );
   }
 
   function assertContains($haystack, $needle, $message)
   {
+    $pass = $this->contains($haystack, $needle);
+    $message = $pass ? $message : $message . " \n     - Expected " . ConsoleColor::warning($haystack) . " to contain " . ConsoleColor::warning($needle);
     return $this->test->expect(
-      $this->contains($haystack, $needle),
-      $message
+      $pass,
+      $message,
+      1
     );
   }
 
@@ -352,7 +358,8 @@ class Base
   {
     return $this->test->expect(
       $this->notContains($haystack, $needle),
-      $message
+      $message,
+      1
     );
   }
 
