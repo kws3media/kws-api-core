@@ -30,7 +30,7 @@ abstract class Base extends \Exception
 
     if (defined('AUTOMATED_TESTING')) {
       $DB = Loader::getDB();
-      if ($DB->trans()) {
+      if ($DB && $DB->trans()) {
         $DB->rollback();
       }
     }
