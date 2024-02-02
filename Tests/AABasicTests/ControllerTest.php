@@ -7,6 +7,8 @@ use \Kws3\ApiCore\Loader;
 class ControllerTest extends \Kws3\ApiCore\Test\Base
 {
 
+  public $oldIdentity = null;
+
   function testOffsetLimit()
   {
 
@@ -14,15 +16,17 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
 
     $prop = $refl->getProperty('offset');
     $prop->setAccessible(true);
-    $this->test->expect(
-      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) === 0,
+    $this->assertEquals(
+      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)),
+      0,
       'offset is defaulted to 0'
     );
 
     $prop = $refl->getProperty('limit');
     $prop->setAccessible(true);
-    $this->test->expect(
-      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) === 20,
+    $this->assertEquals(
+      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)),
+      20,
       'limit is defaulted to 20'
     );
 
@@ -38,15 +42,17 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
     $prop = $refl->getProperty('offset');
     $prop->setAccessible(true);
 
-    $this->test->expect(
-      $prop->getValue($instance) === 100,
+    $this->assertEquals(
+      $prop->getValue($instance),
+      100,
       'offset is obeyed from GET params'
     );
 
     $prop = $refl->getProperty('limit');
     $prop->setAccessible(true);
-    $this->test->expect(
-      $prop->getValue($instance) === 60,
+    $this->assertEquals(
+      $prop->getValue($instance),
+      60,
       'limit is obeyed from GET params'
     );
   }
@@ -73,8 +79,9 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
       'default' => 'Hello'
     ]);
     $return = $method->invoke($instance);
-    $this->test->expect(
-      $return === "Hello",
+    $this->assertEquals(
+      $return,
+      "Hello",
       'getModel fallsback to "default"'
     );
 
@@ -84,14 +91,16 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
       'Y' => 'YInstance'
     ]);
     $return = $method->invoke($instance);
-    $this->test->expect(
-      $return === "XInstance",
+    $this->assertEquals(
+      $return,
+      "XInstance",
       'getModel returns the right invocation as per Identity->context'
     );
 
     $return = $method->invoke($instance, 'Y');
-    $this->test->expect(
-      $return === "YInstance",
+    $this->assertEquals(
+      $return,
+      "YInstance",
       'getModel returns the right invocation when a key exists'
     );
 
@@ -99,13 +108,15 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
     try {
       $x = $method->invoke($instance, 'Z');
     } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
-      $this->test->expect(
-        ($ex->getMessage() === 'Unable to resolve model'),
+      $this->assertEquals(
+        $ex->getMessage(),
+        'Unable to resolve model',
         'getModel throws an error when specified key does not exist'
       );
     }
-    $this->test->expect(
-      ($x === 'xxxxxx'),
+    $this->assertEquals(
+      $x,
+      'xxxxxx',
       'getModel did not throw an error when specified key does not exist'
     );
 
@@ -125,15 +136,17 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
 
     $prop = $refl->getProperty('isSearch');
     $prop->setAccessible(true);
-    $this->test->expect(
-      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) === false,
+    $this->assertEquals(
+      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)),
+      false,
       'isSearch is defaulted to false'
     );
 
     $prop = $refl->getProperty('filters');
     $prop->setAccessible(true);
-    $this->test->expect(
-      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)) === [],
+    $this->assertEquals(
+      $prop->getValue(new \Kws3\ApiCore\Controllers\Controller($this->app)),
+      [],
       'filters is defaulted to empty array'
     );
 
@@ -149,13 +162,15 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
       $filters = $prop->getValue($instance);
     } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
       $ex_message = $ex->getMessage();
-      $this->test->expect(
-        ($ex->getMessage() === 'The fields you specified cannot be searched.'),
+      $this->assertEquals(
+        $ex->getMessage(),
+        'The fields you specified cannot be searched.',
         'Unspecified search params throw an exception'
       );
     }
-    $this->test->expect(
-      ($ex_message !== ''),
+    $this->assertNotEquals(
+      $ex_message,
+      '',
       'Exception was thrown in last test as expected'
     );
 
@@ -164,9 +179,9 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
 
     $prop = $refl->getProperty('allowedSearchFields');
     $prop->setAccessible(true);
-    $prop->setValue($instance, ['field1', 'field2', 'field3', 'field4']);
+    $prop->setValue($instance, ['field1', 'field2', 'field3', 'field4', 'field5']);
 
-    Loader::set('GET.q', '(field1:1,field2[gt]:2, field3[xx]|: 3, field4[eq]|: 4)');
+    Loader::set('GET.q', '(field1:1,field2[gt]:2, field3[xx]|: 3, field4[eq]|: 4, field5[eq;g1]|: 5)');
 
     $method->invoke($instance);
 
@@ -174,22 +189,61 @@ class ControllerTest extends \Kws3\ApiCore\Test\Base
     $prop->setAccessible(true);
     $filters = $prop->getValue($instance);
 
+    $this->assertEquals(
+      $filters[0],
+      [
+        "field" => "field1",
+        "value" => "1",
+        "condition" => "eq",
+        "jointype" => "AND",
+        "group" => null
+      ],
+      'filters values are set properly'
+    );
+    $this->assertEquals(
+      $filters[1],
+      [
+        "field" => "field2",
+        "value" => "2",
+        "condition" => "gt",
+        "jointype" => "AND",
+        "group" => null
+      ],
+      'filters values are set properly'
+    );
+    $this->assertEquals(
+      $filters[2],
+      [
+        "field" => "field3",
+        "value" => "3",
+        "condition" => "xx",
+        "jointype" => "OR",
+        "group" => null
+      ],
+      'filters values are set properly'
+    );
+    $this->assertEquals(
+      $filters[3],
+      [
+        "field" => "field4",
+        "value" => "4",
+        "condition" => "eq",
+        "jointype" => "OR",
+        "group" => null
+      ],
+      'filters values are set properly'
+    );
 
-    $this->test->expect(
-      ($filters[0]['field'] === 'field1' && $filters[0]['value'] === '1' && $filters[0]['condition'] === 'eq' && $filters[0]['jointype'] === 'AND'),
-      'filters values are set properly'
-    );
-    $this->test->expect(
-      ($filters[1]['field'] === 'field2' && $filters[1]['value'] === '2' && $filters[1]['condition'] === 'gt' && $filters[1]['jointype'] === 'AND'),
-      'filters values are set properly'
-    );
-    $this->test->expect(
-      ($filters[2]['field'] === 'field3' && $filters[2]['value'] === '3' && $filters[2]['condition'] === 'xx' && $filters[2]['jointype'] === 'OR'),
-      'filters values are set properly'
-    );
-    $this->test->expect(
-      ($filters[3]['field'] === 'field4' && $filters[3]['value'] === '4' && $filters[3]['condition'] === 'eq' && $filters[3]['jointype'] === 'OR'),
-      'filters values are set properly'
+    $this->assertEquals(
+      $filters[4],
+      [
+        "field" => "field5",
+        "value" => "5",
+        "condition" => "eq",
+        "jointype" => "OR",
+        "group" => "g1"
+      ],
+      'filters group values are set properly'
     );
   }
 }
