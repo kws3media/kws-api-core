@@ -584,6 +584,9 @@ class Base
     if (is_string($v)) {
       return '"' . $v . '"';
     }
+    if (is_array($v)) {
+      return print_r($v, true);
+    }
     return $v;
   }
 }
