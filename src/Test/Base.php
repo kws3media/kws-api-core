@@ -6,6 +6,7 @@ use \Kws3\ApiCore\Loader;
 use \Kws3\ApiCore\Utils\Tools;
 use \Kws3\ApiCore\Utils\ConsoleColor;
 use ReflectionException;
+use Registry;
 
 class Base
 {
@@ -596,10 +597,10 @@ class Base
     foreach ($this->test->results() as $result) {
       $msg = $result['text'];
       if ($result['status']) {
-        $this->op($msg, 'Pass');
+        $this->op($msg, 'Pass', $result["source"]);
         $this->passed++;
       } else {
-        $this->op($msg, 'Fail', true);
+        $this->op($msg, 'Fail', $result["source"], true);
         $this->failed++;
       }
       usleep(12500);
@@ -610,12 +611,14 @@ class Base
 
 
 
-  function op($txt, $msg, $err = false)
+  function op($txt, $msg, $src, $err = false)
   {
+    $processed = $this->processSourceFile($src);
+    $line = $processed[1];
     if ($err) {
-      echo "  -> " . ConsoleColor::error(" " . $msg . " ") . " - $txt\n";
+      echo "  -> " . ConsoleColor::error(" " . $msg . " ") . " " . ConsoleColor::info("[L" . str_pad($line, 4, '0', STR_PAD_LEFT) . "]") . " - $txt\n";
     } else {
-      echo "  -> " . ConsoleColor::success(" " . $msg . " ") . " - $txt\n";
+      echo "  -> " . ConsoleColor::success(" " . $msg . " ") . " " . ConsoleColor::info("[L" . str_pad($line, 4, '0', STR_PAD_LEFT) . "]") . " - $txt\n";
     }
     $this->flush();
   }
@@ -664,5 +667,14 @@ class Base
       return print_r($v, true);
     }
     return $v;
+  }
+
+  protected function processSourceFile($source)
+  {
+    $cwd = getcwd();
+    $fileLine = explode(':', str_replace($cwd, "", $source));
+    return [
+      $fileLine[0], $fileLine[1]
+    ];
   }
 }
