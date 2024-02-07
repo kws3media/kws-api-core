@@ -5,8 +5,7 @@ namespace Kws3\ApiCore\Test;
 use \Kws3\ApiCore\Loader;
 use \Kws3\ApiCore\Utils\Tools;
 use \Kws3\ApiCore\Utils\ConsoleColor;
-use ReflectionException;
-use Registry;
+use \Kws3\ApiCore\Exceptions\HTTPException;
 
 class Base
 {
@@ -544,7 +543,7 @@ class Base
     try {
 
       $this->mockRequest($data);
-    } catch (\Kws3\ApiCore\Exceptions\HTTPException $ex) {
+    } catch (HTTPException $ex) {
       $ex_message = $ex->getMessage();
     }
     $this->test->expect(
@@ -587,8 +586,8 @@ class Base
     if (isset($data['data'])) {
       $mockData = $data['data'];
     }
-    $this->app->mock($data['url'], $mockData);
-    $response = Loader::get('RESPONSE');
+
+    $response = $this->childProcessRequest($data['url'], $mockData);
     return json_decode($response, true);
   }
 
@@ -634,6 +633,90 @@ class Base
       ob_end_flush();
     }
     flush();
+  }
+
+  protected function childProcessRequest($url, $mockData)
+  {
+
+    $TAG_EXCEPTION = "|EXCEPTION|";
+    $TAG_RESPONSE = "|RESPONSE|";
+
+    if (!function_exists("pcntl_fork")) {
+      echo "Server does not support process isolation";
+      $this->flush();
+      die();
+    }
+    if (!function_exists("socket_create_pair")) {
+      echo "Server does not support sockets";
+      $this->flush();
+      die();
+    }
+
+    $sockets = [];
+    if (socket_create_pair(AF_UNIX, SOCK_STREAM, 0, $sockets) === false) {
+      echo "socket_create_pair() failed. Reason: " . socket_strerror(socket_last_error());
+      $this->flush();
+    }
+
+    $pid = \pcntl_fork();
+    if ($pid === -1) {
+      echo "Could not fork child process";
+      $this->flush();
+      die();
+    } elseif ($pid) {
+      //We are in parent process
+      pcntl_wait($status);
+      $this->flush();
+
+      $received = trim(socket_read($sockets[1], 65535));
+
+      socket_close($sockets[1]);
+
+      if ($this->startsWith($received, $TAG_RESPONSE)) {
+        $omit = strlen($TAG_RESPONSE);
+        return substr($received, $omit);
+      }
+
+      if ($this->startsWith($received, $TAG_EXCEPTION)) {
+        $omit = strlen($TAG_EXCEPTION);
+        throw new HTTPException(substr($received, $omit));
+      }
+    } else {
+      //we are in child process
+
+      //this shutdown function ensures
+      //child processes do not close the database connection
+      register_shutdown_function(function () {
+        posix_kill(getmypid(), SIGKILL);
+      });
+
+      $response = null;
+      $ex_message = null;
+      try {
+        $this->app->mock($url, $mockData);
+        $response = Loader::get('RESPONSE');
+      } catch (HTTPException $ex) {
+        $ex_message = $ex->getMessage();
+      }
+
+      $output = "";
+      if ($ex_message !== null) {
+        $output .= $TAG_EXCEPTION;
+        $output .= $ex_message . "\r";
+      } else {
+        $output .= $TAG_RESPONSE;
+        $output .= $response . "\r";
+      }
+
+
+      if (socket_write($sockets[0], $output, strlen($output)) === false) {
+        echo "socket_write() failed. Reason: " . socket_strerror(socket_last_error($sockets[0]));
+        $this->flush();
+      }
+
+      socket_close($sockets[0]);
+      exit;
+    }
   }
 
   protected function handleResults($methodName)
