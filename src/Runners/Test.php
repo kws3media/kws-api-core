@@ -246,12 +246,6 @@ class $className extends " . $this->config['base_namespace'] .
     $exceptions = 0;
     $failures = [];
 
-    $folder = Loader::get('TEMP') . "test_data/";
-    if (!is_dir($folder)) {
-      mkdir($folder, 0777, true);
-    }
-
-
     $this->output("");
     foreach ($obj['files'] as $tf) {
       $f = explode(DIRECTORY_SEPARATOR, $tf);
@@ -262,55 +256,11 @@ class $className extends " . $this->config['base_namespace'] .
         $className = $this->config['namespace'] . "\\" . ($obj['namespace'] ? $obj['namespace'] . "\\" : "") . $f;
 
         $class = new $className;
-        if ($class->isolate) {
-          $outfile = $folder . str_replace("\\", "~", $className);
-        }
-
-
-        if ($class->isolate) {
-          if (!function_exists("pcntl_fork")) {
-            $this->output("$className has \$isolate = true; but server does not support process isolation", true);
-            die();
-          }
-
-          $pid = \pcntl_fork();
-
-          if ($pid === -1) {
-            $this->output("$className has \$isolate = true; but server does not support process isolation", true);
-            die();
-          } elseif ($pid) {
-            //We are in parent process
-            pcntl_wait($status);
-          } else {
-            //we are in child process
-
-            //this shutdown function ensures
-            //child processes do not close the database connection
-            register_shutdown_function(function () {
-              posix_kill(getmypid(), SIGKILL);
-            });
-
-            $class->run(true, $outfile);
-            exit;
-          }
-
-          if (is_file($outfile)) {
-            $testOutput = file_get_contents($outfile);
-            $results = unserialize($testOutput);
-
-            $passed += $results['passed'];
-            $failed += $results['failed'];
-            $exceptions += $results['exceptions'];
-            $failures = array_merge($failures, $results['failures']);
-            @unlink($outfile);
-          }
-        } else {
-          $class->run();
-          $passed += $class->passed;
-          $failed += $class->failed;
-          $exceptions += $class->exceptions;
-          $failures = array_merge($failures, $class->failures());
-        }
+        $class->run();
+        $passed += $class->passed;
+        $failed += $class->failed;
+        $exceptions += $class->exceptions;
+        $failures = array_merge($failures, $class->failures());
       }
     }
 

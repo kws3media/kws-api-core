@@ -10,8 +10,6 @@ use \Kws3\ApiCore\Exceptions\HTTPException;
 class Base
 {
 
-  public $isolate = true;
-
   public $passed = 0;
   public $failed = 0;
   public $exceptions = 0;
@@ -78,7 +76,7 @@ class Base
     }, $config['TEST_DB']));
   }
 
-  function run($is_forked = false, $outfile = "")
+  function run()
   {
     $class = get_class($this);
     $methods = get_class_methods($class);
@@ -126,16 +124,6 @@ class Base
         }
       }
       $this->after();
-    }
-
-    if ($is_forked) {
-      file_put_contents($outfile, serialize([
-        'passed' => $this->passed,
-        'failed' => $this->failed,
-        'exceptions' => $this->exceptions,
-        'results' => $this->results,
-        'failures' => $this->failures,
-      ]));
     }
   }
 
