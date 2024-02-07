@@ -69,7 +69,7 @@ class Base
           [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
         );
       } catch (\Exception $ex) {
-        $this->op('Unable to connect to the database.', 'Uncaught Exception', true);
+        $this->op('Unable to connect to the database.', 'Uncaught Exception', null, true);
         $this->exceptions++;
         echo "\n";
       }
@@ -118,7 +118,7 @@ class Base
 
           echo "\n";
         } catch (\Exception $ex) {
-          $this->op($ex->getMessage(), 'Uncaught Exception', true);
+          $this->op($ex->getMessage(), 'Uncaught Exception', null, true);
           $this->exceptions++;
           echo "\n";
         }
@@ -600,8 +600,12 @@ class Base
 
   function op($txt, $msg, $src, $err = false)
   {
-    $processed = $this->processSourceFile($src);
-    $line = $processed[1];
+    if ($src) {
+      $processed = $this->processSourceFile($src);
+      $line = $processed[1];
+    } else {
+      $line = "";
+    }
     if ($err) {
       echo "  -> " . ConsoleColor::error(" " . $msg . " ") . " " . ConsoleColor::info("[L" . str_pad($line, 4, ' ', STR_PAD_LEFT) . "]") . " - $txt\n";
     } else {
