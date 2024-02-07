@@ -17,8 +17,6 @@ class JSONResponse extends Base
       $response = json_encode($message);
       if (!defined('AUTOMATED_TESTING')) {
 
-        echo $response;
-
         if (Framework::isClockworkEnabled()) {
           if ($error) {
             dbg()->error($message['records']);
@@ -30,9 +28,9 @@ class JSONResponse extends Base
             ]);
           }
         }
-      } else {
-        Loader::set('APP_RESPONSE', $response);
       }
+
+      echo $response;
     }
 
     dbg()->requestProcessed();

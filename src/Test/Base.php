@@ -588,7 +588,7 @@ class Base
       $mockData = $data['data'];
     }
     $this->app->mock($data['url'], $mockData);
-    $response = Loader::get('APP_RESPONSE');
+    $response = Loader::get('RESPONSE');
     return json_decode($response, true);
   }
 

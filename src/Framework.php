@@ -216,5 +216,8 @@ class Framework extends \Prefab
     foreach ($params as $k => $v) {
       Loader::set($k, $v);
     }
+    if (defined("AUTOMATED_TESTING")) {
+      Loader::set("QUIET", true);
+    }
   }
 }
