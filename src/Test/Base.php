@@ -603,9 +603,9 @@ class Base
     $processed = $this->processSourceFile($src);
     $line = $processed[1];
     if ($err) {
-      echo "  -> " . ConsoleColor::error(" " . $msg . " ") . " " . ConsoleColor::info("[L" . str_pad($line, 4, '0', STR_PAD_LEFT) . "]") . " - $txt\n";
+      echo "  -> " . ConsoleColor::error(" " . $msg . " ") . " " . ConsoleColor::info("[L" . str_pad($line, 4, ' ', STR_PAD_LEFT) . "]") . " - $txt\n";
     } else {
-      echo "  -> " . ConsoleColor::success(" " . $msg . " ") . " " . ConsoleColor::info("[L" . str_pad($line, 4, '0', STR_PAD_LEFT) . "]") . " - $txt\n";
+      echo "  -> " . ConsoleColor::success(" " . $msg . " ") . " " . ConsoleColor::info("[L" . str_pad($line, 4, ' ', STR_PAD_LEFT) . "]") . " - $txt\n";
     }
     $this->flush();
   }
