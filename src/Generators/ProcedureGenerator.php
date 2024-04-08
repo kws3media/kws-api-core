@@ -181,6 +181,7 @@ class {{CLASSNAME}} {{EXTENDS}}
 {
     protected \$procName = "{{PROCNAME}}",
     \$procSource = <<<PROCSOURCE
+DROP PROCEDURE IF EXISTS "{{PROCNAME}}";
 {{PROCSOURCE}}
 PROCSOURCE;
 
